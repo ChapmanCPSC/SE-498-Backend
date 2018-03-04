@@ -3,21 +3,34 @@
 > The Web Portal section of the Pharmacy School quiz application is built using the [React Framework](https://reactjs.org/)
 
 
-* In order to run our webapplication, you need to install the necessary tools.
+* In order to run our webapplication, you need to install the necessary tools. If you don't already have it, first you need to install npm and [Node.js](https://nodejs.org/en/download/).
 
-* The config.yml has already been made and it exists within the SE-498/Web/ChapmanPharmacyBackendApplication/PharmacyApplication/.circleci directory. 
+* Also, install [Yarn](https://yarnpkg.com/lang/en/docs/install/).
 
-* Since we are using react, which is built from node.js, within your .yml, make sure npm install is included. If not, the dependcies will not be installed and your code tests will fail!
+* Once you have these, you can now install, run, and build React!
+```
+npm install -g create-react-app
+```
+* Now, cd into the repo directory. It's time to install npm dependencies associated with our project! (Note: this can take a while).
 
-* When running tests, there are two changes to this config file that may need to be made. Make sure the working_directory is set to the specified location where the test code is. Second, the "npm tests" command is set to this current folder. If your test code exists in another folder, change this.
+```
+npm install
+```
 
-* Regarding the structure of the config.yml file and extra capabilities, please refer to this [document](https://circleci.com/docs/2.0/sample-config/)
+* You can now build and run our application locally!
+
+```
+yarn build
+yarn start
+```
+
+*That's it!
 
 # Firebase
 
-> Our database and hosting service is run through Google's [Firebase](https://firebase.google.com). Though you are able to run our project locally, we deploy our website using the [Firebase CLI](https://firebase.google.com/docs/cli/)
+> Our database and hosting service is running on Google's [Firebase](https://firebase.google.com). Though you are able to run our project locally, we deploy our website using the [Firebase CLI](https://firebase.google.com/docs/cli/)
 
-* Before deploying, use a google account to create a project in [Firebase](https://console.firebase.google.com/u/0/)! You will need to use this to sign into Firebase and deploy your website to its free hosting service!
+* Before deploying, use a Google account to create a project in [Firebase](https://console.firebase.google.com/u/0/)! You will need to use this to sign into Firebase and deploy your website to use its free hosting service!
 
 * Now, we can get started. Since you already should have Node.js installed due to installing the React framework in the previous section, we can begin installing Firebase!
 
