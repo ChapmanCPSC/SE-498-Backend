@@ -1,4 +1,4 @@
-## Build and Deploy 
+## Build, Deploy, and Test 
 # React Framework
 
 > The Web Portal section of the Pharmacy School quiz application is built using the [React Framework](https://reactjs.org/).
