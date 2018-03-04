@@ -4,6 +4,8 @@
 
 > The gamification of the learning process will not only allow for a new method of assessing student learning, but it will also take advantage of the inherent competitive nature of students.
 
+> For building and deploying notes, please refer to this [document](https://github.com/ChapmanCPSC/SE-498-Backend/tree/master/tests).
+
 ## Application Features
 * iOS App
   * Allows students to compete in live, fast-paced, in-class quizzes with other students!

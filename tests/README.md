@@ -1,9 +1,10 @@
+## Build and Deploy 
 # React Framework
 
-> The Web Portal section of the Pharmacy School quiz application is built using the [React Framework](https://reactjs.org/)
+> The Web Portal section of the Pharmacy School quiz application is built using the [React Framework](https://reactjs.org/).
 
 
-* In order to run our webapplication, you need to install the necessary tools. If you don't already have it, first you need to install npm and [Node.js](https://nodejs.org/en/download/).
+* In order to run our web application, you need to install the necessary tools. If you don't already have it, first you need to install [Node.js](https://nodejs.org/en/download/).
 
 * Also, install [Yarn](https://yarnpkg.com/lang/en/docs/install/).
 
@@ -24,7 +25,7 @@ yarn build
 yarn start
 ```
 
-*That's it!
+* That's it!
 
 # Firebase
 
