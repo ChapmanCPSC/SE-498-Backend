@@ -80,13 +80,14 @@ class QuestionsPage extends Component {
                     <select name="currentlySelectedTag" value={this.state.currentlySelectedTag} onChange={this.handleChange}>
                         <option name="defaultTagOption"
                                 value="defaultOption"
-                                key="defaultOption">---Please Select a Question---</option>
-                        {Object.keys(this.state.tags).map(function(key) {
+                                key="defaultOption">---Select a Tag!---</option>
+                        {Object.keys(this.state.tags).map(key => {
                             return ( <option name="tagOption"
-                                           key={key}
-                                           value={key}>{this.state.tags[key].name}</option>
+                                             key={key}
+                                             value={key}>{this.state.tags[key].name}</option>
                             )
                         })}
+
                     </select>
                 </div>
 
@@ -129,7 +130,6 @@ class QuestionsPage extends Component {
         )
     }
     componentDidMount () {
-
         db.getTagReference().on('value', (snapshot) => {
             let tagVal = snapshot.val();
             this.setState({
