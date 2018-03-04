@@ -31,7 +31,7 @@
 
 
 
-# CircleCI Intergration Testing [![build](https://circleci.com/gh/ChapmanCPSC/SE-498-Backend?style=shield&circle-token=76c4b73a28b85f2ccdc01619ca1bf04babbd5f0a)]
+# CircleCI Intergration Testing [![build](https://circleci.com/gh/ChapmanCPSC/SE-498-Backend.png?style=shield&circle-token=76c4b73a28b85f2ccdc01619ca1bf04babbd5f0a)]
 
 https://circleci.com/gh/ChapmanCPSC/SE-498-Backend
 76c4b73a28b85f2ccdc01619ca1bf04babbd5f0a
