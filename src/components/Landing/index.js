@@ -1,9 +1,10 @@
 import React from 'react';
-
+import logo from '../images/pharmacylogo.jpg';
 const LandingPage = () =>
-  <div>
-    <h1>Landing</h1>
-    <p>The Landing Page is open to everyone, even though the user isn't signed in.</p>
-  </div>
+  <div align='center'>
+        <div>
+            <img src = {logo} alt="logo"/>
+        </div>
+    </div>
 
 export default LandingPage;
