@@ -12,7 +12,7 @@ class QuestionsPage extends Component {
             searchQuestionName: "",
             newQuestionText : "",
             tags : {},
-            questions: []
+            questionFilterResults: []
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleAddQuestionSubmit = this.handleAddQuestionSubmit.bind(this);
@@ -39,6 +39,25 @@ class QuestionsPage extends Component {
 
     handleGetQuestionsWithTag(event) {
         event.preventDefault();
+        {/* Iterate through selected tag, find the questions that have that tag, then set the state? */}
+        let stateToSet = [];
+        for (let item in this.state.tags) {
+            for (let quesID in this.state.tags[item].questions) {
+                if (this.state.tags[item].questions[quesID] === true) {
+                    db.getQuestionWithID(quesID).on('value', (snapshot) => {
+                        let questionsVal = snapshot.val();
+                        stateToSet.push( {
+                            id : quesID,
+                            questionText : questionsVal.text
+                        });
+                        console.log(quesID);
+                    });
+                }
+            }
+        }
+        this.setState({
+            questionFilterResults: stateToSet
+        });
     }
 
     renderEditForm() {
@@ -77,37 +96,21 @@ class QuestionsPage extends Component {
                 {/* Here is a dropdown for tags! */}
 
                 <div className="questionTagSearch">
-                    <select name="currentlySelectedTag" value={this.state.currentlySelectedTag} onChange={this.handleChange}>
-                        <option name="defaultTagOption"
-                                value="defaultOption"
-                                key="defaultOption">---Select a Tag!---</option>
-                        {Object.keys(this.state.tags).map(key => {
-                            return ( <option name="tagOption"
-                                             key={key}
-                                             value={key}>{this.state.tags[key].name}</option>
-                            )
-                        })}
+                    <form onSubmit={this.handleGetQuestionsWithTag}>
+                        <select name="currentlySelectedTag" value={this.state.currentlySelectedTag} onChange={this.handleChange}>
+                            <option name="defaultTagOption"
+                                    value="defaultOption"
+                                    key="defaultOption">---Select a Tag!---</option>
+                            {Object.keys(this.state.tags).map(key => {
+                                return ( <option name="tagOption"
+                                                 key={key}
+                                                 value={key}>{this.state.tags[key].name}</option>
+                                )
+                            })}
+                        </select>
+                        <button>Search For Questions With Tag </button>
+                    </form>
 
-                    </select>
-                </div>
-
-
-                <div className="questionSelection">
-                    {/* TODO: Must maintain concurrency: I.e. if a question is deleted by another admin, need to make sure
-                        the currently selected question changed back to default, or alerts the user
-                    */}
-                    <select name="currentlySelectedQuestion" value={this.state.currentlySelectedQuestion} onChange={this.handleChange}>
-                        <option name="defaultQuestionOption"
-                                value="defaultOption"
-                                key="defaultOption">---Please Select a Question---</option>
-                        {this.state.questions.map((question) => {
-                            return (
-                                <option name="questionToSelectOption"
-                                        key={question.id}
-                                        value={question.id}>{question.questionText}</option>
-                            )
-                        })}
-                    </select>
                 </div>
 
                 {/* Here is a box and button for adding a new question */}

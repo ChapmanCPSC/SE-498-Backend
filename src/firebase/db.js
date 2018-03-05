@@ -13,12 +13,15 @@ export const onceGetUsers = () =>
 export function getQuestionReference() {
     return db.ref('question')
 }
-export function getQuestionsWithTag(tag) {
-    return db.ref('question/')
+export function getQuestionWithID(ID) {
+    return db.ref('question/' + ID)
 }
 
 export function getTagReference() {
     return db.ref('tag')
+}
+export function getSpecificTagReference(tagID) {
+    return db.ref('tag/' + tagID)
 }
 
 // Other db APIs ...
