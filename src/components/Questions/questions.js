@@ -12,18 +12,23 @@ class QuestionsPage extends Component {
             searchQuestionName: "",
             newQuestionText : "",
             tags : {},
-            questionFilterResults: []
+            questionFilterResults: [],
+            selectedQuestionData : undefined,
+            tagForQuestionEdit : "",
+            newAnswerText : ""
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleAddQuestionSubmit = this.handleAddQuestionSubmit.bind(this);
         this.handleSearchForQuestion = this.handleSearchForQuestion.bind(this);
         this.handleGetQuestionsWithTag = this.handleGetQuestionsWithTag.bind(this);
+        this.handleQuestionFormSubmit = this.handleQuestionFormSubmit.bind(this);
     }
 
     handleChange(event) {
         this.setState({[event.target.name]: event.target.value})
     }
     handleAddQuestionSubmit(event) {
+        {/* Need to be sure this works well with the filters */}
         event.preventDefault();
         const ref = db.getQuestionReference();
         let newAddition = ref.push();
@@ -31,6 +36,13 @@ class QuestionsPage extends Component {
             text: this.state.newQuestionText
         });
         this.setState({currentlySelectedQuestion: newAddition.key})
+    }
+    handleQuestionFormSubmit(event) {
+        event.preventDefault();
+        db.getQuestionWithID(this.state.currentlySelectedQuestion).on('value', (snapshot) => {
+            this.setState({selectedQuestionData : snapshot.val()});
+        });
+
     }
 
     handleSearchForQuestion(event) {
@@ -41,32 +53,85 @@ class QuestionsPage extends Component {
         event.preventDefault();
         {/* Iterate through selected tag, find the questions that have that tag, then set the state? */}
         let stateToSet = [];
-            for (let quesID in this.state.tags[this.state.currentlySelectedTag].questions) {
-                if (this.state.tags[this.state.currentlySelectedTag].questions[quesID] === true) {
-                    db.getQuestionWithID(quesID).on('value', (snapshot) => {
-                        let questionsVal = snapshot.val();
-                        stateToSet.push( {
-                            id : quesID,
-                            questionText : questionsVal.text
-                        });
+        for (let quesID in this.state.tags[this.state.currentlySelectedTag].questions) {
+            if (this.state.tags[this.state.currentlySelectedTag].questions[quesID] === true) {
+                db.getQuestionWithID(quesID).on('value', (snapshot) => {
+                    let questionsVal = snapshot.val();
+                    stateToSet.push( {
+                        id : quesID,
+                        questionText : questionsVal.text
                     });
-                }
+                });
             }
+        }
         this.setState({
             questionFilterResults: stateToSet
         });
     }
+    deleteAnswerChoice() {
+
+    }
+    addNewAnswerChoice() {
+
+    }
 
     renderEditForm() {
         {/* this.state.questions[this.state.currentlySelectedQuestion].questionText */}
+        if(this.state.selectedQuestionData !== undefined) {
+            return(
+                <div className="questionEditDiv">
+                    <form>
+                        <h1> Edit </h1>
+                        <input type="text"
+                               name="existingQuestionText"
+                               value={this.state.selectedQuestionData.text}
+                               placeholder="Enter Question Text Here"
+                               onChange={this.handleChange} />
+                        <input type="text"
+                               name="tagForQuestionEdit"
+                               placeholder="Enter Tag Here"
+                               value={this.state.tagForQuestionEdit} onChange={this.handleChange} />
+                        <div>
+                            <h3> Answers </h3>
+                            {Object.keys(this.state.selectedQuestionData.answers).map((item) => {
+                                return (
+                                    <div>
+                                        <input type="text" name="answersInSelection"
+                                               value={this.state.selectedQuestionData.answers[item]} onChange={this.handleChange}/>
+                                        <input type="checkbox" />
+                                        <button type="button" onClick={this.deleteAnswerChoice}> Delete </button>
+                                    </div>
+                                )
+                            })}
+                            <button type ="button"> Add New Answer Choice </button>
+                        </div>
+                        <button>Submit Changes!</button>
+                    </form>
+                </div>
+            )
+        }
+    }
+
+    renderQuestionSelectionBox() {
         return(
-            <div className="questionEditDiv">
-                <form>
-                    <input type="text"
-                           name="existingQuestionText"
-                           value="PLEASECHANGETHIS!"
-                           onChange={this.handleChange}
-                    />
+            <div className="questionSelection">
+                {/* TODO: Must maintain concurrency: I.e. if a question is deleted by another admin, need to make sure
+                        the currently selected question changed back to default, or alerts the user
+                    */}
+                <form onSubmit={this.handleQuestionFormSubmit}>
+                    <select name="currentlySelectedQuestion" value={this.state.currentlySelectedQuestion} onChange={this.handleChange}>
+                        <option name="defaultQuestionOption"
+                                value="defaultOption"
+                                key="defaultOption">---Please Select a Question---</option>
+                        {this.state.questionFilterResults.map((item) => {
+                            return (
+                                <option name="questionToSelectOption"
+                                        key={item.id}
+                                        value={item.id}>{item.questionText}</option>
+                            )
+                        })}
+                    </select>
+                    <button> Edit! </button>
                 </form>
             </div>
         )
@@ -77,7 +142,7 @@ class QuestionsPage extends Component {
             <div className="wholeQuestionPage">
                 <h1>Questions Page</h1> {/* Header for the Question Creation/Editing Page */}
 
-                {/* Here is a box for searching for a question in the database by tag */}
+                {/* Here is a box for searching for a question in the database by tag
                 <div className="questionSearch">
                     <form onSubmit={this.handleSearchForQuestion}>
                         <input type="text"
@@ -88,7 +153,7 @@ class QuestionsPage extends Component {
                         />
                         <button>Search</button>
                     </form>
-                </div>
+                </div> */}
 
                 {/* Here is a dropdown for tags! */}
 
@@ -107,26 +172,9 @@ class QuestionsPage extends Component {
                         </select>
                         <button>Search For Questions With Tag </button>
                     </form>
-
                 </div>
 
-                <div className="questionSelection">
-                    {/* TODO: Must maintain concurrency: I.e. if a question is deleted by another admin, need to make sure
-                        the currently selected question changed back to default, or alerts the user
-                    */}
-                    <select name="currentlySelectedQuestion" value={this.state.currentlySelectedQuestion} onChange={this.handleChange}>
-                        <option name="defaultQuestionOption"
-                                value="defaultOption"
-                                key="defaultOption">---Please Select a Question---</option>
-                        {this.state.questionFilterResults.map((item) => {
-                            return (
-                                <option name="questionToSelectOption"
-                                        key={item.id}
-                                        value={item.id}>{item.questionText}</option>
-                            )
-                        })}
-                    </select>
-                </div>
+                {this.renderQuestionSelectionBox()}
 
                 {/* Here is a box and button for adding a new question */}
                 <div className="addNewQuestion">
@@ -143,7 +191,7 @@ class QuestionsPage extends Component {
 
                 {/* Here is the box for the editing of questions */}
                 {/* {this.state.currentlySelectedQuestion !== 'defaultOption' && this.renderEditForm()} */}
-
+                {this.renderEditForm()}
             </div>
         )
     }
