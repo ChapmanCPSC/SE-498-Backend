@@ -41,20 +41,17 @@ class QuestionsPage extends Component {
         event.preventDefault();
         {/* Iterate through selected tag, find the questions that have that tag, then set the state? */}
         let stateToSet = [];
-        for (let item in this.state.tags) {
-            for (let quesID in this.state.tags[item].questions) {
-                if (this.state.tags[item].questions[quesID] === true) {
+            for (let quesID in this.state.tags[this.state.currentlySelectedTag].questions) {
+                if (this.state.tags[this.state.currentlySelectedTag].questions[quesID] === true) {
                     db.getQuestionWithID(quesID).on('value', (snapshot) => {
                         let questionsVal = snapshot.val();
                         stateToSet.push( {
                             id : quesID,
                             questionText : questionsVal.text
                         });
-                        console.log(quesID);
                     });
                 }
             }
-        }
         this.setState({
             questionFilterResults: stateToSet
         });
@@ -111,6 +108,24 @@ class QuestionsPage extends Component {
                         <button>Search For Questions With Tag </button>
                     </form>
 
+                </div>
+
+                <div className="questionSelection">
+                    {/* TODO: Must maintain concurrency: I.e. if a question is deleted by another admin, need to make sure
+                        the currently selected question changed back to default, or alerts the user
+                    */}
+                    <select name="currentlySelectedQuestion" value={this.state.currentlySelectedQuestion} onChange={this.handleChange}>
+                        <option name="defaultQuestionOption"
+                                value="defaultOption"
+                                key="defaultOption">---Please Select a Question---</option>
+                        {this.state.questionFilterResults.map((item) => {
+                            return (
+                                <option name="questionToSelectOption"
+                                        key={item.id}
+                                        value={item.id}>{item.questionText}</option>
+                            )
+                        })}
+                    </select>
                 </div>
 
                 {/* Here is a box and button for adding a new question */}
