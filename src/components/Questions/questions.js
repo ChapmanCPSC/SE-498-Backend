@@ -84,9 +84,15 @@ class QuestionsPage extends Component {
                     currentlySelectedQuestion={this.state.currentlySelectedQuestion}
                     questionFilterResults={this.state.questionFilterResults}/>
 
-                <AddQuestion />
+                <AddQuestion
+                    newQuestionText={this.state.newQuestionText}
+                    onAddQuestionSubmit={this.state.handleAddQuestionSubmit}
+                    handleChange={this.handleChange}/>
                 {/* Here is the box for the editing of questions */}
-                <QuestionEdit />
+                <QuestionEdit
+                    selectedQuestionData={this.state.selectedQuestionData}
+                    tagForQuestionEdit={this.state.tagForQuestionEdit}
+                    handleChange={this.handleChange}/>
                 {/* {this.state.currentlySelectedQuestion !== 'defaultOption' && this.renderEditForm()} */}
             </div>
         )
@@ -126,7 +132,7 @@ class FilterQuestions extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
     handleChange(event) {
-        this.props.handleChange(event.target.value)
+        this.props.handleChange(event)
     }
     render() {
         return(
@@ -190,30 +196,33 @@ class QuestionEdit extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
     handleChange(event) {
-        this.props.handleChange(event.target.value)
+        this.props.handleChange(event)
+    }
+    deleteAnswerChoice() {
+
     }
     render() {
-        if(this.state.selectedQuestionData !== undefined) {
+        if(this.props.selectedQuestionData !== undefined) {
             return(
                 <div className="questionEditDiv">
                     <form>
                         <h1> Edit </h1>
                         <input type="text"
                                name="existingQuestionText"
-                               value={this.state.selectedQuestionData.text}
+                               value={this.props.selectedQuestionData.text}
                                placeholder="Enter Question Text Here"
                                onChange={this.handleChange} />
                         <input type="text"
                                name="tagForQuestionEdit"
                                placeholder="Enter Tag Here"
-                               value={this.state.tagForQuestionEdit} onChange={this.handleChange} />
+                               value={this.props.tagForQuestionEdit} onChange={this.handleChange} />
                         <div>
                             <h3> Answers </h3>
-                            {Object.keys(this.state.selectedQuestionData.answers).map((item) => {
+                            {Object.keys(this.props.selectedQuestionData.answers).map((item) => {
                                 return (
                                     <div>
                                         <input type="text" name="answersInSelection"
-                                               value={this.state.selectedQuestionData.answers[item]} onChange={this.handleChange}/>
+                                               value={this.props.selectedQuestionData.answers[item]} onChange={this.handleChange}/>
                                         <input type="checkbox" />
                                         <button type="button" onClick={this.deleteAnswerChoice}> Delete </button>
                                     </div>
@@ -226,6 +235,7 @@ class QuestionEdit extends Component {
                 </div>
             )
         }
+        else { return null; }
     }
 }
 
@@ -236,16 +246,16 @@ class AddQuestion extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
     handleChange(event) {
-        this.props.handleChange(event.target.value)
+        this.props.handleChange(event)
     }
     render() {
         return (
             <div className="addNewQuestion">
-                <form onSubmit={this.handleAddQuestionSubmit}>
+                <form onSubmit={this.props.onAddQuestionSubmit}>
                     <input type="text"
                            name="newQuestionText"
                            placeholder="Please enter your question"
-                           value={this.state.newQuestionText}
+                           value={this.props.newQuestionText}
                            onChange={this.handleChange}
                     />
                     <button>Add Question</button>
@@ -261,7 +271,7 @@ class Answers extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
     handleChange(event) {
-        this.props.handleChange(event.target.value)
+        this.props.handleChange(event)
     }
 
     deleteAnswerChoice() {
@@ -272,7 +282,7 @@ class Answers extends Component {
     }
 
     render() {
-        return(<h2> Test For Now </h2>)
+        return null;
     }
 }
 
