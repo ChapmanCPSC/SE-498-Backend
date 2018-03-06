@@ -43,7 +43,8 @@ jobs:
        steps:
          - run:
              name: Deploy Master to Firebase
-             command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_DEPLOY_TOKEN
+             command: ./node_modules/.bin/firebase deploy --token=1/yPgan3_q_BrcS30uS3GYVAvmT7IF8vMb8QIUNk9dxNT_CxtowLXh024LLpspXL72
+
                
     workflows:
       version: 2
