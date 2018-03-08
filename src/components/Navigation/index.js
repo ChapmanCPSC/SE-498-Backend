@@ -22,10 +22,12 @@ const NavigationAuth = () =>
   </ul>
 
 const NavigationNonAuth = () =>
-  <ul>
-    <li><Link to={routes.LANDING}>Landing</Link></li>
-    <li><Link to={routes.SIGN_IN}>Sign In</Link></li>
-  </ul>
+  <div>
+      <div class = "topnav">
+          <Link to={routes.LANDING}>Landing</Link>
+          <Link to={routes.SIGN_IN}>Sign In</Link>
+      </div>
+  </div>
 
 const mapStateToProps = (state) => ({
   authUser: state.sessionState.authUser,

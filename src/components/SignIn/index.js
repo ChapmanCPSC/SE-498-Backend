@@ -7,8 +7,7 @@ import { auth } from '../../firebase';
 import * as routes from '../../constants/routes';
 
 const SignInPage = ({ history }) =>
-  <div>
-    <h1>SignIn</h1>
+  <div align = 'center'>
     <SignInForm history={history} />
     <PasswordForgetLink />
     <SignUpLink />
@@ -65,23 +64,28 @@ class SignInForm extends Component {
       email === '';
 
     return (
-      <form onSubmit={this.onSubmit}>
-        <input
-          value={email}
-          onChange={event => this.setState(updateByPropertyName('email', event.target.value))}
-          type="text"
-          placeholder="Email Address"
-        />
-        <input
-          value={password}
-          onChange={event => this.setState(updateByPropertyName('password', event.target.value))}
-          type="password"
-          placeholder="Password"
-        />
-        <button disabled={isInvalid} type="submit">
-          Sign In
-        </button>
-
+      <form onSubmit={this.onSubmit} >
+        <div align = 'center' class ='signin'>
+          <input
+            value={email}
+            onChange={event => this.setState(updateByPropertyName('email', event.target.value))}
+            type="text"
+            placeholder="Email Address"
+          />
+        </div>
+        <div align = 'center' class ='signin'>
+          <input
+            value={password}
+            onChange={event => this.setState(updateByPropertyName('password', event.target.value))}
+            type="password"
+            placeholder="Password"
+          />
+        </div>
+        <div align = 'center'>
+          <button disabled={isInvalid} type="submit">
+            Sign In
+          </button>
+        </div>
         { error && <p>{error.message}</p> }
       </form>
     );
