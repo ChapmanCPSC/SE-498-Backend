@@ -14,15 +14,14 @@ class QuestionsPage extends Component {
             tags : {},
             allQuestionNames : {},
             questionFilterResults: [],
-            selectedQuestionData : undefined,
-            tagForQuestionEdit : "",
+            inEditMode : false,
             newAnswerText : ""
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleAddQuestionSubmit = this.handleAddQuestionSubmit.bind(this);
         this.handleSearchForQuestion = this.handleSearchForQuestion.bind(this);
         this.handleGetQuestionsWithTag = this.handleGetQuestionsWithTag.bind(this);
-        this.handleQuestionFormSubmit = this.handleQuestionFormSubmit.bind(this);
+        this.handleGetQuestionForEditFormSubmit = this.handleGetQuestionForEditFormSubmit.bind(this);
     }
 
     handleChange(event) {
@@ -38,10 +37,13 @@ class QuestionsPage extends Component {
         });
         this.setState({currentlySelectedQuestion: newAddition.key})
     }
-    handleQuestionFormSubmit(event) {
+    handleGetQuestionForEditFormSubmit(event) {
         event.preventDefault();
-        db.getQuestionWithID(this.state.currentlySelectedQuestion).on('value', (snapshot) => {
+        db.getQuestionWithID(this.state.currentlySelectedQuestion).once('value', (snapshot) => {
             this.setState({selectedQuestionData : snapshot.val()});
+        });
+        db.getQuestionAnswersWithID(this.state.currentlySelectedQuestion).once('value', (snapshot) => {
+            this.setState({selectedQuestionAnswerData : snapshot.val()});
         });
 
     }
@@ -53,6 +55,7 @@ class QuestionsPage extends Component {
     handleGetQuestionsWithTag(event) {
         event.preventDefault();
         {/* Iterate through selected tag, find the questions that have that tag, then set the state? */}
+        this.state.currentlySelectedQuestion = "defaultOption";
         let stateToSet = [];
         for (let quesID in this.state.tags[this.state.currentlySelectedTag].questions) {
             if (this.state.tags[this.state.currentlySelectedTag].questions[quesID] === true) {
@@ -78,7 +81,7 @@ class QuestionsPage extends Component {
                     handleChange={this.handleChange}
                     currentlySelectedTag={this.state.currentlySelectedTag}
                     onTagSearchSubmit={this.handleGetQuestionsWithTag}
-                    onQuestionSearchSubmit={this.handleQuestionFormSubmit}
+                    onSelectEditQuestionSubmit={this.handleGetQuestionForEditFormSubmit}
                     currentlySelectedQuestion={this.state.currentlySelectedQuestion}
                     questionFilterResults={this.state.questionFilterResults}/>
 
@@ -88,8 +91,8 @@ class QuestionsPage extends Component {
                     handleChange={this.handleChange}/>
                 {/* Here is the box for the editing of questions */}
                 <QuestionEdit
-                    selectedQuestionData={this.state.selectedQuestionData}
-                    tagForQuestionEdit={this.state.tagForQuestionEdit}
+                    selectedQuestionForEditing={this.state.currentlySelectedQuestion}
+                    inEditMode={this.state.inEditMode}
                     handleChange={this.handleChange}/>
                 {/* {this.state.currentlySelectedQuestion !== 'defaultOption' && this.renderEditForm()} */}
             </div>
@@ -108,22 +111,6 @@ class QuestionsPage extends Component {
                 allQuestionNames : quesVal
             })
         });
-
-
-        {/*
-        db.getQuestionReference().on('value', (snapshot) => {
-            let questionsVal = snapshot.val();
-            let stateToSet = [];
-            for (let item in questionsVal) {
-                stateToSet.push({
-                    id : item,
-                    questionText : questionsVal[item].text
-                })
-            }
-            this.setState({
-                questions: stateToSet
-            });
-        }); */}
     }
     componentWillUnmount() {
         db.getQuestionReference().off();
@@ -174,7 +161,7 @@ class FilterQuestions extends Component {
                         {/* TODO: Must maintain concurrency: I.e. if a question is deleted by another admin, need to make sure
                             the currently selected question changed back to default, or alerts the user
                         */}
-                        <form onSubmit={this.props.onQuestionSearchSubmit}>
+                        <form onSubmit={this.props.onSelectEditQuestionSubmit}>
                             <select name="currentlySelectedQuestion" value={this.props.currentlySelectedQuestion}
                                     onChange={this.handleChange}>
                                 <option name="defaultQuestionOption"
@@ -201,8 +188,13 @@ class FilterQuestions extends Component {
 class QuestionEdit extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            selectedQuestionData : undefined,
+            selectedQuestionAnswerData : undefined
+        };
         this.handleChange = this.handleChange.bind(this);
     }
+
     handleChange(event) {
         this.props.handleChange(event)
     }
@@ -210,7 +202,7 @@ class QuestionEdit extends Component {
 
     }
     render() {
-        if(this.props.selectedQuestionData !== undefined) {
+        if(this.props.inEditMode == true) {
             return(
                 <div className="questionEditDiv">
                     <form>
@@ -226,11 +218,11 @@ class QuestionEdit extends Component {
                                value={this.props.tagForQuestionEdit} onChange={this.handleChange} />
                         <div>
                             <h3> Answers </h3>
-                            {Object.keys(this.props.selectedQuestionData.answers).map((item) => {
+                            {Object.keys(this.props.selectedQuestionAnswerData.answers).map((item) => {
                                 return (
                                     <div>
                                         <input type="text" name="answersInSelection"
-                                               value={this.props.selectedQuestionData.answers[item]} onChange={this.handleChange}/>
+                                               value={this.props.selectedQuestionAnswerData.answers[item]} onChange={this.handleChange}/>
                                         <input type="checkbox" />
                                         <button type="button" onClick={this.deleteAnswerChoice}> Delete </button>
                                     </div>
