@@ -36,6 +36,8 @@ jobs:
       # run tests!
       - run: yarn test
       
+      - run: npm install
+      
       - run: npm install -g firebase-tools
       
       - run:
