@@ -196,6 +196,7 @@ class QuestionEdit extends Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleInStateChange = this.handleInStateChange.bind(this);
+        this.handleQuestionTextChange = this.handleQuestionTextChange.bind(this);
     }
     reset() {
         this.setState(InitialQuestionEditState);
@@ -227,6 +228,13 @@ class QuestionEdit extends Component {
     handleChange(event) {
         this.props.handleChange(event)
     }
+    handleQuestionTextChange(event) {
+        this.setState({
+            questionData: Object.assign({}, this.state.questionData, {
+                name: event.target.value,
+            }),
+        });
+    }
     handleInStateChange(event) {
         this.setState({[event.target.name]: event.target.value})
     }
@@ -243,13 +251,13 @@ class QuestionEdit extends Component {
                                name="existingQuestionText"
                                value={this.state.questionData.name}
                                placeholder="Enter Question Text Here"
-                               onChange={this.handleInStateChange} />
+                               onChange={this.handleQuestionTextChange} />
                         {/*
                         <input type="text"
                                name="tagForQuestionEdit"
                                placeholder="Enter Tag Here"
                                value={this.state.questionData.tags.} onChange={this.handleChange} /> */}
-                        
+
                         <Answers
                         answerData ={this.state.answerData}
                         handleChange = {this.handleInStateChange}/>
