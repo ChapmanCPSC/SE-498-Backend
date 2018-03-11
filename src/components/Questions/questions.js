@@ -39,12 +39,9 @@ class QuestionsPage extends Component {
     }
     handleGetQuestionForEditFormSubmit(event) {
         event.preventDefault();
-        db.getQuestionWithID(this.state.currentlySelectedQuestion).once('value', (snapshot) => {
-            this.setState({selectedQuestionData : snapshot.val()});
-        });
-        db.getQuestionAnswersWithID(this.state.currentlySelectedQuestion).once('value', (snapshot) => {
-            this.setState({selectedQuestionAnswerData : snapshot.val()});
-        });
+        if(this.state.currentlySelectedQuestion !== "defaultOption") {
+            this.setState({inEditMode: true})
+        }
 
     }
 
@@ -187,8 +184,8 @@ class FilterQuestions extends Component {
 
 
 const InitialQuestionEditState = {
-    selectedQuestionData : undefined,
-    selectedQuestionAnswerData : undefined
+    questionData : undefined,
+    answerData : undefined
 };
 
 class QuestionEdit extends Component {
@@ -198,6 +195,7 @@ class QuestionEdit extends Component {
         this.state = InitialQuestionEditState;
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleInStateChange = this.handleInStateChange.bind(this);
     }
     reset() {
         this.setState(InitialQuestionEditState);
@@ -207,7 +205,17 @@ class QuestionEdit extends Component {
         if (!this.props.inEditMode && nextProps.inEditMode) {
             {/* 1. If you are not in edit mode, but have requested to go into edit mode */}
             {/* Grab the data listed in Firebase so the user can edit! */}
-
+            {/* Data Should be copied into a local structure */}
+            console.log("1. We are beginning");
+            db.getQuestionWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
+                this.setState({questionData : snapshot.val()});
+                console.log("2. FB 1!");
+            });
+            db.getQuestionAnswersWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
+                this.setState({answerData : snapshot.val()});
+                console.log("3. FB 2!");
+            });
+            console.log("4. We are done with Firebase!");
         }
         else if (this.props.inEditMode && !nextProps.inEditMode) {
             {/* 2. If you are in edit mode, but have requested to switch out back to filtering and selecting questions */}
@@ -219,38 +227,32 @@ class QuestionEdit extends Component {
     handleChange(event) {
         this.props.handleChange(event)
     }
+    handleInStateChange(event) {
+        this.setState({[event.target.name]: event.target.value})
+    }
     deleteAnswerChoice() {
 
     }
     render() {
-        if(this.props.inEditMode === true) {
+        if(this.props.inEditMode && this.state.questionData !== undefined && this.state.answerData !== undefined) {
             return(
                 <div className="questionEditDiv">
                     <form>
                         <h1> Edit </h1>
                         <input type="text"
                                name="existingQuestionText"
-                               value={this.props.selectedQuestionData.text}
+                               value={this.state.questionData.name}
                                placeholder="Enter Question Text Here"
-                               onChange={this.handleChange} />
+                               onChange={this.handleInStateChange} />
+                        {/*
                         <input type="text"
                                name="tagForQuestionEdit"
                                placeholder="Enter Tag Here"
-                               value={this.props.tagForQuestionEdit} onChange={this.handleChange} />
-                        <div>
-                            <h3> Answers </h3>
-                            {Object.keys(this.props.selectedQuestionAnswerData.answers).map((item) => {
-                                return (
-                                    <div>
-                                        <input type="text" name="answersInSelection"
-                                               value={this.props.selectedQuestionAnswerData.answers[item]} onChange={this.handleChange}/>
-                                        <input type="checkbox" />
-                                        <button type="button" onClick={this.deleteAnswerChoice}> Delete </button>
-                                    </div>
-                                )
-                            })}
-                            <button type ="button"> Add New Answer Choice </button>
-                        </div>
+                               value={this.state.questionData.tags.} onChange={this.handleChange} /> */}
+                        
+                        <Answers
+                        answerData ={this.state.answerData}
+                        handleChange = {this.handleInStateChange}/>
                         <button>Submit Changes!</button>
                     </form>
                 </div>
@@ -272,7 +274,7 @@ class AddQuestion extends Component {
     render() {
         return (
             <div className="addNewQuestion">
-                <form onSubmit={this.props.onAddQuestionSubmit}>
+                {/* <form onSubmit={this.props.onAddQuestionSubmit}>
                     <input type="text"
                            name="newQuestionText"
                            placeholder="Please enter your question"
@@ -280,7 +282,7 @@ class AddQuestion extends Component {
                            onChange={this.handleChange}
                     />
                     <button>Add Question</button>
-                </form>
+                </form> */}
             </div>
         )
     }
@@ -303,7 +305,22 @@ class Answers extends React.Component {
     }
 
     render() {
-        return null;
+        return(
+            <div>
+                <h3> Answers </h3>
+                {Object.keys(this.props.answerData.answers).map((item) => {
+                    return (
+                        <div>
+                            <input type="text" name="answersInSelection"
+                                   value={this.props.answerData.answers[item]} onChange={this.handleChange}/>
+                            <input type="checkbox" />
+                            <button type="button" onClick={this.deleteAnswerChoice}> Delete </button>
+                        </div>
+                    )
+                })}
+                <button type ="button"> Add New Answer Choice </button>
+            </div>
+        )
     }
 }
 
