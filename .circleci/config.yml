@@ -36,9 +36,9 @@ jobs:
       # run tests!
       - run: yarn test
       
-      - run: npm install
+      - run: sudo npm install
       
-      - run: npm install -g firebase-tools
+      - run: sudo npm install -g firebase-tools
       
       - run:
           name: Deploy
