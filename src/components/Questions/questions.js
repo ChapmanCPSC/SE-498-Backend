@@ -185,14 +185,35 @@ class FilterQuestions extends Component {
     }
 }
 
+
+const InitialQuestionEditState = {
+    selectedQuestionData : undefined,
+    selectedQuestionAnswerData : undefined
+};
+
 class QuestionEdit extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            selectedQuestionData : undefined,
-            selectedQuestionAnswerData : undefined
-        };
+        {/* Actual state is listed above in the constant var called InitialQuestionEditState*/}
+        this.state = InitialQuestionEditState;
+
         this.handleChange = this.handleChange.bind(this);
+    }
+    reset() {
+        this.setState(InitialQuestionEditState);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (!this.props.inEditMode && nextProps.inEditMode) {
+            {/* 1. If you are not in edit mode, but have requested to go into edit mode */}
+            {/* Grab the data listed in Firebase so the user can edit! */}
+
+        }
+        else if (this.props.inEditMode && !nextProps.inEditMode) {
+            {/* 2. If you are in edit mode, but have requested to switch out back to filtering and selecting questions */}
+            {/* Reset your state back to nothing! So clear everything you've done so far*/}
+            this.reset();
+        }
     }
 
     handleChange(event) {
@@ -202,7 +223,7 @@ class QuestionEdit extends Component {
 
     }
     render() {
-        if(this.props.inEditMode == true) {
+        if(this.props.inEditMode === true) {
             return(
                 <div className="questionEditDiv">
                     <form>
