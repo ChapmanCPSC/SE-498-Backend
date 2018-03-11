@@ -1,0 +1,190 @@
+{
+  "course" : {
+    "93fa23ec3dcb43a9925a" : {
+      "coursecode" : "PHRM 577",
+      "faculty" : "d31b1d9547b0467aa443",
+      "quizzes" : {
+        "96f8f44213334d4eb8ff" : true
+      },
+      "students" : {
+        "e9ba98c57654426e87a6" : true
+      },
+      "title" : "Health Care Delivery I",
+      "yearrank" : "P1"
+    }
+  },
+  "faculty" : {
+    "d31b1d9547b0467aa443" : {
+      "name" : "Jack London",
+      "courses" : {
+        "93fa23ec3dcb43a9925a": true
+      },
+      "questions" : {
+        "5a2ec76bf4b843a79183" : true
+      },
+      "quizzes" : {
+        "96f8f44213334d4eb8ff" : true
+      }
+    }
+  },
+  "game" : {
+    "670cac07d84b4d4abe63" : {
+      "datecreated" : "2018-15-2",
+      "gamepin" : "8419",
+      "quiz" : "96f8f44213334d4eb8ff",
+      "students" : {
+        "e9ba98c57654426e87a6" : true
+      },
+      "timecreated" : "12:58:02"
+    }
+  },
+  "question" : {
+    "5a2ec76bf4b843a79183" : {
+      "name" : "If a physician prescribes 250mg qid for 10 days, how many mililiters of amoxicillin oral suspension containing 250mg/5mL should be dispensed?",
+      "datecreated" : "02-16-2018",
+      "imageforanswers" : false,
+      "imageforquestion" : false,
+      "lastused" : {
+        "class" : "93fa23ec3dcb43a9925a",
+        "date" : "02-18-2018",
+        "time" : "10:24:13"
+      },
+      "points" : 10,
+      "tags" : {
+        "2473fd35c39a499fa9997c51ab3e2496" : true
+      },
+      "timecreated" : "18:05:28"
+    },
+    "8d93j7s293nf83jd92j3" : {
+      "name" : "How my liters in a beaker?",
+      "datecreated" : "02-16-2018",
+      "imageforanswers" : false,
+      "imageforquestion" : false,
+      "lastused" : {
+        "class" : "93fa23ec3dcb43a9925a",
+        "date" : "02-18-2018",
+        "time" : "10:24:13"
+      },
+      "points" : 10,
+      "tags" : {
+        "2473fd35c39a499fa9997c51ab3e2496" : true
+      },
+      "timecreated" : "18:05:28"
+    }
+  },
+  "choices" : {
+    "5a2ec76bf4b843a79183" : {
+      "answers" : {
+        "a" : "200mL",
+        "b" : "300mL",
+        "c" : "40mL",
+        "d" : "500mL"
+      },
+      "correctanswer" : "a"
+    },
+    "8d93j7s293nf83jd92j3" : {
+      "answers" : {
+        "a" : "200mL",
+        "b" : "100mL",
+        "c" : "40mL",
+        "d" : "500mL"
+      },
+      "correctanswer" : "c"
+    }
+  },
+  "question-name" : {
+    "5a2ec76bf4b843a79183" : {
+      "name" : "If a physician prescribes 250mg qid for 10 days, how many mililiters of amoxicillin oral suspension containing 250mg/5mL should be dispensed?"
+    },
+    "8d93j7s293nf83jd92j3" : {
+      "name" : "How my liters in a beaker?"
+    }
+  },
+  "ingame-student-question-selection" : {
+    "a4174d0e545e4cd3af79" : {
+      "choice" : "A",
+      "question" : "00001",
+      "quiz" : "00001",
+      "student" : "e9ba98c57654426e87a6"
+    }
+  },
+  "quiz" : {
+    "96f8f44213334d4eb8ff" : {
+      "available" : true,
+      "courses" : {
+        "93fa23ec3dcb43a9925a" : true
+      },
+      "datecreated" : "02-16-2018",
+      "lastused" : {
+        "class" : "93fa23ec3dcb43a9925a",
+        "date" : "02-18-2018",
+        "time" : "10:24:13"
+      },
+      "points" : false,
+      "questions" : {
+        "5a2ec76bf4b843a79183" : true,
+        "8d93j7s293nf83jd92j3" : true
+      },
+      "tags" : {
+        "2473fd35c39a499fa9997c51ab3e2496" : true
+      },
+      "timecreated" : "18:05:28",
+      "title" : "Quiz #1",
+      "visible" : true
+    }
+  },
+  "student" : {
+    "e9ba98c57654426e87a6" : {
+      "courses" : {
+        "93fa23ec3dcb43a9925a" : true
+      },
+      "profilepic" : "gs://cusp-quiz-app.appspot.com/images/studentprofilepictures/CatStudentImage.jpg",
+      "username" : "lylenator2000"
+    }
+  },
+  "score" : {
+    "96f8f44213334d4eb8ff": true
+  },
+  "tag" : {
+    "2473fd35c39a499fa9997c51ab3e2496" : {
+      "color" : "blue",
+      "name" : "Biology",
+      "questions" : {
+        "5a2ec76bf4b843a79183" : true
+      }
+    },
+    "5918026cc79843679d2b" : {
+      "color" : "yellow",
+      "name" : "Nephrology",
+      "questions" : {
+        "5a2ec76bf4b843a79183" : true
+      }
+    },
+    "713540d93752493cae90" : {
+      "color" : "pink",
+      "name" : "Oncology",
+      "questions" : {
+        "5a2ec76bf4b843a79183" : true
+      }
+    },
+    "8y29834y9824g892984h2938h4" : {
+      "color" : "purple",
+      "name" : "Frivolous",
+      "questions" : {
+        "5a2ec76bf4b843a79183" : true
+      }
+    },
+    "c038a7dba6d74b8bbed0" : {
+      "color" : "green",
+      "name" : "Cardiology",
+      "questions" : {
+        "5a2ec76bf4b843a79183" : true
+      }
+    }
+  },
+  "users" : {
+    "2pqSH9EAE3M4dkGeOUC4lLcw9bi1" : {
+      "email" : "tom@tom.com"
+    }
+  }
+}
