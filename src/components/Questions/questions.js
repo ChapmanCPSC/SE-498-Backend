@@ -12,6 +12,7 @@ class QuestionsPage extends Component {
             searchQuestionName: "",
             newQuestionText : "",
             tags : {},
+            allQuestionNames : {},
             questionFilterResults: [],
             selectedQuestionData : undefined,
             tagForQuestionEdit : "",
@@ -55,13 +56,10 @@ class QuestionsPage extends Component {
         let stateToSet = [];
         for (let quesID in this.state.tags[this.state.currentlySelectedTag].questions) {
             if (this.state.tags[this.state.currentlySelectedTag].questions[quesID] === true) {
-                db.getQuestionWithID(quesID).on('value', (snapshot) => {
-                    let questionsVal = snapshot.val();
                     stateToSet.push( {
                         id : quesID,
-                        questionText : questionsVal.text
+                        questionText : this.state.allQuestionNames[quesID].name
                     });
-                });
             }
         }
         this.setState({
@@ -103,6 +101,12 @@ class QuestionsPage extends Component {
             this.setState({
                 tags : tagVal
             });
+        });
+        db.getAllQuestionNames().on('value', (snapshot) => {
+            let quesVal = snapshot.val();
+            this.setState({
+                allQuestionNames : quesVal
+            })
         });
 
 
@@ -165,26 +169,30 @@ class FilterQuestions extends Component {
                         <button>Search</button>
                     </form>
                 </div> */}
-                <div className="questionSelection">
-                    {/* TODO: Must maintain concurrency: I.e. if a question is deleted by another admin, need to make sure
-                        the currently selected question changed back to default, or alerts the user
-                    */}
-                    <form onSubmit={this.props.onQuestionSearchSubmit}>
-                        <select name="currentlySelectedQuestion" value={this.props.currentlySelectedQuestion} onChange={this.handleChange}>
-                            <option name="defaultQuestionOption"
-                                    value="defaultOption"
-                                    key="defaultOption">---Please Select a Question---</option>
-                            {this.props.questionFilterResults.map((item) => {
-                                return (
-                                    <option name="questionToSelectOption"
-                                            key={item.id}
-                                            value={item.id}>{item.questionText}</option>
-                                )
-                            })}
-                        </select>
-                        <button> Edit! </button>
-                    </form>
-                </div>
+                {this.props.questionFilterResults.length > 0 &&
+                    <div className="questionSelection">
+                        {/* TODO: Must maintain concurrency: I.e. if a question is deleted by another admin, need to make sure
+                            the currently selected question changed back to default, or alerts the user
+                        */}
+                        <form onSubmit={this.props.onQuestionSearchSubmit}>
+                            <select name="currentlySelectedQuestion" value={this.props.currentlySelectedQuestion}
+                                    onChange={this.handleChange}>
+                                <option name="defaultQuestionOption"
+                                        value="defaultOption"
+                                        key="defaultOption">---Please Select a Question---
+                                </option>
+                                {this.props.questionFilterResults.map((item) => {
+                                    return (
+                                        <option name="questionToSelectOption"
+                                                key={item.id}
+                                                value={item.id}>{item.questionText}</option>
+                                    )
+                                })}
+                            </select>
+                            <button> Edit!</button>
+                        </form>
+                    </div>
+                }
             </div>
         )
     }
@@ -265,7 +273,7 @@ class AddQuestion extends Component {
     }
 }
 
-class Answers extends Component {
+class Answers extends React.Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);

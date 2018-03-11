@@ -17,6 +17,14 @@ export function getQuestionWithID(ID) {
     return db.ref('question/' + ID)
 }
 
+export function getQuestionNamesWithID(ID) {
+    return db.ref('question-name/' + ID)
+}
+
+export function getAllQuestionNames() {
+    return db.ref('question-name')
+}
+
 export function getTagReference() {
     return db.ref('tag')
 }
