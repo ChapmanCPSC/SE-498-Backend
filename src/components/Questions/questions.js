@@ -196,7 +196,8 @@ class QuestionEdit extends Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleInStateChange = this.handleInStateChange.bind(this);
-        this.handleQuestionTextChange = this.handleQuestionTextChange.bind(this);
+        this.handleInStateChange = this.handleTextStateChange.bind(this);
+        this.submitQuestion = this.submitQuestion.bind(this);
     }
     reset() {
         this.setState(InitialQuestionEditState);
@@ -211,6 +212,7 @@ class QuestionEdit extends Component {
             db.getQuestionWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
                 this.setState({questionData : snapshot.val()});
                 console.log("2. FB 1!");
+                console.log(snapshot.val());
             });
             db.getQuestionAnswersWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
                 this.setState({answerData : snapshot.val()});
@@ -228,10 +230,10 @@ class QuestionEdit extends Component {
     handleChange(event) {
         this.props.handleChange(event)
     }
-    handleQuestionTextChange(event) {
+    handleTextStateChange(event, keyName) {
         this.setState({
             questionData: Object.assign({}, this.state.questionData, {
-                name: event.target.value,
+                 [keyName] : event.target.value,
             }),
         });
     }
@@ -241,17 +243,35 @@ class QuestionEdit extends Component {
     deleteAnswerChoice() {
 
     }
+
+    submitQuestion(event) {
+        event.preventDefault();
+        let updates = {};
+        updates['/question/' + this.props.selectedQuestionForEditing] = this.state.questionData;
+
+        updates['/question-name/' + this.props.selectedQuestionForEditing ] = {name: this.state.questionData.name};
+        updates['/choices/' + this.props.selectedQuestionForEditing] = this.state.answerData;
+        db.getFullDBReference().update(updates);
+    }
+
     render() {
         if(this.props.inEditMode && this.state.questionData !== undefined && this.state.answerData !== undefined) {
             return(
                 <div className="questionEditDiv">
-                    <form>
+                    <form onSubmit={this.submitQuestion}>
                         <h1> Edit </h1>
+                        <h4> Question Name: </h4>
                         <input type="text"
                                name="existingQuestionText"
                                value={this.state.questionData.name}
                                placeholder="Enter Question Text Here"
-                               onChange={this.handleQuestionTextChange} />
+                               onChange={(event) => this.handleTextStateChange(event, "name")}/>
+                        <h4> Points </h4>
+                        <input type="text"
+                               name="pointsRecievedOnCorrect"
+                               value={this.state.questionData.points}
+                               placeholder="Points gained on correct answer"
+                               onChange={(event) => this.handleTextStateChange(event, "points")}/>
                         {/*
                         <input type="text"
                                name="tagForQuestionEdit"
