@@ -336,11 +336,11 @@ class Answers extends React.Component {
         return(
             <div>
                 <h3> Answers </h3>
-                {Object.keys(this.props.answerData.answers).map((item) => {
+                {Object.keys(this.props.answerData.answers).map((answerID) => {
                     return (
                         <div>
                             <input type="text" name="answersInSelection"
-                                   value={this.props.answerData.answers[item]} onChange={this.handleChange}/>
+                                   value={this.props.answerData.answers[answerID]} onChange={this.handleChange}/>
                             <input type="checkbox" />
                             <button type="button" onClick={this.deleteAnswerChoice}> Delete </button>
                         </div>
