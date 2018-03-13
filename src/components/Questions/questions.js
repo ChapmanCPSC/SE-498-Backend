@@ -62,7 +62,7 @@ class QuestionsPage extends Component {
     handleGetQuestionsWithTag(event) {
         event.preventDefault();
         {/* Iterate through selected tag, find the questions that have that tag, then set the state? */}
-        this.state.currentlySelectedQuestion = "defaultOption";
+        this.setState({ currentlySelectedQuestion : "defaultOption"});
         let stateToSet = [];
         for (let quesID in this.state.tags[this.state.currentlySelectedTag].questions) {
             if (this.state.tags[this.state.currentlySelectedTag].questions[quesID] === true) {
