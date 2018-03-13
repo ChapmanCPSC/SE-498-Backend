@@ -39,7 +39,7 @@ jobs:
       - run: sudo npm install
       
       - run: sudo npm install -g firebase-tools
-      - run: unset CI
+      - run: process.env.CI = false
       - run: yarn build  
       - run:
           name: Deploy
