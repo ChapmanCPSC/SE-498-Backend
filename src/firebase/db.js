@@ -10,6 +10,10 @@ export const doCreateUser = (id, email) =>
 export const onceGetUsers = () =>
   db.ref('users').once('value');
 
+export function getFullDBReference() {
+    return db.ref()
+}
+
 export function getQuestionReference() {
     return db.ref('question')
 }

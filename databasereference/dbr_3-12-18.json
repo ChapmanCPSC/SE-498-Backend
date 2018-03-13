@@ -1,0 +1,199 @@
+{
+  "choices" : {
+    "5a2ec76bf4b843a79183" : {
+      "answers" : {
+        "c09a3cc630e44569a80e" : "200mL",
+        "750a4d404a4446f097af" : "300mL",
+        "704eda0fa0f349df8fcc" : "40mL",
+        "8c2dbef081894c609f9b" : "500mL"
+      },
+      "correctanswers" : {
+        "c09a3cc630e44569a80e": false,
+        "750a4d404a4446f097af" : false,
+        "704eda0fa0f349df8fcc" : true,
+        "8c2dbef081894c609f9b" : false
+      }
+    },
+    "8d93j7s293nf83jd92j3" : {
+      "answers" : {
+        "fff5b054be8e4bc7bd6b" : "4mL",
+        "c3810c734c3049e18963" : "8mL",
+        "adfc463bdc0a4ba29368" : "12mL",
+        "a50f25b0ab204110b529" : "15mL"
+      },
+      "correctanswers" : {
+        "fff5b054be8e4bc7bd6b" : false,
+        "c3810c734c3049e18963" : false,
+        "adfc463bdc0a4ba29368" : true,
+        "a50f25b0ab204110b529" : false
+      }
+    }
+  },
+  "course" : {
+    "93fa23ec3dcb43a9925a" : {
+      "coursecode" : "PHRM 577",
+      "faculty" : "d31b1d9547b0467aa443",
+      "quizzes" : {
+        "96f8f44213334d4eb8ff" : true
+      },
+      "students" : {
+        "e9ba98c57654426e87a6" : true
+      },
+      "title" : "Health Care Delivery I",
+      "yearrank" : "P1"
+    }
+  },
+  "faculty" : {
+    "d31b1d9547b0467aa443" : {
+      "courses" : {
+        "93fa23ec3dcb43a9925a" : true
+      },
+      "name" : "Jack London",
+      "questions" : {
+        "5a2ec76bf4b843a79183" : true
+      },
+      "quizzes" : {
+        "96f8f44213334d4eb8ff" : true
+      }
+    }
+  },
+  "game" : {
+    "670cac07d84b4d4abe63" : {
+      "datecreated" : "2018-15-2",
+      "gamepin" : "8419",
+      "quiz" : "96f8f44213334d4eb8ff",
+      "students" : {
+        "e9ba98c57654426e87a6" : true
+      },
+      "timecreated" : "12:58:02"
+    }
+  },
+  "ingame-student-question-selection" : {
+    "a4174d0e545e4cd3af79" : {
+      "choice" : "A",
+      "question" : "00001",
+      "quiz" : "00001",
+      "student" : "e9ba98c57654426e87a6"
+    }
+  },
+  "question" : {
+    "5a2ec76bf4b843a79183" : {
+      "datecreated" : "02-16-2018",
+      "imageforanswers" : false,
+      "imageforquestion" : false,
+      "lastused" : {
+        "class" : "93fa23ec3dcb43a9925a",
+        "date" : "02-18-2018",
+        "time" : "10:24:13"
+      },
+      "name" : "How many ML in a bag of soap?",
+      "points" : "100",
+      "tags" : {
+        "2473fd35c39a499fa9997c51ab3e2496" : true
+      },
+      "timecreated" : "18:05:28"
+    },
+    "8d93j7s293nf83jd92j3" : {
+      "datecreated" : "02-16-2018",
+      "imageforanswers" : false,
+      "imageforquestion" : false,
+      "lastused" : {
+        "class" : "93fa23ec3dcb43a9925a",
+        "date" : "02-18-2018",
+        "time" : "10:24:13"
+      },
+      "name" : "How my liters in a beaker?",
+      "points" : 10,
+      "tags" : {
+        "5918026cc79843679d2b" : true
+      },
+      "timecreated" : "18:05:28"
+    }
+  },
+  "question-name" : {
+    "5a2ec76bf4b843a79183" : {
+      "name" : "How many ML in a bag of soap?"
+    },
+    "8d93j7s293nf83jd92j3" : {
+      "name" : "How my liters in a beaker?"
+    }
+  },
+  "quiz" : {
+    "96f8f44213334d4eb8ff" : {
+      "available" : true,
+      "courses" : {
+        "93fa23ec3dcb43a9925a" : true
+      },
+      "datecreated" : "02-16-2018",
+      "lastused" : {
+        "class" : "93fa23ec3dcb43a9925a",
+        "date" : "02-18-2018",
+        "time" : "10:24:13"
+      },
+      "points" : false,
+      "questions" : {
+        "5a2ec76bf4b843a79183" : true,
+        "8d93j7s293nf83jd92j3" : true
+      },
+      "tags" : {
+        "2473fd35c39a499fa9997c51ab3e2496" : true
+      },
+      "timecreated" : "18:05:28",
+      "title" : "Quiz #1",
+      "visible" : true
+    }
+  },
+  "score" : {
+    "score1" : {
+      "points" : 20,
+      "quiz" : {
+        "96f8f44213334d4eb8ff" : true
+      },
+      "student" : {
+        "e9ba98c57654426e87a6" : true
+      }
+    }
+  },
+  "student" : {
+    "e9ba98c57654426e87a6" : {
+      "courses" : {
+        "93fa23ec3dcb43a9925a" : true
+      },
+      "profilepic" : "gs://cusp-quiz-app.appspot.com/images/studentprofilepictures/CatStudentImage.jpg",
+      "username" : "lylenator2000"
+    }
+  },
+  "tag" : {
+    "2473fd35c39a499fa9997c51ab3e2496" : {
+      "color" : "blue",
+      "name" : "Biology",
+      "questions" : {
+        "5a2ec76bf4b843a79183" : true
+      }
+    },
+    "5918026cc79843679d2b" : {
+      "color" : "yellow",
+      "name" : "Nephrology",
+      "questions" : {
+        "8d93j7s293nf83jd92j3" : true
+      }
+    },
+    "713540d93752493cae90" : {
+      "color" : "pink",
+      "name" : "Oncology"
+    },
+    "8y29834y9824g892984h2938h4" : {
+      "color" : "purple",
+      "name" : "Frivolous"
+    },
+    "c038a7dba6d74b8bbed0" : {
+      "color" : "green",
+      "name" : "Cardiology"
+    }
+  },
+  "users" : {
+    "2pqSH9EAE3M4dkGeOUC4lLcw9bi1" : {
+      "email" : "tom@tom.com"
+    }
+  }
+}
