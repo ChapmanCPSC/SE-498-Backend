@@ -32,6 +32,15 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-        
+    
       # run tests!
       - run: yarn test
+      
+      - run: sudo npm install
+      
+      - run: sudo npm install -g firebase-tools
+      - run: yarn build  
+      - run:
+          name: Deploy
+          command: firebase deploy --token=$FIREBASE_TOKEN --non-interactive
+    
