@@ -31,9 +31,19 @@ class QuestionsPage extends Component {
         {/* Need to be sure this works well with the filters */}
         event.preventDefault();
         const ref = db.getQuestionReference();
+
+        let currDate = new Date();
+
         let newAddition = ref.push();
         newAddition.set({
-            text: this.state.newQuestionText
+            name: this.state.newQuestionText,
+            datecreated: currDate.toISOString().split('T')[0],
+            imageforanswers : false,
+            imageforquestion : false,
+            lastused : null,
+            points : 100,
+            tags : null,
+            timecreated : currDate.toTimeString().split(' ')[0].split(':')
         });
         this.setState({currentlySelectedQuestion: newAddition.key})
     }
@@ -81,11 +91,11 @@ class QuestionsPage extends Component {
                     onSelectEditQuestionSubmit={this.handleGetQuestionForEditFormSubmit}
                     currentlySelectedQuestion={this.state.currentlySelectedQuestion}
                     questionFilterResults={this.state.questionFilterResults}/>
-
+                {/*
                 <AddQuestion
                     newQuestionText={this.state.newQuestionText}
                     onAddQuestionSubmit={this.state.handleAddQuestionSubmit}
-                    handleChange={this.handleChange}/>
+                    handleChange={this.handleChange}/> */}
                 {/* Here is the box for the editing of questions */}
                 <QuestionEdit
                     selectedQuestionForEditing={this.state.currentlySelectedQuestion}
@@ -198,6 +208,8 @@ class QuestionEdit extends Component {
         this.handleInStateChange = this.handleInStateChange.bind(this);
         this.handleInStateChange = this.handleTextStateChange.bind(this);
         this.submitQuestion = this.submitQuestion.bind(this);
+        this.handleChangeAnswerText = this.handleChangeAnswerText.bind(this);
+        this.handleChangeAnswerCorrectness = this.handleChangeAnswerCorrectness.bind(this);
     }
     reset() {
         this.setState(InitialQuestionEditState);
@@ -212,7 +224,6 @@ class QuestionEdit extends Component {
             db.getQuestionWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
                 this.setState({questionData : snapshot.val()});
                 console.log("2. FB 1!");
-                console.log(snapshot.val());
             });
             db.getQuestionAnswersWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
                 this.setState({answerData : snapshot.val()});
@@ -240,6 +251,29 @@ class QuestionEdit extends Component {
     handleInStateChange(event) {
         this.setState({[event.target.name]: event.target.value})
     }
+
+    handleChangeAnswerText(event, id) {
+        {/* This is REALLY inefficient and we need another way of doing this without nested assigns*/}
+        this.setState({
+            answerData: Object.assign({}, this.state.answerData, {
+                answers : Object.assign({}, this.state.answerData.answers, {
+                    [id] : event.target.value,
+                }),
+            }),
+        });
+    }
+
+    handleChangeAnswerCorrectness(event, id) {
+        {/* This is REALLY inefficient and we need another way of doing this without nested assigns*/}
+        this.setState({
+            answerData: Object.assign({}, this.state.answerData, {
+                correctanswers : Object.assign({}, this.state.answerData.correctanswers, {
+                    [id] : event.target.checked,
+                }),
+            }),
+        });
+    }
+
     deleteAnswerChoice() {
 
     }
@@ -280,7 +314,10 @@ class QuestionEdit extends Component {
 
                         <Answers
                         answerData ={this.state.answerData}
-                        handleChange = {this.handleInStateChange}/>
+                        handleChange = {this.handleInStateChange}
+                        handleChangeAnswerText = {this.handleChangeAnswerText}
+                        handleChangeAnswerCorrectness = {this.handleChangeAnswerCorrectness} />
+
                         <button>Submit Changes!</button>
                     </form>
                 </div>
@@ -302,7 +339,7 @@ class AddQuestion extends Component {
     render() {
         return (
             <div className="addNewQuestion">
-                {/* <form onSubmit={this.props.onAddQuestionSubmit}>
+                <form onSubmit={this.props.onAddQuestionSubmit}>
                     <input type="text"
                            name="newQuestionText"
                            placeholder="Please enter your question"
@@ -310,7 +347,7 @@ class AddQuestion extends Component {
                            onChange={this.handleChange}
                     />
                     <button>Add Question</button>
-                </form> */}
+                </form>
             </div>
         )
     }
@@ -320,9 +357,18 @@ class Answers extends React.Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
+        this.handleAnswerTextChange = this.handleAnswerTextChange.bind(this);
     }
     handleChange(event) {
         this.props.handleChange(event)
+    }
+
+    handleAnswerTextChange(event, id) {
+        this.props.handleChangeAnswerText(event, id);
+    }
+
+    handleAnswerCorrectOrNot(event, id) {
+        this.props.handleChangeAnswerCorrectness(event, id);
     }
 
     deleteAnswerChoice() {
@@ -338,10 +384,10 @@ class Answers extends React.Component {
                 <h3> Answers </h3>
                 {Object.keys(this.props.answerData.answers).map((answerID) => {
                     return (
-                        <div>
+                        <div key={answerID}>
                             <input type="text" name="answersInSelection"
-                                   value={this.props.answerData.answers[answerID]} onChange={this.handleChange}/>
-                            <input type="checkbox" />
+                                   value={this.props.answerData.answers[answerID]} onChange={(event) => this.handleAnswerTextChange(event, answerID)}/>
+                            <input type="checkbox" checked={this.props.answerData.correctanswers[answerID]} onChange={(event) => this.handleAnswerCorrectOrNot(event, answerID)}/>
                             <button type="button" onClick={this.deleteAnswerChoice}> Delete </button>
                         </div>
                     )
