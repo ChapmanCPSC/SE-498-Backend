@@ -26,7 +26,6 @@ const NavigationNonAuth = () =>
   <div>
       <div class = "topnav">
           <Link to={routes.LANDING}>Landing</Link>
-          <Link to={routes.SIGN_IN}>Sign In</Link>
       </div>
   </div>
 
