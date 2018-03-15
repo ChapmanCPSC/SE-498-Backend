@@ -14,13 +14,14 @@ const Navigation = ({ authUser }) =>
   </div>
 
 const NavigationAuth = () =>
-  <ul>
-    <li><Link to={routes.LANDING}>Landing</Link></li>
-    <li><Link to={routes.HOME}>Home</Link></li>
-    <li><Link to={routes.ACCOUNT}>Account</Link></li>
-    <li><SignOutButton /></li>
-  </ul>
-
+  <div>
+    <div class = "topnav">
+      <Link to={routes.LANDING}>Landing</Link>
+      <Link to={routes.HOME}>Home</Link>
+      <Link to={routes.ACCOUNT}>Account</Link>
+      <SignOutButton />
+    </div>
+  </div>
 const NavigationNonAuth = () =>
   <div>
       <div class = "topnav">
