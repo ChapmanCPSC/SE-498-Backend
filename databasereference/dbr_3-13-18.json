@@ -1,0 +1,304 @@
+{
+  "choices" : {
+    "5a2ec76bf4b843a79183" : {
+      "answers" : {
+        "704eda0fa0f349df8fcc" : "Sure",
+        "750a4d404a4446f097af" : "Kinda?",
+        "8c2dbef081894c609f9b" : "Not Really",
+        "c09a3cc630e44569a80e" : "No!!"
+      },
+      "correctanswers" : {
+        "704eda0fa0f349df8fcc" : false,
+        "750a4d404a4446f097af" : true,
+        "8c2dbef081894c609f9b" : false,
+        "c09a3cc630e44569a80e" : true
+      }
+    },
+    "8d93j7s293nf83jd92j3" : {
+      "answers" : {
+        "a50f25b0ab204110b529" : "100 m",
+        "adfc463bdc0a4ba29368" : "120 m",
+        "c3810c734c3049e18963" : "300 m",
+        "fff5b054be8e4bc7bd6b" : "0 m"
+      },
+      "correctanswers" : {
+        "a50f25b0ab204110b529" : true,
+        "adfc463bdc0a4ba29368" : false,
+        "c3810c734c3049e18963" : false,
+        "fff5b054be8e4bc7bd6b" : false
+      }
+    },
+    "894g73hg9sghh289483h8" : {
+      "answers" : {
+        "b2ff476786d14e2cb81d" : "A skyscraper",
+        "0b93fbbd649d473f8df4" : "Clown Town",
+        "3c1f63d01428421f9bd1" : "Burger Restaurant",
+        "1bc167387e784ecb9fb3" : "A street"
+      },
+      "correctanswers" : {
+        "b2ff476786d14e2cb81d" : true,
+        "0b93fbbd649d473f8df4" : false,
+        "3c1f63d01428421f9bd1" : false,
+        "1bc167387e784ecb9fb3" : false
+      }
+    },
+    "d83j59d642c938g928f8" : {
+      "answers" : {
+        "2ae62c7b0d194cef9372" : "gs://cusp-quiz-app.appspot.com/images/answerimages/dogclipart.png",
+        "afd768a046654ce38723" : "gs://cusp-quiz-app.appspot.com/images/answerimages/catclipart.jpg",
+        "3cf740d9db374a79a964" : "gs://cusp-quiz-app.appspot.com/images/answerimages/treeclipart.jpg",
+        "cb3e9d69838044b1a5fd" : "gs://cusp-quiz-app.appspot.com/images/answerimages/benchclipart.png"
+      },
+      "correctanswers" : {
+        "2ae62c7b0d194cef9372" : true,
+        "afd768a046654ce38723" : true,
+        "3cf740d9db374a79a964" : false,
+        "cb3e9d69838044b1a5fd" : false
+      }
+    }
+
+  },
+  "course" : {
+    "93fa23ec3dcb43a9925a" : {
+      "coursecode" : "PHRM 577",
+      "faculty" : "d31b1d9547b0467aa443",
+      "quizzes" : {
+        "96f8f44213334d4eb8ff" : true
+      },
+      "students" : {
+        "e9ba98c57654426e87a6" : true
+      },
+      "title" : "Health Care Delivery I",
+      "yearrank" : "P1"
+    }
+  },
+  "faculty" : {
+    "d31b1d9547b0467aa443" : {
+      "courses" : [ "93fa23ec3dcb43a9925a" ],
+      "name" : "Jack London",
+      "questions" : {
+        "5a2ec76bf4b843a79183" : true
+      },
+      "quizzes" : {
+        "96f8f44213334d4eb8ff" : true
+      }
+    }
+  },
+  "game" : {
+    "670cac07d84b4d4abe63" : {
+      "datecreated" : "2018-15-2",
+      "gamepin" : "8419",
+      "quiz" : "96f8f44213334d4eb8ff",
+      "students" : {
+        "e9ba98c57654426e87a6" : true
+      },
+      "timecreated" : "12:58:02"
+    }
+  },
+  "ingame-student-question-selection" : {
+    "a4174d0e545e4cd3af79" : {
+      "choice" : "A",
+      "question" : "00001",
+      "quiz" : "00001",
+      "student" : "e9ba98c57654426e87a6"
+    }
+  },
+  "question" : {
+    "5a2ec76bf4b843a79183" : {
+      "datecreated" : "02-16-2018",
+      "imageforanswers" : false,
+      "imageforquestion" : false,
+      "lastused" : {
+        "class" : "93fa23ec3dcb43a9925a",
+        "date" : "02-18-2018",
+        "time" : "10:24:13"
+      },
+      "name" : "Can you read this?",
+      "points" : "200",
+      "tags" : {
+        "2473fd35c39a499fa9997c51ab3e2496" : true
+      },
+      "timecreated" : "18:05:28"
+    },
+    "8d93j7s293nf83jd92j3" : {
+      "datecreated" : "02-16-2018",
+      "imageforanswers" : false,
+      "imageforquestion" : false,
+      "lastused" : {
+        "class" : "93fa23ec3dcb43a9925a",
+        "date" : "02-18-2018",
+        "time" : "10:24:13"
+      },
+      "name" : "How far is it to get to Los Angeles?",
+      "points" : "20",
+      "tags" : {
+        "5918026cc79843679d2b" : true
+      },
+      "timecreated" : "18:05:28"
+    },
+    "894g73hg9sghh289483h8" : {
+      "datecreated" : "03-13-2018",
+      "imageforanswers" : false,
+      "imageforquestion" : true,
+      "questionimage" : "gs://cusp-quiz-app.appspot.com/images/questionimages/Banner.png",
+      "lastused" : {
+        "class" : "93fa23ec3dcb43a9925a",
+        "date" : "03-13-2018",
+        "time" : "10:30:13"
+      },
+      "name" : "What is featured in this image?",
+      "points" : "20",
+      "tags" : {
+        "8y29834y9824g892984h2938h4" : true
+      },
+      "timecreated" : "13:05:28"
+    },
+    "d83j59d642c938g928f8" : {
+      "datecreated" : "03-13-2018",
+      "imageforanswers" : true,
+      "imageforquestion" : false,
+      "lastused" : {
+        "class" : "93fa23ec3dcb43a9925a",
+        "date" : "03-13-2018",
+        "time" : "10:30:13"
+      },
+      "name" : "Pick the images which are pets?",
+      "points" : "20",
+      "tags" : {
+        "c038a7dba6d74b8bbed0" : true
+      },
+      "timecreated" : "12:05:28"
+    }
+  },
+  "question-name" : {
+    "5a2ec76bf4b843a79183" : {
+      "name" : "Can you read this?"
+    },
+    "8d93j7s293nf83jd92j3" : {
+      "name" : "How far is it to get to Los Angeles?"
+    },
+    "894g73hg9sghh289483h8" : {
+      "name" : "What is featured in this image?"
+    },
+    "d83j59d642c938g928f8" : {
+      "name" : "Pick the images which are pets?"
+    }
+  },
+  "quiz" : {
+    "96f8f44213334d4eb8ff" : {
+      "available" : true,
+      "courses" : {
+        "93fa23ec3dcb43a9925a" : true
+      },
+      "datecreated" : "02-16-2018",
+      "lastused" : {
+        "class" : "93fa23ec3dcb43a9925a",
+        "date" : "02-18-2018",
+        "time" : "10:24:13"
+      },
+      "points" : false,
+      "questions" : {
+        "5a2ec76bf4b843a79183" : true,
+        "8d93j7s293nf83jd92j3" : true,
+        "894g73hg9sghh289483h8" : true,
+        "d83j59d642c938g928f8" : true
+
+      },
+      "tags" : {
+        "2473fd35c39a499fa9997c51ab3e2496" : true
+      },
+      "timecreated" : "18:05:28",
+      "title" : "Quiz #1",
+      "visible" : true
+    }
+  },
+  "score" : {
+    "3c7vb478n5dv45svf77n98uh76t" : {
+      "points" : 20,
+      "quiz" : {
+        "96f8f44213334d4eb8ff" : true
+      },
+      "student" : {
+        "e9ba98c57654426e87a6" : true
+      }
+    },
+    "84y1jn1n12n8n0f80n180289398n1" : {
+      "points" : 50,
+      "quiz" : {
+        "96f8f44213334d4eb8ff" : true
+      },
+      "student" : {
+        "b29fks9mf9gh37fhh1h9814" : true
+      }
+    }
+  },
+  "leaderboard" : {
+    "e9ba98c57654426e87a6" : true,
+    "b29fks9mf9gh37fhh1h9814" : true
+  },
+  "student" : {
+    "e9ba98c57654426e87a6" : {
+      "courses" : {
+        "93fa23ec3dcb43a9925a" : true
+      },
+      "profilepic" : "gs://cusp-quiz-app.appspot.com/images/studentprofilepictures/CatStudentImage.jpg",
+      "username" : "lylenator2000",
+      "password" : "notsureifweshouldhavepasswordstoredhere",
+      "scores" : {
+        "3c7vb478n5dv45svf77n98uh76t" : true
+      }
+    },
+    "b29fks9mf9gh37fhh1h9814" : {
+      "courses" : {
+        "93fa23ec3dcb43a9925a" : true
+      },
+      "username" : "tacobellfan292",
+      "password" : "notsureifweshouldhavepasswordstoredhere",
+      "scores" : {
+        "84y1jn1n12n8n0f80n180289398n1" : true
+      }
+    }
+  },
+  "tag" : {
+    "2473fd35c39a499fa9997c51ab3e2496" : {
+      "color" : "blue",
+      "name" : "Biology",
+      "questions" : {
+        "5a2ec76bf4b843a79183" : true
+      },
+      "quizzes" : {
+        "96f8f44213334d4eb8ff" : true
+      }
+    },
+    "5918026cc79843679d2b" : {
+      "color" : "yellow",
+      "name" : "Nephrology",
+      "questions" : {
+        "8d93j7s293nf83jd92j3" : true
+      }
+    },
+    "713540d93752493cae90" : {
+      "color" : "pink",
+      "name" : "Oncology"
+    },
+    "8y29834y9824g892984h2938h4" : {
+      "color" : "purple",
+      "name" : "Frivolous",
+      "questions" : {
+        "894g73hg9sghh289483h8" : true
+      }
+    },
+    "c038a7dba6d74b8bbed0" : {
+      "color" : "green",
+      "name" : "Cardiology",
+      "questions" : {
+        "d83j59d642c938g928f8" : true
+      }
+    }
+  },
+  "users" : {
+    "2pqSH9EAE3M4dkGeOUC4lLcw9bi1" : {
+      "email" : "tom@tom.com"
+    }
+  }
+}

@@ -31,20 +31,27 @@ class QuestionsPage extends Component {
         {/* Need to be sure this works well with the filters */}
         event.preventDefault();
         const ref = db.getQuestionReference();
+
+        let currDate = new Date();
+
         let newAddition = ref.push();
         newAddition.set({
-            text: this.state.newQuestionText
+            name: this.state.newQuestionText,
+            datecreated: currDate.toISOString().split('T')[0],
+            imageforanswers : false,
+            imageforquestion : false,
+            lastused : null,
+            points : 100,
+            tags : null,
+            timecreated : currDate.toTimeString().split(' ')[0].split(':')
         });
         this.setState({currentlySelectedQuestion: newAddition.key})
     }
     handleGetQuestionForEditFormSubmit(event) {
         event.preventDefault();
-        db.getQuestionWithID(this.state.currentlySelectedQuestion).once('value', (snapshot) => {
-            this.setState({selectedQuestionData : snapshot.val()});
-        });
-        db.getQuestionAnswersWithID(this.state.currentlySelectedQuestion).once('value', (snapshot) => {
-            this.setState({selectedQuestionAnswerData : snapshot.val()});
-        });
+        if(this.state.currentlySelectedQuestion !== "defaultOption") {
+            this.setState({inEditMode: true})
+        }
 
     }
 
@@ -55,7 +62,7 @@ class QuestionsPage extends Component {
     handleGetQuestionsWithTag(event) {
         event.preventDefault();
         {/* Iterate through selected tag, find the questions that have that tag, then set the state? */}
-        this.state.currentlySelectedQuestion = "defaultOption";
+        this.setState({ currentlySelectedQuestion : "defaultOption"});
         let stateToSet = [];
         for (let quesID in this.state.tags[this.state.currentlySelectedTag].questions) {
             if (this.state.tags[this.state.currentlySelectedTag].questions[quesID] === true) {
@@ -84,11 +91,11 @@ class QuestionsPage extends Component {
                     onSelectEditQuestionSubmit={this.handleGetQuestionForEditFormSubmit}
                     currentlySelectedQuestion={this.state.currentlySelectedQuestion}
                     questionFilterResults={this.state.questionFilterResults}/>
-
+                {/*
                 <AddQuestion
                     newQuestionText={this.state.newQuestionText}
                     onAddQuestionSubmit={this.state.handleAddQuestionSubmit}
-                    handleChange={this.handleChange}/>
+                    handleChange={this.handleChange}/> */}
                 {/* Here is the box for the editing of questions */}
                 <QuestionEdit
                     selectedQuestionForEditing={this.state.currentlySelectedQuestion}
@@ -185,51 +192,132 @@ class FilterQuestions extends Component {
     }
 }
 
+
+const InitialQuestionEditState = {
+    questionData : undefined,
+    answerData : undefined
+};
+
 class QuestionEdit extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            selectedQuestionData : undefined,
-            selectedQuestionAnswerData : undefined
-        };
+        {/* Actual state is listed above in the constant var called InitialQuestionEditState*/}
+        this.state = InitialQuestionEditState;
+
         this.handleChange = this.handleChange.bind(this);
+        this.handleInStateChange = this.handleInStateChange.bind(this);
+        this.handleInStateChange = this.handleTextStateChange.bind(this);
+        this.submitQuestion = this.submitQuestion.bind(this);
+        this.handleChangeAnswerText = this.handleChangeAnswerText.bind(this);
+        this.handleChangeAnswerCorrectness = this.handleChangeAnswerCorrectness.bind(this);
+    }
+    reset() {
+        this.setState(InitialQuestionEditState);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (!this.props.inEditMode && nextProps.inEditMode) {
+            {/* 1. If you are not in edit mode, but have requested to go into edit mode */}
+            {/* Grab the data listed in Firebase so the user can edit! */}
+            {/* Data Should be copied into a local structure */}
+            console.log("1. We are beginning");
+            db.getQuestionWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
+                this.setState({questionData : snapshot.val()});
+                console.log("2. FB 1!");
+            });
+            db.getQuestionAnswersWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
+                this.setState({answerData : snapshot.val()});
+                console.log("3. FB 2!");
+            });
+            console.log("4. We are done with Firebase!");
+        }
+        else if (this.props.inEditMode && !nextProps.inEditMode) {
+            {/* 2. If you are in edit mode, but have requested to switch out back to filtering and selecting questions */}
+            {/* Reset your state back to nothing! So clear everything you've done so far*/}
+            this.reset();
+        }
     }
 
     handleChange(event) {
         this.props.handleChange(event)
     }
+    handleTextStateChange(event, keyName) {
+        this.setState({
+            questionData: Object.assign({}, this.state.questionData, {
+                 [keyName] : event.target.value,
+            }),
+        });
+    }
+    handleInStateChange(event) {
+        this.setState({[event.target.name]: event.target.value})
+    }
+
+    handleChangeAnswerText(event, id) {
+        {/* This is REALLY inefficient and we need another way of doing this without nested assigns*/}
+        this.setState({
+            answerData: Object.assign({}, this.state.answerData, {
+                answers : Object.assign({}, this.state.answerData.answers, {
+                    [id] : event.target.value,
+                }),
+            }),
+        });
+    }
+
+    handleChangeAnswerCorrectness(event, id) {
+        {/* This is REALLY inefficient and we need another way of doing this without nested assigns*/}
+        this.setState({
+            answerData: Object.assign({}, this.state.answerData, {
+                correctanswers : Object.assign({}, this.state.answerData.correctanswers, {
+                    [id] : event.target.checked,
+                }),
+            }),
+        });
+    }
+
     deleteAnswerChoice() {
 
     }
+
+    submitQuestion(event) {
+        event.preventDefault();
+        let updates = {};
+        updates['/question/' + this.props.selectedQuestionForEditing] = this.state.questionData;
+
+        updates['/question-name/' + this.props.selectedQuestionForEditing ] = {name: this.state.questionData.name};
+        updates['/choices/' + this.props.selectedQuestionForEditing] = this.state.answerData;
+        db.getFullDBReference().update(updates);
+    }
+
     render() {
-        if(this.props.inEditMode == true) {
+        if(this.props.inEditMode && this.state.questionData !== undefined && this.state.answerData !== undefined) {
             return(
                 <div className="questionEditDiv">
-                    <form>
+                    <form onSubmit={this.submitQuestion}>
                         <h1> Edit </h1>
+                        <h4> Question Name: </h4>
                         <input type="text"
                                name="existingQuestionText"
-                               value={this.props.selectedQuestionData.text}
+                               value={this.state.questionData.name}
                                placeholder="Enter Question Text Here"
-                               onChange={this.handleChange} />
+                               onChange={(event) => this.handleTextStateChange(event, "name")}/>
+                        <h4> Points </h4>
+                        <input type="text"
+                               name="pointsRecievedOnCorrect"
+                               value={this.state.questionData.points}
+                               placeholder="Points gained on correct answer"
+                               onChange={(event) => this.handleTextStateChange(event, "points")}/>
+                        {/*
                         <input type="text"
                                name="tagForQuestionEdit"
                                placeholder="Enter Tag Here"
-                               value={this.props.tagForQuestionEdit} onChange={this.handleChange} />
-                        <div>
-                            <h3> Answers </h3>
-                            {Object.keys(this.props.selectedQuestionAnswerData.answers).map((item) => {
-                                return (
-                                    <div>
-                                        <input type="text" name="answersInSelection"
-                                               value={this.props.selectedQuestionAnswerData.answers[item]} onChange={this.handleChange}/>
-                                        <input type="checkbox" />
-                                        <button type="button" onClick={this.deleteAnswerChoice}> Delete </button>
-                                    </div>
-                                )
-                            })}
-                            <button type ="button"> Add New Answer Choice </button>
-                        </div>
+                               value={this.state.questionData.tags.} onChange={this.handleChange} /> */}
+
+                        <Answers
+                        answerData ={this.state.answerData}
+                        handleChange = {this.handleInStateChange}
+                        handleChangeAnswerText = {this.handleChangeAnswerText}
+                        handleChangeAnswerCorrectness = {this.handleChangeAnswerCorrectness} />
+
                         <button>Submit Changes!</button>
                     </form>
                 </div>
@@ -269,9 +357,18 @@ class Answers extends React.Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
+        this.handleAnswerTextChange = this.handleAnswerTextChange.bind(this);
     }
     handleChange(event) {
         this.props.handleChange(event)
+    }
+
+    handleAnswerTextChange(event, id) {
+        this.props.handleChangeAnswerText(event, id);
+    }
+
+    handleAnswerCorrectOrNot(event, id) {
+        this.props.handleChangeAnswerCorrectness(event, id);
     }
 
     deleteAnswerChoice() {
@@ -282,7 +379,22 @@ class Answers extends React.Component {
     }
 
     render() {
-        return null;
+        return(
+            <div>
+                <h3> Answers </h3>
+                {Object.keys(this.props.answerData.answers).map((answerID) => {
+                    return (
+                        <div key={answerID}>
+                            <input type="text" name="answersInSelection"
+                                   value={this.props.answerData.answers[answerID]} onChange={(event) => this.handleAnswerTextChange(event, answerID)}/>
+                            <input type="checkbox" checked={this.props.answerData.correctanswers[answerID]} onChange={(event) => this.handleAnswerCorrectOrNot(event, answerID)}/>
+                            <button type="button" onClick={this.deleteAnswerChoice}> Delete </button>
+                        </div>
+                    )
+                })}
+                <button type ="button"> Add New Answer Choice </button>
+            </div>
+        )
     }
 }
 
