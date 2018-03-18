@@ -22,6 +22,7 @@ class QuestionsPage extends Component {
         this.handleSearchForQuestion = this.handleSearchForQuestion.bind(this);
         this.handleGetQuestionsWithTag = this.handleGetQuestionsWithTag.bind(this);
         this.handleGetQuestionForEditFormSubmit = this.handleGetQuestionForEditFormSubmit.bind(this);
+        this.handleExitEditMode = this.handleExitEditMode.bind(this);
     }
 
     handleChange(event) {
@@ -47,16 +48,22 @@ class QuestionsPage extends Component {
         });
         this.setState({currentlySelectedQuestion: newAddition.key})
     }
+
     handleGetQuestionForEditFormSubmit(event) {
         event.preventDefault();
         if(this.state.currentlySelectedQuestion !== "defaultOption") {
-            this.setState({inEditMode: true})
+            this.setState({inEditMode: true});
         }
 
     }
 
     handleSearchForQuestion(event) {
         event.preventDefault();
+    }
+
+    handleExitEditMode(event) {
+        event.preventDefault();
+        this.setState({inEditMode: false})
     }
 
     handleGetQuestionsWithTag(event) {
@@ -90,7 +97,8 @@ class QuestionsPage extends Component {
                     onTagSearchSubmit={this.handleGetQuestionsWithTag}
                     onSelectEditQuestionSubmit={this.handleGetQuestionForEditFormSubmit}
                     currentlySelectedQuestion={this.state.currentlySelectedQuestion}
-                    questionFilterResults={this.state.questionFilterResults}/>
+                    questionFilterResults={this.state.questionFilterResults}
+                    inEditMode={this.state.inEditMode}/>
                 {/*
                 <AddQuestion
                     newQuestionText={this.state.newQuestionText}
@@ -100,7 +108,8 @@ class QuestionsPage extends Component {
                 <QuestionEdit
                     selectedQuestionForEditing={this.state.currentlySelectedQuestion}
                     inEditMode={this.state.inEditMode}
-                    handleChange={this.handleChange}/>
+                    handleChange={this.handleChange}
+                    handleExitEditMode={this.handleExitEditMode}/>
                 {/* {this.state.currentlySelectedQuestion !== 'defaultOption' && this.renderEditForm()} */}
             </div>
         )
@@ -137,7 +146,7 @@ class FilterQuestions extends Component {
             <div>
                 <div className="questionTagSearch">
                     <form onSubmit={this.props.onTagSearchSubmit}>
-                        <select name="currentlySelectedTag" value={this.props.currentlySelectedTag} onChange={this.handleChange}>
+                        <select name="currentlySelectedTag" value={this.props.currentlySelectedTag} onChange={this.handleChange} disabled={this.props.inEditMode}>
                             <option name="defaultTagOption"
                                     value="defaultOption"
                                     key="defaultOption">---Select a Tag!---</option>
@@ -148,7 +157,7 @@ class FilterQuestions extends Component {
                                 )
                             })}
                         </select>
-                        <button>Search For Questions With Tag </button>
+                        <button disabled={this.props.inEditMode}>Search For Questions With Tag </button>
                     </form>
                 </div>
                 {/* Here is a box for searching for a question in the database by tag
@@ -170,7 +179,7 @@ class FilterQuestions extends Component {
                         */}
                         <form onSubmit={this.props.onSelectEditQuestionSubmit}>
                             <select name="currentlySelectedQuestion" value={this.props.currentlySelectedQuestion}
-                                    onChange={this.handleChange}>
+                                    onChange={this.handleChange} disabled={this.props.inEditMode}>
                                 <option name="defaultQuestionOption"
                                         value="defaultOption"
                                         key="defaultOption">---Please Select a Question---
@@ -183,7 +192,7 @@ class FilterQuestions extends Component {
                                     )
                                 })}
                             </select>
-                            <button> Edit!</button>
+                            <button disabled={this.props.inEditMode}> Edit!</button>
                         </form>
                     </div>
                 }
@@ -210,6 +219,7 @@ class QuestionEdit extends Component {
         this.submitQuestion = this.submitQuestion.bind(this);
         this.handleChangeAnswerText = this.handleChangeAnswerText.bind(this);
         this.handleChangeAnswerCorrectness = this.handleChangeAnswerCorrectness.bind(this);
+        this.handleExitEditMode = this.handleExitEditMode.bind(this);
     }
     reset() {
         this.setState(InitialQuestionEditState);
@@ -248,6 +258,11 @@ class QuestionEdit extends Component {
             }),
         });
     }
+
+    handleExitEditMode(event) {
+        this.props.handleExitEditMode(event);
+    }
+
     handleInStateChange(event) {
         this.setState({[event.target.name]: event.target.value})
     }
@@ -294,6 +309,7 @@ class QuestionEdit extends Component {
                 <div className="questionEditDiv">
                     <form onSubmit={this.submitQuestion}>
                         <h1> Edit </h1>
+                        <button type="button" onClick={this.handleExitEditMode}> Go Back To Question Select </button>
                         <h4> Question Name: </h4>
                         <input type="text"
                                name="existingQuestionText"
