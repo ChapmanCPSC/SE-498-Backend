@@ -306,19 +306,13 @@ class QuestionEdit extends Component {
         this.setState({
             answerData: Object.assign({}, this.state.answerData, {
                 answers : Object.assign({}, this.state.answerData.answers, {
-                    [id] : false,
+                    [id] : "",
                 }),
-            }),
-        });
-        this.setState({
-            answerData: Object.assign({}, this.state.answerData, {
                 correctanswers : Object.assign({}, this.state.answerData.correctanswers, {
                     [id] : false,
                 }),
             }),
-        })
-
-
+        });
     }
 
     submitQuestion(event) {
@@ -433,7 +427,7 @@ class Answers extends React.Component {
                 {Object.keys(this.props.answerData.answers).map((answerID) => {
                     return (
                         <div key={answerID}>
-                            <input type="text" name="answersInSelection"
+                            <input type="text" name="answersInSelection" placeholder="Enter Answer Text Here"
                                    value={this.props.answerData.answers[answerID]} onChange={(event) => this.handleAnswerTextChange(event, answerID)}/>
                             <input type="checkbox" checked={this.props.answerData.correctanswers[answerID]} onChange={(event) => this.handleAnswerCorrectOrNot(event, answerID)}/>
                             <button type="button" onClick={(event) => this.deleteAnswerChoice(event, answerID)}> Delete </button>
