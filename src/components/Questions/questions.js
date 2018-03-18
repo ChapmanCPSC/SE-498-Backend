@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import * as routes from '../../constants/routes';
 import { firebase } from '../../firebase';
 import { db } from '../../firebase';
+import * as utils from '../../utilities/utils.js'
 
 class QuestionsPage extends Component {
     constructor (props) {
@@ -220,6 +221,8 @@ class QuestionEdit extends Component {
         this.handleChangeAnswerText = this.handleChangeAnswerText.bind(this);
         this.handleChangeAnswerCorrectness = this.handleChangeAnswerCorrectness.bind(this);
         this.handleExitEditMode = this.handleExitEditMode.bind(this);
+        this.addAnswerChoice = this.addAnswerChoice.bind(this);
+        this.deleteAnswerChoice = this.deleteAnswerChoice.bind(this);
     }
     reset() {
         this.setState(InitialQuestionEditState);
@@ -289,7 +292,32 @@ class QuestionEdit extends Component {
         });
     }
 
-    deleteAnswerChoice() {
+    deleteAnswerChoice(event, id) {
+        const removedKeyStateCopy = Object.assign({}, this.state);
+        delete removedKeyStateCopy.answerData.answers[id];
+        delete removedKeyStateCopy.answerData.correctanswers[id];
+        this.setState({removedKeyStateCopy});
+
+    }
+
+    addAnswerChoice(event) {
+        let id = utils.generateAnswerID();
+        {/* This is REALLY inefficient and we need another way of doing this without nested assigns*/}
+        this.setState({
+            answerData: Object.assign({}, this.state.answerData, {
+                answers : Object.assign({}, this.state.answerData.answers, {
+                    [id] : false,
+                }),
+            }),
+        });
+        this.setState({
+            answerData: Object.assign({}, this.state.answerData, {
+                correctanswers : Object.assign({}, this.state.answerData.correctanswers, {
+                    [id] : false,
+                }),
+            }),
+        })
+
 
     }
 
@@ -332,7 +360,9 @@ class QuestionEdit extends Component {
                         answerData ={this.state.answerData}
                         handleChange = {this.handleInStateChange}
                         handleChangeAnswerText = {this.handleChangeAnswerText}
-                        handleChangeAnswerCorrectness = {this.handleChangeAnswerCorrectness} />
+                        handleChangeAnswerCorrectness = {this.handleChangeAnswerCorrectness}
+                        deleteAnswerChoice = {this.deleteAnswerChoice}
+                        addAnswerChoice = {this.addAnswerChoice}/>
 
                         <button>Submit Changes!</button>
                     </form>
@@ -374,6 +404,8 @@ class Answers extends React.Component {
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.handleAnswerTextChange = this.handleAnswerTextChange.bind(this);
+        this.addNewAnswerChoice = this.addNewAnswerChoice.bind(this);
+        this.deleteAnswerChoice = this.deleteAnswerChoice.bind(this);
     }
     handleChange(event) {
         this.props.handleChange(event)
@@ -387,11 +419,11 @@ class Answers extends React.Component {
         this.props.handleChangeAnswerCorrectness(event, id);
     }
 
-    deleteAnswerChoice() {
-
+    deleteAnswerChoice(event, id) {
+        this.props.deleteAnswerChoice(event, id);
     }
-    addNewAnswerChoice() {
-
+    addNewAnswerChoice(event) {
+        this.props.addAnswerChoice(event);
     }
 
     render() {
@@ -404,11 +436,11 @@ class Answers extends React.Component {
                             <input type="text" name="answersInSelection"
                                    value={this.props.answerData.answers[answerID]} onChange={(event) => this.handleAnswerTextChange(event, answerID)}/>
                             <input type="checkbox" checked={this.props.answerData.correctanswers[answerID]} onChange={(event) => this.handleAnswerCorrectOrNot(event, answerID)}/>
-                            <button type="button" onClick={this.deleteAnswerChoice}> Delete </button>
+                            <button type="button" onClick={(event) => this.deleteAnswerChoice(event, answerID)}> Delete </button>
                         </div>
                     )
                 })}
-                <button type ="button"> Add New Answer Choice </button>
+                <button type ="button" onClick={this.addNewAnswerChoice}> Add New Answer Choice </button>
             </div>
         )
     }
