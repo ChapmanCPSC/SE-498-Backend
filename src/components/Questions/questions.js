@@ -293,15 +293,15 @@ class QuestionEdit extends Component {
     }
 
     deleteAnswerChoice(event, id) {
-        const removedKeyStateCopy = Object.assign({}, this.state);
+        {/* THIS DELETION METHOD MAKES MANY NESTED COPIES! CHANGE METHOD OF DOING THIS!!*/}
+        let removedKeyStateCopy = Object.assign({}, this.state);
         delete removedKeyStateCopy.answerData.answers[id];
         delete removedKeyStateCopy.answerData.correctanswers[id];
         this.setState({removedKeyStateCopy});
-
     }
 
     addAnswerChoice(event) {
-        let id = utils.generateAnswerID();
+        let id = utils.generateAnswerID(); {/*  Generate A ID for the answer key */}
         {/* This is REALLY inefficient and we need another way of doing this without nested assigns*/}
         this.setState({
             answerData: Object.assign({}, this.state.answerData, {
