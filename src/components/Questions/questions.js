@@ -10,6 +10,7 @@ class QuestionsPage extends Component {
         this.state = {
             currentlySelectedQuestion : "defaultOption",
             currentlySelectedTag : "defaultOption",
+            currentlySelectedTagToAdd: "defaultOption",
             searchQuestionName: "",
             newQuestionText : "",
             tags : {},
@@ -33,35 +34,43 @@ class QuestionsPage extends Component {
         event.preventDefault();
 
         let that = this;
+        if (this.state.currentlySelectedTagToAdd !== "defaultOption") {
+            console.log("Test Here");
+            {/* Need to be sure this works well with the filters */
+            }
+            const quesRef = db.getQuestionReference();
 
-        console.log("Test Here");
-        {/* Need to be sure this works well with the filters */}
-        const quesRef = db.getQuestionReference();
+            let currDate = new Date();
+            let dateAdd = currDate.toISOString().split('T')[0];
+            let timeAdd = currDate.toTimeString().split(' ')[0];
 
-        let currDate = new Date();
-        let dateAdd = currDate.toISOString().split('T')[0];
-        let timeAdd = currDate.toTimeString().split(' ')[0];
+            {/* This push operation is all client-side. I.e., we can run it without worrying about asynchronous issues */}
+            let newAddition = quesRef.push();
+            let keyVal = newAddition.key;
+            {/* This next section must utilize Promises to ensure that it all operates synchronously */}
+            let newQuestionData = {
+                name: this.state.newQuestionText,
+                datecreated: dateAdd,
+                imageforanswers: false,
+                imageforquestion: false,
+                lastused: false,
+                points: 100,
+                tags: {[this.state.currentlySelectedTagToAdd] : true},
+                timecreated: timeAdd
+            };
 
-        {/* This push operation is all client-side. I.e., we can run it without worrying about asynchronous issues */}
-        let newAddition = quesRef.push();
-        let keyVal = newAddition.key;
-        {/* This next section must utilize Promises to ensure that it all operates synchronously */}
-        newAddition.set({
-            name: this.state.newQuestionText,
-            datecreated: dateAdd,
-            imageforanswers : false,
-            imageforquestion : false,
-            lastused : false,
-            points : 100,
-            tags : false,
-            timecreated : timeAdd
-        }).then( function() {
-            db.getQuestionNamesWithID(keyVal).set({name: that.state.newQuestionText}).then( function() {
-                db.getQuestionAnswersWithID(keyVal).set({answers: false, correctanswers: false});
+            let updates = {};
+            updates['question/' + keyVal] = newQuestionData;
+            updates['question-name/' + keyVal] = {name: that.state.newQuestionText};
+            updates['choices/' + keyVal] = {answers: false, correctanswers: false};
+            updates['tag/' + this.state.currentlySelectedTagToAdd + '/questions/' + keyVal] = true;
+
+            db.getFullDBReference().update(updates).then(function () {
+
             });
-        }).then(function() {
-            that.setState({currentlySelectedQuestion: keyVal});
-        });
+
+
+        }
     }
 
     handleGetQuestionForEditFormSubmit(event) {
@@ -121,7 +130,9 @@ class QuestionsPage extends Component {
                     newQuestionText={this.state.newQuestionText}
                     onAddQuestionSubmit={this.handleAddQuestionSubmit}
                     handleChange={this.handleChange}
-                    inEditMode={this.state.inEditMode}/>
+                    inEditMode={this.state.inEditMode}
+                    currentlySelectedTagToAdd={this.state.currentlySelectedTagToAdd}
+                    tags={this.state.tags}/>
 
                 {/* Here is the box for the editing of questions */}
                 <QuestionEdit
@@ -397,6 +408,7 @@ class AddQuestion extends Component {
     render() {
         return (
             <div className="addNewQuestion">
+                <h3> Add New Question </h3>
                 <form onSubmit={this.props.onAddQuestionSubmit}>
                     <input type="text"
                            disabled={this.props.inEditMode}
@@ -405,6 +417,17 @@ class AddQuestion extends Component {
                            value={this.props.newQuestionText}
                            onChange={this.handleChange}
                     />
+                    <select name="currentlySelectedTagToAdd" value={this.props.currentlySelectedTagToAdd} onChange={this.handleChange} disabled={this.props.inEditMode}>
+                        <option name="defaultTagOption"
+                                value="defaultOption"
+                                key="defaultOption">---Select a Tag!---</option>
+                        {Object.keys(this.props.tags).map(key => {
+                            return ( <option name="tagOption"
+                                             key={key}
+                                             value={key}>{this.props.tags[key].name}</option>
+                            )
+                        })}
+                    </select>
                     <button disabled={this.props.inEditMode}>Add Question</button>
                 </form>
             </div>
