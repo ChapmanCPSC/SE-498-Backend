@@ -24,6 +24,9 @@ export function getQuestionWithID(ID) {
 export function getQuestionAnswersWithID(ID) {
     return db.ref('choices/' + ID)
 }
+export function getAnswers() {
+    return db.ref('choices')
+}
 
 export function getQuestionNamesWithID(ID) {
     return db.ref('question-name/' + ID)

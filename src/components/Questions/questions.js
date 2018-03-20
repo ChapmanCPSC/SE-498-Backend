@@ -30,24 +30,38 @@ class QuestionsPage extends Component {
         this.setState({[event.target.name]: event.target.value})
     }
     handleAddQuestionSubmit(event) {
-        {/* Need to be sure this works well with the filters */}
         event.preventDefault();
-        const ref = db.getQuestionReference();
+
+        let that = this;
+
+        console.log("Test Here");
+        {/* Need to be sure this works well with the filters */}
+        const quesRef = db.getQuestionReference();
 
         let currDate = new Date();
+        let dateAdd = currDate.toISOString().split('T')[0];
+        let timeAdd = currDate.toTimeString().split(' ')[0];
 
-        let newAddition = ref.push();
+        {/* This push operation is all client-side. I.e., we can run it without worrying about asynchronous issues */}
+        let newAddition = quesRef.push();
+        let keyVal = newAddition.key;
+        {/* This next section must utilize Promises to ensure that it all operates synchronously */}
         newAddition.set({
             name: this.state.newQuestionText,
-            datecreated: currDate.toISOString().split('T')[0],
+            datecreated: dateAdd,
             imageforanswers : false,
             imageforquestion : false,
-            lastused : null,
+            lastused : false,
             points : 100,
-            tags : null,
-            timecreated : currDate.toTimeString().split(' ')[0].split(':')
+            tags : false,
+            timecreated : timeAdd
+        }).then( function() {
+            db.getQuestionNamesWithID(keyVal).set({name: that.state.newQuestionText}).then( function() {
+                db.getQuestionAnswersWithID(keyVal).set({answers: false, correctanswers: false});
+            });
+        }).then(function() {
+            that.setState({currentlySelectedQuestion: keyVal});
         });
-        this.setState({currentlySelectedQuestion: newAddition.key})
     }
 
     handleGetQuestionForEditFormSubmit(event) {
@@ -69,20 +83,22 @@ class QuestionsPage extends Component {
 
     handleGetQuestionsWithTag(event) {
         event.preventDefault();
-        {/* Iterate through selected tag, find the questions that have that tag, then set the state? */}
-        this.setState({ currentlySelectedQuestion : "defaultOption"});
-        let stateToSet = [];
-        for (let quesID in this.state.tags[this.state.currentlySelectedTag].questions) {
-            if (this.state.tags[this.state.currentlySelectedTag].questions[quesID] === true) {
+        if (this.state.currentlySelectedTag !== "defaultOption") {
+            {/* Iterate through selected tag, find the questions that have that tag, then set the state? */}
+            this.setState({ currentlySelectedQuestion : "defaultOption"});
+            let stateToSet = [];
+            for (let quesID in this.state.tags[this.state.currentlySelectedTag].questions) {
+                if (this.state.tags[this.state.currentlySelectedTag].questions[quesID] === true) {
                     stateToSet.push( {
                         id : quesID,
                         questionText : this.state.allQuestionNames[quesID].name
                     });
+                }
             }
+            this.setState({
+                questionFilterResults: stateToSet
+            });
         }
-        this.setState({
-            questionFilterResults: stateToSet
-        });
     }
 
     render () {
@@ -100,11 +116,13 @@ class QuestionsPage extends Component {
                     currentlySelectedQuestion={this.state.currentlySelectedQuestion}
                     questionFilterResults={this.state.questionFilterResults}
                     inEditMode={this.state.inEditMode}/>
-                {/*
+
                 <AddQuestion
                     newQuestionText={this.state.newQuestionText}
-                    onAddQuestionSubmit={this.state.handleAddQuestionSubmit}
-                    handleChange={this.handleChange}/> */}
+                    onAddQuestionSubmit={this.handleAddQuestionSubmit}
+                    handleChange={this.handleChange}
+                    inEditMode={this.state.inEditMode}/>
+
                 {/* Here is the box for the editing of questions */}
                 <QuestionEdit
                     selectedQuestionForEditing={this.state.currentlySelectedQuestion}
@@ -381,12 +399,13 @@ class AddQuestion extends Component {
             <div className="addNewQuestion">
                 <form onSubmit={this.props.onAddQuestionSubmit}>
                     <input type="text"
+                           disabled={this.props.inEditMode}
                            name="newQuestionText"
                            placeholder="Please enter your question"
                            value={this.props.newQuestionText}
                            onChange={this.handleChange}
                     />
-                    <button>Add Question</button>
+                    <button disabled={this.props.inEditMode}>Add Question</button>
                 </form>
             </div>
         )
