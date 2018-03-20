@@ -66,7 +66,11 @@ class QuestionsPage extends Component {
             updates['tag/' + this.state.currentlySelectedTagToAdd + '/questions/' + keyVal] = true;
 
             db.getFullDBReference().update(updates).then(function () {
-
+                that.setState({
+                    newQuestionText : "",
+                    currentlySelectedTagToAdd: "defaultOption",
+                    currentlySelectedQuestion : "defaultOption",
+                    currentlySelectedTag : "defaultOption"})
             });
 
 
@@ -87,7 +91,7 @@ class QuestionsPage extends Component {
 
     handleExitEditMode(event) {
         event.preventDefault();
-        this.setState({inEditMode: false})
+        this.setState({inEditMode: false, currentlySelectedQuestion : "defaultOption", currentlySelectedTag : "defaultOption"});
     }
 
     handleGetQuestionsWithTag(event) {
@@ -277,6 +281,7 @@ class QuestionEdit extends Component {
             {/* 2. If you are in edit mode, but have requested to switch out back to filtering and selecting questions */}
             {/* Reset your state back to nothing! So clear everything you've done so far*/}
             this.reset();
+
         }
     }
 
