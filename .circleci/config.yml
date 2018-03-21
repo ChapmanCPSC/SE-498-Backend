@@ -30,7 +30,7 @@ jobs:
       
       - run: yarn add --dev jest
       
-      - run: npm install --save-dev jest babel-preset-react babel-preset-es2015 react-test-renderer
+      - run: npm install --save-dev babel-preset-react babel-preset-es2015 react-test-renderer
       
       - run: sudo npm install
       
@@ -43,7 +43,7 @@ jobs:
     
       # run tests!
     
-      - run: jest -u
+      - run: yarn test -u
       - run: CI=false yarn build  
       - run:
           name: Deploy
