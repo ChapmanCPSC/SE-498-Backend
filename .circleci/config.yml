@@ -27,6 +27,8 @@ jobs:
           - v1-dependencies-
 
       - run: yarn install
+      
+      - run: add --dev jest
 
       - save_cache:
           paths:
