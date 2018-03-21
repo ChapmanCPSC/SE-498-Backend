@@ -30,10 +30,8 @@ jobs:
       
       - run: yarn add --dev jest
       
-      - run: npm install --save-dev babel-preset-react
+      - run: npm install --save-dev babel-preset-react babel-preset-es2015 react-test-renderer
       
-      - run: npm install --save babel-preset-es2015
-
       - run: sudo npm install
       
       - run: sudo npm install -g firebase-tools
