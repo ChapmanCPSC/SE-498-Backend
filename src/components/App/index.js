@@ -10,6 +10,7 @@ import HomePage from '../Home';
 import AccountPage from '../Account';
 import withAuthentication from '../Session/withAuthentication';
 import QuestionsPage from '../Questions/questions';
+import QuizzesPage from '../Quizzes/quizzes';
 import * as routes from '../../constants/routes';
 
 import './index.css';
@@ -23,6 +24,7 @@ const App = () =>
       <Route exact path={routes.HOME} component={() => <HomePage />} />
       <Route exact path={routes.ACCOUNT} component={() => <AccountPage />} />
       <Route exact path={routes.QUESTIONS} component = { () => <QuestionsPage />} />
+        <Route exact path={routes.QUIZZES} component = { () => <QuizzesPage />} />
 
 
     </div>
