@@ -30,7 +30,7 @@ jobs:
       
       - run: yarn add --dev jest
       
-      - run: npm install --save-dev babel-preset-react babel-preset-es2015 react-test-renderer
+      - run: npm install --save-dev jest babel-preset-react babel-preset-es2015 react-test-renderer
       
       - run: sudo npm install
       
@@ -42,8 +42,8 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
     
       # run tests!
-      - run: yarn test --update-snapshots
-      
+    
+      - run: jest -u
       - run: CI=false yarn build  
       - run:
           name: Deploy
