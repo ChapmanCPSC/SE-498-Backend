@@ -29,6 +29,12 @@ jobs:
       - run: yarn install
       
       - run: yarn add --dev jest
+      
+      - run: npm install --save-dev babel-preset-react
+      
+      - run: sudo npm install
+      
+      - run: sudo npm install -g firebase-tools
 
       - save_cache:
           paths:
@@ -38,9 +44,6 @@ jobs:
       # run tests!
       - run: yarn test
       
-      - run: sudo npm install
-      
-      - run: sudo npm install -g firebase-tools
       - run: CI=false yarn build  
       - run:
           name: Deploy
