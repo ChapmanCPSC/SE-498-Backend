@@ -42,8 +42,7 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
     
       # run tests!
-      - run: jest --updateSnapshot
-      - run: yarn test
+      - run: yarn test --updateSnapshot
       
       - run: CI=false yarn build  
       - run:
