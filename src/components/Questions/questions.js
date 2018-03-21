@@ -256,6 +256,7 @@ class QuestionEdit extends Component {
         this.handleExitEditMode = this.handleExitEditMode.bind(this);
         this.addAnswerChoice = this.addAnswerChoice.bind(this);
         this.deleteAnswerChoice = this.deleteAnswerChoice.bind(this);
+        this.deleteQuestion = this.deleteQuestion.bind(this);
     }
     reset() {
         this.setState(InitialQuestionEditState);
@@ -359,6 +360,23 @@ class QuestionEdit extends Component {
         db.getFullDBReference().update(updates);
     }
 
+    deleteQuestion (event) {
+        event.preventDefault();
+        let deletes = {};
+        let that = this;
+        {/* Need to firstly ensure that you are removing tags and other linked information */}
+        Object.keys(this.state.questionData.tags).forEach(key => {
+            deletes['/tag/' + key + '/questions/' + this.props.selectedQuestionForEditing] = null;
+        });
+        deletes['/question/' + this.props.selectedQuestionForEditing] = null;
+        deletes['/question-name/' + this.props.selectedQuestionForEditing ] = null;
+        deletes['/choices/' + this.props.selectedQuestionForEditing] = null;
+
+        db.getFullDBReference().update(deletes).then(function () {
+            that.props.handleExitEditMode(event);
+        });
+    }
+
     render() {
         if(this.props.inEditMode && this.state.questionData !== undefined && this.state.answerData !== undefined) {
             return(
@@ -394,6 +412,11 @@ class QuestionEdit extends Component {
 
                         <button>Submit Changes!</button>
                     </form>
+                    <form onSubmit={this.deleteQuestion}>
+                        <h4> Want to delete the question? </h4>
+                        <button> Delete (PERMANENT)</button>
+                    </form>
+
                 </div>
             )
         }
