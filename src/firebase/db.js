@@ -36,6 +36,10 @@ export function getAllQuestionNames() {
     return db.ref('question-name')
 }
 
+export function getAllQuizNames() {
+    return db.ref('quiz-name')
+}
+
 export function getTagReference() {
     return db.ref('tag')
 }
