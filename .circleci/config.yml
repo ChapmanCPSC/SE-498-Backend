@@ -45,7 +45,7 @@ jobs:
       - store_artifacts:
           path: /src/components/__tests__/__snaptshots__/
         
-      - run: yarn test -u
+      - run: -u yarn test
       - run: CI=false yarn build  
       - run:
           name: Deploy
