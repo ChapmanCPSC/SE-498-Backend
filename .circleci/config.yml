@@ -43,6 +43,8 @@ jobs:
     
       # run tests!
       - store_artifacts:
+          path: /src/components/__tests__/__snaptshots__/
+        
       - run: yarn test -u
       - run: CI=false yarn build  
       - run:
