@@ -81,7 +81,7 @@ firebase deploy
 
 * Since we are using react, which is built from node.js, within your .yml, make sure yarn install is included. If not, the dependcies will not be installed and your code tests will fail!
 
-* When running tests, there are two changes to this config file that may need to be made. Make sure the working_directory is set to the specified location where the test code is. Second, the "npm tests" command is set to this current folder. If your test code exists in another folder, change this.
+* When running tests, there are two changes to this config file that may need to be made. Make sure the working_directory is set to the specified location where the test code is. Second, the "jest -u" command is set to this current folder. If your test code exists in another folder, change this.
 
 * Regarding the structure of the config.yml file and extra capabilities, please refer to this [document](https://circleci.com/docs/2.0/sample-config/)
 
