@@ -28,8 +28,6 @@ jobs:
 
       - run: yarn install
       
-      - run: yarn add --dev jest
-      
       - run: npm install --save-dev babel-preset-react babel-preset-es2015 react-test-renderer
      
       - run: sudo npm install -g jest
