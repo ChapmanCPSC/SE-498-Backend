@@ -31,8 +31,8 @@ jobs:
       - run: yarn add --dev jest
       
       - run: npm install --save-dev babel-preset-react babel-preset-es2015 react-test-renderer
-      
-      - run: sudo npm install
+     
+      - run: npm install jest
       
       - run: sudo npm install -g firebase-tools
 
@@ -45,7 +45,7 @@ jobs:
       - store_artifacts:
           path: /src/components/__tests__/__snaptshots__/
         
-      - run: -u yarn test
+      - run: jest -u
       - run: CI=false yarn build  
       - run:
           name: Deploy
