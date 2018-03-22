@@ -18,6 +18,8 @@ class QuizzesPage extends Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleGetQuizzesWithTag = this.handleGetQuizzesWithTag.bind(this);
+        this.handleGetQuizForEditFormSubmit = this.handleGetQuizForEditFormSubmit.bind(this);
+        this.handleExitEditMode = this.handleExitEditMode.bind(this);
     }
 
     handleChange(event) {
@@ -30,6 +32,11 @@ class QuizzesPage extends Component {
             this.setState({inEditMode: true});
         }
 
+    }
+
+    handleExitEditMode(event) {
+        event.preventDefault();
+        this.setState({inEditMode: false, currentlySelectedQuiz : "defaultOption", currentlySelectedTag : "defaultOption"});
     }
 
     handleGetQuizzesWithTag(event) {
@@ -75,10 +82,17 @@ class QuizzesPage extends Component {
                 handleChange={this.handleChange}
                 currentlySelectedTag={this.state.currentlySelectedTag}
                 onTagSearchSubmit={this.handleGetQuizzesWithTag}
-                onSelectEditQuestionSubmit={this.handleGetQuizForEditFormSubmit}
+                onSelectEditQuizSubmit={this.handleGetQuizForEditFormSubmit}
                 currentlySelectedQuiz={this.state.currentlySelectedQuiz}
                 quizFilterResults={this.state.quizFilterResults}
                 inEditMode={this.state.inEditMode}/>
+
+
+            <QuizEdit
+                selectedQuizForEditing={this.state.currentlySelectedQuiz}
+                inEditMode={this.state.inEditMode}
+                handleChange={this.handleChange}
+                handleExitEditMode={this.handleExitEditMode}/>
         </div>
     }
 }
@@ -86,8 +100,10 @@ class QuizzesPage extends Component {
 class FilterQuizzes extends Component {
     constructor (props) {
         super(props);
+
         this.handleChange = this.handleChange.bind(this);
     }
+
     handleChange(event) {
         this.props.handleChange(event)
     }
@@ -137,6 +153,108 @@ class FilterQuizzes extends Component {
                 }
             </div>
         )
+    }
+}
+
+const InitialQuizEditState = {
+    quizData : undefined
+};
+
+class QuizEdit extends Component {
+    constructor(props) {
+        super(props);
+        {/* Actual state is listed above in the constant var called InitialQuizEditState*/}
+        this.state = InitialQuizEditState;
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleTextStateChange = this.handleTextStateChange.bind(this);
+        this.handleExitEditMode = this.handleExitEditMode.bind(this);
+        this.submitQuiz = this.submitQuiz.bind(this);
+        this.deleteQuiz = this.deleteQuiz.bind(this);
+    }
+
+    reset() {
+        this.setState(InitialQuizEditState);
+    }
+
+    handleChange(event) {
+        this.props.handleChange(event)
+    }
+
+    handleTextStateChange(event, keyName) {
+        this.setState({
+            quizData: Object.assign({}, this.state.quizData, {
+                [keyName] : event.target.value,
+            }),
+        });
+    }
+
+    handleExitEditMode(event) {
+        this.props.handleExitEditMode(event);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (!this.props.inEditMode && nextProps.inEditMode) {
+            {/* 1. If you are not in edit mode, but have requested to go into edit mode */}
+            {/* Grab the data listed in Firebase so the user can edit! */}
+            {/* Data Should be copied into a local structure */}
+            db.getQuizWithID(this.props.selectedQuizForEditing).once('value', (snapshot) => {
+                this.setState({quizData : snapshot.val()});
+            });
+        }
+        else if (this.props.inEditMode && !nextProps.inEditMode) {
+            {/* 2. If you are in edit mode, but have requested to switch out back to filtering and selecting quizzes */}
+            {/* Reset your state back to nothing! So clear everything you've done so far*/}
+            this.reset();
+        }
+    }
+
+    submitQuiz(event) {
+        event.preventDefault();
+
+    }
+
+    deleteQuiz(event) {
+        event.preventDefault();
+    }
+
+    render() {
+        if(this.props.inEditMode && this.state.quizData !== undefined) {
+            return(
+                <div className="quizEditDiv">
+                    <form onSubmit={this.submitQuiz}>
+                        <h1> Edit </h1>
+                        <button type="button" onClick={this.handleExitEditMode}> Go Back To Quiz Select </button>
+                        <h4> Quiz Name: </h4>
+                        <input type="text"
+                               name="existingQuizText"
+                               value={this.state.quizData.name}
+                               placeholder="Enter Quiz Text Here"
+                               onChange={(event) => this.handleTextStateChange(event, "name")}/>
+                        <h4> Total Points </h4>
+                        <input type="text"
+                               disabled="true"
+                               name="totalPoints"
+                               value={this.state.quizData.points}
+                               placeholder="Total Points for this quiz"
+                               onChange={(event) => this.handleTextStateChange(event, "points")}/>
+                        {/*
+                        <input type="text"
+                               name="tagForQuizEdit"
+                               placeholder="Enter Tag Here"
+                               value={this.state.quizData.tags.} onChange={this.handleChange} /> */}
+
+                        <button>Submit Changes!</button>
+                    </form>
+                    <form onSubmit={this.deleteQuiz}>
+                        <h4> Want to delete the quiz? </h4>
+                        <button> Delete (PERMANENT)</button>
+                    </form>
+
+                </div>
+            )
+        }
+        else { return null; }
     }
 }
 

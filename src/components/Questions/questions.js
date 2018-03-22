@@ -292,7 +292,7 @@ class QuestionEdit extends Component {
     handleTextStateChange(event, keyName) {
         this.setState({
             questionData: Object.assign({}, this.state.questionData, {
-                 [keyName] : event.target.value,
+                [keyName] : event.target.value,
             }),
         });
     }
