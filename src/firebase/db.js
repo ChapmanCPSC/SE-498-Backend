@@ -17,6 +17,11 @@ export function getFullDBReference() {
 export function getQuestionReference() {
     return db.ref('question')
 }
+
+export function getQuizReference() {
+    return db.ref('quiz')
+}
+
 export function getQuestionWithID(ID) {
     return db.ref('question/' + ID)
 }
