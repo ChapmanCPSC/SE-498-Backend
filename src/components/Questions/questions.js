@@ -91,7 +91,11 @@ class QuestionsPage extends Component {
 
     handleExitEditMode(event) {
         event.preventDefault();
-        this.setState({inEditMode: false, currentlySelectedQuestion : "defaultOption", currentlySelectedTag : "defaultOption"});
+        this.setState({inEditMode: false,
+            currentlySelectedQuestion : "defaultOption",
+            currentlySelectedTag : "defaultOption",
+            questionFilterResults : false
+        });
     }
 
     handleGetQuestionsWithTag(event) {
@@ -238,7 +242,9 @@ class FilterQuestions extends Component {
 
 const InitialQuestionEditState = {
     questionData : undefined,
-    answerData : undefined
+    answerData : undefined,
+    questionDataInitialLoad : undefined,
+    answerDataInitialLoad : undefined
 };
 
 class QuestionEdit extends Component {
@@ -269,11 +275,11 @@ class QuestionEdit extends Component {
             {/* Data Should be copied into a local structure */}
             console.log("1. We are beginning");
             db.getQuestionWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
-                this.setState({questionData : snapshot.val()});
+                this.setState({questionData : snapshot.val(), questionDataInitialLoad : snapshot.val()});
                 console.log("2. FB 1!");
             });
             db.getQuestionAnswersWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
-                this.setState({answerData : snapshot.val()});
+                this.setState({answerData : snapshot.val(), answerDataInitialLoad : snapshot.val()});
                 console.log("3. FB 2!");
             });
             console.log("4. We are done with Firebase!");
@@ -328,11 +334,12 @@ class QuestionEdit extends Component {
     }
 
     deleteAnswerChoice(event, id) {
-        {/* THIS DELETION METHOD MAKES MANY NESTED COPIES! CHANGE METHOD OF DOING THIS!!*/}
-        let removedKeyStateCopy = Object.assign({}, this.state);
-        delete removedKeyStateCopy.answerData.answers[id];
-        delete removedKeyStateCopy.answerData.correctanswers[id];
-        this.setState({removedKeyStateCopy});
+        if(Object.keys(this.state.answerData.answers).length !== 1) {
+            let removedKeyStateCopy = Object.assign({}, this.state);
+            delete removedKeyStateCopy.answerData.answers[id];
+            delete removedKeyStateCopy.answerData.correctanswers[id];
+            this.setState(removedKeyStateCopy);
+        }
     }
 
     addAnswerChoice(event) {
@@ -353,11 +360,14 @@ class QuestionEdit extends Component {
     submitQuestion(event) {
         event.preventDefault();
         let updates = {};
+        let that = this;
         updates['/question/' + this.props.selectedQuestionForEditing] = this.state.questionData;
 
         updates['/question-name/' + this.props.selectedQuestionForEditing ] = {name: this.state.questionData.name};
         updates['/choices/' + this.props.selectedQuestionForEditing] = this.state.answerData;
-        db.getFullDBReference().update(updates);
+        db.getFullDBReference().update(updates).then(function () {
+            that.props.handleExitEditMode(event);
+        });
     }
 
     deleteQuestion (event) {
@@ -365,8 +375,12 @@ class QuestionEdit extends Component {
         let deletes = {};
         let that = this;
         {/* Need to firstly ensure that you are removing tags and other linked information */}
-        Object.keys(this.state.questionData.tags).forEach(key => {
+        Object.keys(this.state.questionDataInitialLoad.tags).forEach(key => {
             deletes['/tag/' + key + '/questions/' + this.props.selectedQuestionForEditing] = null;
+        });
+        {/* Be sure to delete quiz relationships too! Let them know that they no longer can use this question */}
+        Object.keys(this.state.questionDataInitialLoad.quizzes).forEach(key => {
+            deletes['/quiz/' + key + '/questions/' + this.props.selectedQuestionForEditing] = null;
         });
         deletes['/question/' + this.props.selectedQuestionForEditing] = null;
         deletes['/question-name/' + this.props.selectedQuestionForEditing ] = null;
