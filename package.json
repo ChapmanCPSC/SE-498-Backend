@@ -18,10 +18,19 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "jest",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
     "firebase": "^4.9.1"
+  },
+  "jest": {
+    "preset": "react-native",
+    "transform" : {
+      "^.+\\.js?$": "babel-jest"
+    },
+     "transformIgnorePatterns": [
+      "!node_modules/react-runtime"
+    ]
   }
 }

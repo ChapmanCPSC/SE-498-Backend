@@ -27,6 +27,16 @@ jobs:
           - v1-dependencies-
 
       - run: yarn install
+      
+      - run: yarn add --dev jest
+      
+      - run: npm install --save-dev babel-preset-react babel-preset-es2015 react-test-renderer
+     
+      - run: sudo npm install -g jest
+      
+      - run: sudo npm install -g jest-cli
+      
+      - run: sudo npm install -g firebase-tools
 
       - save_cache:
           paths:
@@ -34,11 +44,10 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
     
       # run tests!
-      - run: yarn test
-      
-      - run: sudo npm install
-      
-      - run: sudo npm install -g firebase-tools
+      - store_artifacts:
+          path: /src/components/__tests__/__snaptshots__/
+        
+      - run: jest -u
       - run: CI=false yarn build  
       - run:
           name: Deploy
