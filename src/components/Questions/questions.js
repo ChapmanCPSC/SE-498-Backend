@@ -379,9 +379,11 @@ class QuestionEdit extends Component {
             deletes['/tag/' + key + '/questions/' + this.props.selectedQuestionForEditing] = null;
         });
         {/* Be sure to delete quiz relationships too! Let them know that they no longer can use this question */}
-        Object.keys(this.state.questionDataInitialLoad.quizzes).forEach(key => {
-            deletes['/quiz/' + key + '/questions/' + this.props.selectedQuestionForEditing] = null;
-        });
+        if(this.state.questionDataInitialLoad.quizzes !== undefined) {
+            Object.keys(this.state.questionDataInitialLoad.quizzes).forEach(key => {
+                deletes['/quiz/' + key + '/questions/' + this.props.selectedQuestionForEditing] = null;
+            });
+        }
         deletes['/question/' + this.props.selectedQuestionForEditing] = null;
         deletes['/question-name/' + this.props.selectedQuestionForEditing ] = null;
         deletes['/choices/' + this.props.selectedQuestionForEditing] = null;
