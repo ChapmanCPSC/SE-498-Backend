@@ -25,6 +25,9 @@ export function getQuizReference() {
 export function getQuestionWithID(ID) {
     return db.ref('question/' + ID)
 }
+export function getQuestionPoints(ID) {
+    return db.ref('question/' + ID + '/points')
+}
 
 export function getQuizWithID(ID) {
     return db.ref('quiz/' + ID)
