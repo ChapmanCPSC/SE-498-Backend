@@ -181,7 +181,7 @@ class FilterQuestions extends Component {
     }
     render() {
         return(
-            <div>
+            <div className = "marginstuff">
                 <div className="questionTagSearch">
                     <form onSubmit={this.props.onTagSearchSubmit}>
                         <select name="currentlySelectedTag" value={this.props.currentlySelectedTag} onChange={this.handleChange} disabled={this.props.inEditMode}>

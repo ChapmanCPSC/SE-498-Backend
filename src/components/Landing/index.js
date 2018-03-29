@@ -9,7 +9,9 @@ const LandingPage = () =>
         <div>
             <img src = {logo} alt="logo"/>
         </div>
-        <SignInForm />
+        <div class = 'signin'>
+        	<SignInForm />
+        </div>
     </div>
 
 const updateByPropertyName = (propertyName, value) => () => ({
@@ -59,7 +61,7 @@ class SignInForm extends Component {
             this.state.user ?
                 <button onClick={this.logout}>Log Out</button>
                 :
-                <button onClick={this.login}>Log In with Google!</button>
+                <button onClick={this.login}>Log In</button>
         )
     }
 }

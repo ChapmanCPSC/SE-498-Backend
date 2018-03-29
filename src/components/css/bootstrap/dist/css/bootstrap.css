@@ -236,7 +236,7 @@ label {
 }
 
 button {
-  border-radius: 0;
+  border-radius: 0px;
 }
 
 button:focus {
@@ -8982,6 +8982,18 @@ a.text-dark:hover, a.text-dark:focus {
 body {
   background-color: #E0E0E0;
 }
+.customBut{
+  background-color: #9de1f7;
+  border:0px;
+  font-size: 35px;
+  color: white;
+}
+.customBut:hover{
+  background-color: #ED7474;
+  color: white;
+  text-decoration: underline;
+  cursor: pointer;
+}
 .topnav{
   overflow: hidden;
   background-color: #9de1f7;
@@ -9027,7 +9039,7 @@ img {
     margin-right: auto;
     width: 40%;
     margin-top: 200px;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
     vertical-align: middle;
 }
 .bluebar{
@@ -9037,5 +9049,8 @@ img {
 }
 .signin{
   margin: 10px;
+}
+.marginstuff{
+  margin: 20px;
 }
 /*# sourceMappingURL=bootstrap.css.map */

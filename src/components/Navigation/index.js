@@ -17,8 +17,9 @@ const NavigationAuth = () =>
   <div>
     <div class = "topnav">
       <Link to={routes.LANDING}>Landing</Link>
-      <Link to={routes.HOME}>Home</Link>
       <Link to={routes.ACCOUNT}>Account</Link>
+      <Link to={routes.QUIZZES}>Quizzes</Link>
+      <Link to={routes.QUESTIONS}>Questions</Link>
       <SignOutButton />
     </div>
   </div>
