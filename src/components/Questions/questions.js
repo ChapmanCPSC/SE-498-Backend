@@ -120,7 +120,7 @@ class QuestionsPage extends Component {
 
     render () {
         return (
-            <div className="wholeQuestionPage">
+            <div class = "marginstuff">
                 <h1>Questions Page</h1> {/* Header for the Question Creation/Editing Page */}
 
                 {/* Here is the box for searching/filtering questions */}
@@ -181,7 +181,7 @@ class FilterQuestions extends Component {
     }
     render() {
         return(
-            <div className = "marginstuff">
+            <div>
                 <div className="questionTagSearch">
                     <form onSubmit={this.props.onTagSearchSubmit}>
                         <select name="currentlySelectedTag" value={this.props.currentlySelectedTag} onChange={this.handleChange} disabled={this.props.inEditMode}>
@@ -396,7 +396,7 @@ class QuestionEdit extends Component {
     render() {
         if(this.props.inEditMode && this.state.questionData !== undefined && this.state.answerData !== undefined) {
             return(
-                <div className="questionEditDiv">
+                <div class = "marginstuff" className="questionEditDiv">
                     <form onSubmit={this.submitQuestion}>
                         <h1> Edit </h1>
                         <button type="button" onClick={this.handleExitEditMode}> Go Back To Question Select </button>
@@ -451,7 +451,7 @@ class AddQuestion extends Component {
     }
     render() {
         return (
-            <div className="addNewQuestion">
+            <div class = "marginstuff" className="addNewQuestion">
                 <h3> Add New Question </h3>
                 <form onSubmit={this.props.onAddQuestionSubmit}>
                     <input type="text"
