@@ -1,0 +1,531 @@
+{
+  "choices" : {
+    "-L84R52wfZh13Dv64_lE" : {
+      "answers" : false,
+      "correctanswers" : false
+    },
+    "-L8KeFCarKrUXgmve99H" : {
+      "answers" : {
+        "37eca370-2f04-11e8-8bdc-4f582605fc3b" : "Fran",
+        "39fd33f0-2f04-11e8-8bdc-4f582605fc3b" : "Ban",
+        "3b768d80-2f04-11e8-8bdc-4f582605fc3b" : "Orange"
+      },
+      "correctanswers" : {
+        "37eca370-2f04-11e8-8bdc-4f582605fc3b" : true,
+        "39fd33f0-2f04-11e8-8bdc-4f582605fc3b" : true,
+        "3b768d80-2f04-11e8-8bdc-4f582605fc3b" : false
+      }
+    },
+    "-L8KglGFfKB_av3mIzxS" : {
+      "answers" : {
+        "203400b0-32f7-11e8-ba9b-f7e65525c22c" : "Cat",
+        "5f629fd0-32f7-11e8-ba9b-f7e65525c22c" : "Dog",
+        "c3ab3740-2f05-11e8-a77f-0d427ec6d5c2" : "Opposite",
+        "c59a3600-2f05-11e8-a77f-0d427ec6d5c2" : "Optometry",
+        "e091b830-32f6-11e8-ba9b-f7e65525c22c" : "Bus"
+      },
+      "correctanswers" : {
+        "203400b0-32f7-11e8-ba9b-f7e65525c22c" : true,
+        "5f629fd0-32f7-11e8-ba9b-f7e65525c22c" : true,
+        "c3ab3740-2f05-11e8-a77f-0d427ec6d5c2" : false,
+        "c59a3600-2f05-11e8-a77f-0d427ec6d5c2" : false,
+        "e091b830-32f6-11e8-ba9b-f7e65525c22c" : true
+      }
+    },
+    "-L8KgziNTI_IHLyeEWoB" : {
+      "answers" : {
+        "e609bd20-2f05-11e8-a77f-0d427ec6d5c2" : "1",
+        "e6537050-2f05-11e8-a77f-0d427ec6d5c2" : "0.53",
+        "e7596ea0-2f05-11e8-a77f-0d427ec6d5c2" : "0.25",
+        "ed174fb0-2f05-11e8-a77f-0d427ec6d5c2" : "0.125"
+      },
+      "correctanswers" : {
+        "e609bd20-2f05-11e8-a77f-0d427ec6d5c2" : false,
+        "e6537050-2f05-11e8-a77f-0d427ec6d5c2" : false,
+        "e7596ea0-2f05-11e8-a77f-0d427ec6d5c2" : false,
+        "ed174fb0-2f05-11e8-a77f-0d427ec6d5c2" : false
+      }
+    },
+    "-L8_2Mhhi_E4H7phItHo" : {
+      "answers" : {
+        "78bc0e30-315d-11e8-bf19-91cabadffe90" : "Cap",
+        "7b93bf40-315d-11e8-bf19-91cabadffe90" : "Nose",
+        "7d266d30-315d-11e8-bf19-91cabadffe90" : "Glass",
+        "7f6f24b0-315d-11e8-bf19-91cabadffe90" : "Tin"
+      },
+      "correctanswers" : {
+        "78bc0e30-315d-11e8-bf19-91cabadffe90" : true,
+        "7b93bf40-315d-11e8-bf19-91cabadffe90" : false,
+        "7d266d30-315d-11e8-bf19-91cabadffe90" : false,
+        "7f6f24b0-315d-11e8-bf19-91cabadffe90" : false
+      }
+    },
+    "5a2ec76bf4b843a79183" : {
+      "answers" : {
+        "aac3edc0-2f01-11e8-8d46-c790fb0eca06" : "TenI",
+        "eb8e19c0-2af6-11e8-a68d-f98bacc9899f" : "42",
+        "ed8f6800-2af6-11e8-a68d-f98bacc9899f" : "2###",
+        "ee351de0-2af6-11e8-a68d-f98bacc9899f" : "4#"
+      },
+      "correctanswers" : {
+        "aac3edc0-2f01-11e8-8d46-c790fb0eca06" : true,
+        "eb8e19c0-2af6-11e8-a68d-f98bacc9899f" : false,
+        "ed8f6800-2af6-11e8-a68d-f98bacc9899f" : true,
+        "ee351de0-2af6-11e8-a68d-f98bacc9899f" : false
+      }
+    },
+    "8d93j7s293nf83jd92j3" : {
+      "answers" : {
+        "7599bb80-2afa-11e8-b4fc-5bba18089da0" : "#5"
+      },
+      "correctanswers" : {
+        "7599bb80-2afa-11e8-b4fc-5bba18089da0" : true
+      }
+    },
+    "d83j59d642c938g928f8" : {
+      "answers" : {
+        "2ae62c7b0d194cef9372" : "gs://cusp-quiz-app.appspot.com/images/answerimages/dogclipart.png",
+        "3cf740d9db374a79a964" : "gs://cusp-quiz-app.appspot.com/images/answerimages/treeclipart.jpg",
+        "afd768a046654ce38723" : "gs://cusp-quiz-app.appspot.com/images/answerimages/catclipart.jpg",
+        "cb3e9d69838044b1a5fd" : "gs://cusp-quiz-app.appspot.com/images/answerimages/benchclipart.png"
+      },
+      "correctanswers" : {
+        "2ae62c7b0d194cef9372" : true,
+        "3cf740d9db374a79a964" : false,
+        "afd768a046654ce38723" : true,
+        "cb3e9d69838044b1a5fd" : false
+      }
+    }
+  },
+  "course" : {
+    "93fa23ec3dcb43a9925a" : {
+      "coursecode" : "PHRM 577",
+      "faculty" : "d31b1d9547b0467aa443",
+      "quizzes" : {
+        "96f8f44213334d4eb8ff" : true
+      },
+      "students" : {
+        "e9ba98c57654426e87a6" : true
+      },
+      "title" : "Health Care Delivery I",
+      "yearrank" : "P1"
+    }
+  },
+  "faculty" : {
+    "d31b1d9547b0467aa443" : {
+      "courses" : [ "93fa23ec3dcb43a9925a" ],
+      "name" : "Jack London",
+      "questions" : {
+        "5a2ec76bf4b843a79183" : true
+      },
+      "quizzes" : {
+        "96f8f44213334d4eb8ff" : true
+      }
+    }
+  },
+  "game" : {
+    "670cac07d84b4d4abe63" : {
+      "datecreated" : "2018-15-2",
+      "gamepin" : "8419",
+      "quiz" : "96f8f44213334d4eb8ff",
+      "students" : {
+        "e9ba98c57654426e87a6" : true
+      },
+      "timecreated" : "12:58:02"
+    }
+  },
+  "ingame-student-question-selection" : {
+    "a4174d0e545e4cd3af79" : {
+      "choice" : "A",
+      "question" : "00001",
+      "quiz" : "00001",
+      "student" : "e9ba98c57654426e87a6"
+    }
+  },
+  "leaderboard" : {
+    "b29fks9mf9gh37fhh1h9814" : true,
+    "e9ba98c57654426e87a6" : true
+  },
+  "question" : {
+    "-L84R52wfZh13Dv64_lE" : {
+      "datecreated" : "2018-03-20",
+      "imageforanswers" : false,
+      "imageforquestion" : false,
+      "lastused" : false,
+      "name" : "What is your favorite color?",
+      "points" : 100,
+      "tags" : {
+        "713540d93752493cae90" : true
+      },
+      "timecreated" : "15:03:33"
+    },
+    "-L8KeFCarKrUXgmve99H" : {
+      "datecreated" : "2018-03-24",
+      "imageforanswers" : false,
+      "imageforquestion" : false,
+      "lastused" : false,
+      "name" : "What rhymes with tan?",
+      "points" : "50",
+      "quizzes" : {
+        "-L8JHaATOHycyDRYxzYA" : true,
+        "96f8f44213334d4eb8ff" : true
+      },
+      "tags" : {
+        "8y29834y9824g892984h2938h4" : true
+      },
+      "timecreated" : "18:39:21"
+    },
+    "-L8KglGFfKB_av3mIzxS" : {
+      "datecreated" : "2018-03-24",
+      "imageforanswers" : false,
+      "imageforquestion" : false,
+      "lastused" : false,
+      "name" : "Which of these words has 3 letters in it?",
+      "points" : "20",
+      "quizzes" : {
+        "96f8f44213334d4eb8ff" : true
+      },
+      "tags" : {
+        "8y29834y9824g892984h2938h4" : true
+      },
+      "timecreated" : "18:50:21"
+    },
+    "-L8KgziNTI_IHLyeEWoB" : {
+      "datecreated" : "2018-03-24",
+      "imageforanswers" : false,
+      "imageforquestion" : false,
+      "lastused" : false,
+      "name" : "How many cups in an ounce?",
+      "points" : 100,
+      "quizzes" : {
+        "-L8JHaATOHycyDRYxzYA" : true
+      },
+      "tags" : {
+        "8y29834y9824g892984h2938h4" : true
+      },
+      "timecreated" : "18:51:20"
+    },
+    "-L8_2Mhhi_E4H7phItHo" : {
+      "datecreated" : "2018-03-27",
+      "imageforanswers" : false,
+      "imageforquestion" : false,
+      "lastused" : false,
+      "name" : "What is another name for a hat?",
+      "points" : "200",
+      "quizzes" : {
+        "-L8JHaATOHycyDRYxzYA" : true
+      },
+      "tags" : {
+        "8y29834y9824g892984h2938h4" : true
+      },
+      "timecreated" : "18:23:24"
+    },
+    "5a2ec76bf4b843a79183" : {
+      "datecreated" : "02-16-2018",
+      "imageforanswers" : false,
+      "imageforquestion" : false,
+      "lastused" : {
+        "class" : "93fa23ec3dcb43a9925a",
+        "date" : "02-18-2018",
+        "time" : "10:24:13"
+      },
+      "name" : "How Many Testing Answers?",
+      "points" : "122",
+      "quizzes" : {
+        "96f8f44213334d4eb8ff" : true
+      },
+      "tags" : {
+        "2473fd35c39a499fa9997c51ab3e2496" : true
+      },
+      "timecreated" : "18:05:28"
+    },
+    "8d93j7s293nf83jd92j3" : {
+      "datecreated" : "02-16-2018",
+      "imageforanswers" : false,
+      "imageforquestion" : false,
+      "lastused" : {
+        "class" : "93fa23ec3dcb43a9925a",
+        "date" : "02-18-2018",
+        "time" : "10:24:13"
+      },
+      "name" : "How far is it to get to Los Angeles?",
+      "points" : "20",
+      "quizzes" : {
+        "96f8f44213334d4eb8ff" : true
+      },
+      "tags" : {
+        "5918026cc79843679d2b" : true
+      },
+      "timecreated" : "18:05:28"
+    },
+    "d83j59d642c938g928f8" : {
+      "datecreated" : "03-13-2018",
+      "imageforanswers" : true,
+      "imageforquestion" : false,
+      "lastused" : {
+        "class" : "93fa23ec3dcb43a9925a",
+        "date" : "03-13-2018",
+        "time" : "10:30:13"
+      },
+      "name" : "Pick the images which are pets?",
+      "points" : "20",
+      "quizzes" : {
+        "96f8f44213334d4eb8ff" : true
+      },
+      "tags" : {
+        "c038a7dba6d74b8bbed0" : true
+      },
+      "timecreated" : "12:05:28"
+    }
+  },
+  "question-name" : {
+    "-L84R52wfZh13Dv64_lE" : {
+      "name" : "What is your favorite color?"
+    },
+    "-L8KeFCarKrUXgmve99H" : {
+      "name" : "What rhymes with tan?"
+    },
+    "-L8KglGFfKB_av3mIzxS" : {
+      "name" : "Which of these words has 3 letters in it?"
+    },
+    "-L8KgziNTI_IHLyeEWoB" : {
+      "name" : "How many cups in an ounce?"
+    },
+    "-L8_2Mhhi_E4H7phItHo" : {
+      "name" : "What is another name for a hat?"
+    },
+    "5a2ec76bf4b843a79183" : {
+      "name" : "How Many Testing Answers?"
+    },
+    "8d93j7s293nf83jd92j3" : {
+      "name" : "How far is it to get to Los Angeles?"
+    },
+    "d83j59d642c938g928f8" : {
+      "name" : "Pick the images which are pets?"
+    }
+  },
+  "quiz" : {
+    "-L8JHaATOHycyDRYxzYA" : {
+      "available" : true,
+      "courses" : false,
+      "datecreated" : "2018-03-23",
+      "lastused" : false,
+      "name" : "Quiz About Random Things",
+      "points" : 100,
+      "questions" : {
+        "-L8KeFCarKrUXgmve99H" : true,
+        "-L8KgziNTI_IHLyeEWoB" : true,
+        "-L8_2Mhhi_E4H7phItHo" : true
+      },
+      "tags" : {
+        "8y29834y9824g892984h2938h4" : true
+      },
+      "timecreated" : "12:16:23",
+      "visible" : true
+    },
+    "-L8KSo3mFcXbBW8_EUVB" : {
+      "available" : false,
+      "courses" : false,
+      "datecreated" : "2018-03-24",
+      "lastused" : false,
+      "name" : "Mesed",
+      "points" : 100,
+      "questions" : false,
+      "tags" : {
+        "713540d93752493cae90" : true
+      },
+      "timecreated" : "17:45:00",
+      "visible" : false
+    },
+    "-L8jVXMkS6gBvIVyC-eo" : {
+      "available" : false,
+      "courses" : false,
+      "datecreated" : "2018-03-29",
+      "lastused" : false,
+      "name" : "test",
+      "points" : 100,
+      "questions" : false,
+      "tags" : {
+        "2473fd35c39a499fa9997c51ab3e2496" : true
+      },
+      "timecreated" : "19:07:02",
+      "visible" : false
+    },
+    "-L98NJbX0YUn6FCjD6Vz" : {
+      "available" : false,
+      "courses" : false,
+      "datecreated" : "2018-04-03",
+      "lastused" : false,
+      "name" : "hello",
+      "points" : 100,
+      "questions" : false,
+      "tags" : {
+        "713540d93752493cae90" : true
+      },
+      "timecreated" : "19:41:10",
+      "visible" : false
+    },
+    "-L98Of2v1Q1E6fSFFg6g" : {
+      "available" : false,
+      "courses" : false,
+      "datecreated" : "2018-04-03",
+      "lastused" : false,
+      "name" : "dqfqfqwdqwd",
+      "points" : 100,
+      "questions" : false,
+      "tags" : {
+        "2473fd35c39a499fa9997c51ab3e2496" : true
+      },
+      "timecreated" : "19:47:03",
+      "visible" : false
+    },
+    "96f8f44213334d4eb8ff" : {
+      "available" : true,
+      "courses" : {
+        "93fa23ec3dcb43a9925a" : true
+      },
+      "datecreated" : "02-16-2018",
+      "lastused" : {
+        "class" : "93fa23ec3dcb43a9925a",
+        "date" : "02-18-2018",
+        "time" : "10:24:13"
+      },
+      "name" : "Quiz #2",
+      "points" : 20,
+      "questions" : {
+        "-L8KeFCarKrUXgmve99H" : true,
+        "-L8KglGFfKB_av3mIzxS" : true,
+        "5a2ec76bf4b843a79183" : true,
+        "8d93j7s293nf83jd92j3" : true,
+        "d83j59d642c938g928f8" : true
+      },
+      "tags" : {
+        "2473fd35c39a499fa9997c51ab3e2496" : true
+      },
+      "timecreated" : "18:05:28",
+      "visible" : true
+    }
+  },
+  "quiz-name" : {
+    "-L8JHaATOHycyDRYxzYA" : {
+      "name" : "Quiz About Random Things"
+    },
+    "-L8KSo3mFcXbBW8_EUVB" : {
+      "name" : "Mesed"
+    },
+    "-L8jVXMkS6gBvIVyC-eo" : {
+      "name" : "test"
+    },
+    "-L98NJbX0YUn6FCjD6Vz" : {
+      "name" : "hello"
+    },
+    "-L98Of2v1Q1E6fSFFg6g" : {
+      "name" : "dqfqfqwdqwd"
+    },
+    "96f8f44213334d4eb8ff" : {
+      "name" : "Quiz #2"
+    }
+  },
+  "score" : {
+    "3c7vb478n5dv45svf77n98uh76t" : {
+      "points" : 20,
+      "quiz" : {
+        "96f8f44213334d4eb8ff" : true
+      },
+      "student" : {
+        "e9ba98c57654426e87a6" : true
+      }
+    },
+    "84y1jn1n12n8n0f80n180289398n1" : {
+      "points" : 50,
+      "quiz" : {
+        "96f8f44213334d4eb8ff" : true
+      },
+      "student" : {
+        "b29fks9mf9gh37fhh1h9814" : true
+      }
+    }
+  },
+  "student" : {
+    "b29fks9mf9gh37fhh1h9814" : {
+      "courses" : {
+        "93fa23ec3dcb43a9925a" : true
+      },
+      "password" : "notsureifweshouldhavepasswordstoredhere",
+      "scores" : {
+        "84y1jn1n12n8n0f80n180289398n1" : true
+      },
+      "username" : "tacobellfan292",
+      "usernamechanged" : false
+    },
+    "e9ba98c57654426e87a6" : {
+      "courses" : {
+        "93fa23ec3dcb43a9925a" : true
+      },
+      "password" : "notsureifweshouldhavepasswordstoredhere",
+      "profilepic" : "gs://cusp-quiz-app.appspot.com/images/studentprofilepictures/CatStudentImage.jpg",
+      "scores" : {
+        "3c7vb478n5dv45svf77n98uh76t" : true
+      },
+      "username" : "lylenator2000",
+      "usernamechanged" : true
+    }
+  },
+  "tag" : {
+    "2473fd35c39a499fa9997c51ab3e2496" : {
+      "color" : "blue",
+      "name" : "Biology",
+      "questions" : {
+        "5a2ec76bf4b843a79183" : true
+      },
+      "quizzes" : {
+        "-L8jVXMkS6gBvIVyC-eo" : true,
+        "-L98Of2v1Q1E6fSFFg6g" : true,
+        "96f8f44213334d4eb8ff" : true
+      }
+    },
+    "5918026cc79843679d2b" : {
+      "color" : "yellow",
+      "name" : "Nephrology",
+      "questions" : {
+        "8d93j7s293nf83jd92j3" : true
+      }
+    },
+    "713540d93752493cae90" : {
+      "color" : "pink",
+      "name" : "Oncology",
+      "questions" : {
+        "-L84R52wfZh13Dv64_lE" : true
+      },
+      "quizzes" : {
+        "-L8KSo3mFcXbBW8_EUVB" : true,
+        "-L98NJbX0YUn6FCjD6Vz" : true
+      }
+    },
+    "8y29834y9824g892984h2938h4" : {
+      "color" : "purple",
+      "name" : "Frivolous",
+      "questions" : {
+        "-L8KeFCarKrUXgmve99H" : true,
+        "-L8KglGFfKB_av3mIzxS" : true,
+        "-L8KgziNTI_IHLyeEWoB" : true,
+        "-L8_2Mhhi_E4H7phItHo" : true
+      },
+      "quizzes" : {
+        "-L8JHaATOHycyDRYxzYA" : true
+      }
+    },
+    "c038a7dba6d74b8bbed0" : {
+      "color" : "green",
+      "name" : "Cardiology",
+      "questions" : {
+        "d83j59d642c938g928f8" : true
+      }
+    }
+  },
+  "users" : {
+    "2pqSH9EAE3M4dkGeOUC4lLcw9bi1" : {
+      "email" : "tom@tom.com"
+    }
+  }
+}
