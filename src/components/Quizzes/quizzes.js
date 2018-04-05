@@ -224,11 +224,10 @@ class FilterQuizzes extends Component {
                                 )
                             })}
                         </select>
-                        <button disabled={this.props.inEditMode}>Search For Quizzes With Tag </button>
+                        <button disabled={this.props.inEditMode}>Filter </button>
                     </form>
                 </div>
 
-                {this.props.quizFilterResults.length > 0 &&
                 <div className="quizSelection">
                     {/* TODO: Must maintain concurrency: I.e. if a quiz is deleted by another admin, need to make sure
                             the currently selected quiz changed back to default, or alerts the user
@@ -236,11 +235,7 @@ class FilterQuizzes extends Component {
                     <form onSubmit={this.props.onSelectEditQuizSubmit}>
                         <select multiple class = "form-control" name="currentlySelectedQuiz" value={this.props.currentlySelectedQuiz}
                                 onChange={this.handleChange} disabled={this.props.inEditMode}>
-                            <option name="defaultQuizOption"
-                                    value="defaultOption"
-                                    key="defaultOption">---Please Select a Quiz---
-                            </option>
-                            {this.props.quizFilterResults.map((item) => {
+                            {this.props.quizFilterResults.length > 0 && this.props.quizFilterResults.map((item) => {
                                 return (
                                     <option name="quizToSelectOption"
                                             key={item.id}
@@ -251,7 +246,6 @@ class FilterQuizzes extends Component {
                         <button disabled={this.props.inEditMode}> Edit!</button>
                     </form>
                 </div>
-                }
             </div>
         )
     }
@@ -402,7 +396,7 @@ class QuizEdit extends Component {
                             <input type="text"
                                    name="existingQuizText"
                                    value={this.state.quizData.name}
-                                   placeholder="Enter Quiz Text Here"
+                                   placeholder="Enter Quiz Text Here" maxlength="90" size="100"
                                    onChange={(event) => this.handleTextStateChange(event, "name")}/>
                             <h4> Total Points </h4>
                             {/* This needs to be determined automatically */}
@@ -424,7 +418,7 @@ class QuizEdit extends Component {
                             {Object.keys(this.state.quizData.questions).map((quizID) => {
                                 return (
                                     <div key={quizID}>
-                                        <input type="text" name="questionsInSelection" disabled="true"
+                                        <input type="text" name="questionsInSelection" disabled="true" maxlength="90" size="100"
                                                value={this.props.allQuestionNames[quizID].name} />
                                         <button type="button" onClick={(event) => this.deleteQuestionFromQuiz(event, quizID)}> Delete </button>
                                     </div>
@@ -565,7 +559,7 @@ class Modal extends React.Component {
 
 
     close(e) {
-      e.preventDefault()
+      e.preventDefault();
 
       if (this.props.onClose) {
         this.props.onClose()

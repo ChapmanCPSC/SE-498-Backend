@@ -181,13 +181,14 @@ class FilterQuestions extends Component {
     }
     render() {
         return(
-            <div>
+            <div className="marginstuff">
                 <div className="questionTagSearch">
                     <form onSubmit={this.props.onTagSearchSubmit}>
-                        <select name="currentlySelectedTag" value={this.props.currentlySelectedTag} onChange={this.handleChange} disabled={this.props.inEditMode}>
+                        <select name="currentlySelectedTag" value={this.props.currentlySelectedTag}
+                                onChange={this.handleChange} disabled={this.props.inEditMode}>
                             <option name="defaultTagOption"
                                     value="defaultOption"
-                                    key="defaultOption">---Select a Tag!---</option>
+                                    key="defaultOption" >--Please Select a Tag!--</option>
                             {Object.keys(this.props.tags).map(key => {
                                 return ( <option name="tagOption"
                                                  key={key}
@@ -195,7 +196,7 @@ class FilterQuestions extends Component {
                                 )
                             })}
                         </select>
-                        <button disabled={this.props.inEditMode}>Search For Questions With Tag </button>
+                        <button disabled={this.props.inEditMode}>Filter </button>
                     </form>
                 </div>
                 {/* Here is a box for searching for a question in the database by tag
@@ -210,19 +211,14 @@ class FilterQuestions extends Component {
                         <button>Search</button>
                     </form>
                 </div> */}
-                {this.props.questionFilterResults.length > 0 &&
                     <div className="questionSelection">
                         {/* TODO: Must maintain concurrency: I.e. if a question is deleted by another admin, need to make sure
                             the currently selected question changed back to default, or alerts the user
                         */}
                         <form onSubmit={this.props.onSelectEditQuestionSubmit}>
-                            <select name="currentlySelectedQuestion" value={this.props.currentlySelectedQuestion}
-                                    onChange={this.handleChange} disabled={this.props.inEditMode}>
-                                <option name="defaultQuestionOption"
-                                        value="defaultOption"
-                                        key="defaultOption">---Please Select a Question---
-                                </option>
-                                {this.props.questionFilterResults.map((item) => {
+                            <select multiple class = "form-control" name="currentlySelectedQuestion" value={this.props.currentlySelectedQuestion}
+                                    onChange={this.handleChange} disabled={this.props.inEditMode} size="10">
+                                {this.props.questionFilterResults.length > 0 && this.props.questionFilterResults.map((item) => {
                                     return (
                                         <option name="questionToSelectOption"
                                                 key={item.id}
@@ -233,7 +229,6 @@ class FilterQuestions extends Component {
                             <button disabled={this.props.inEditMode}> Edit!</button>
                         </form>
                     </div>
-                }
             </div>
         )
     }
@@ -343,18 +338,22 @@ class QuestionEdit extends Component {
     }
 
     addAnswerChoice(event) {
-        let id = utils.generateAnswerID(); {/*  Generate A ID for the answer key */}
-        {/* This is REALLY inefficient and we need another way of doing this without nested assigns*/}
-        this.setState({
-            answerData: Object.assign({}, this.state.answerData, {
-                answers : Object.assign({}, this.state.answerData.answers, {
-                    [id] : "",
+        if(Object.keys(this.state.answerData.answers).length !== 4) {
+            let id = utils.generateAnswerID(); {/*  Generate A ID for the answer key */}
+            this.setState({
+                answerData: Object.assign({}, this.state.answerData, {
+                    answers : Object.assign({}, this.state.answerData.answers, {
+                        [id] : "",
+                    }),
+                    correctanswers : Object.assign({}, this.state.answerData.correctanswers, {
+                        [id] : false,
+                    }),
                 }),
-                correctanswers : Object.assign({}, this.state.answerData.correctanswers, {
-                    [id] : false,
-                }),
-            }),
-        });
+            });
+        }
+        else {
+            {/* Alert user */}
+        }
     }
 
     submitQuestion(event) {
@@ -404,7 +403,7 @@ class QuestionEdit extends Component {
                         <input type="text"
                                name="existingQuestionText"
                                value={this.state.questionData.name}
-                               placeholder="Enter Question Text Here"
+                               placeholder="Enter Question Text Here" maxlength="90" size="100"
                                onChange={(event) => this.handleTextStateChange(event, "name")}/>
                         <h4> Points </h4>
                         <input type="text"
@@ -441,41 +440,121 @@ class QuestionEdit extends Component {
 }
 
 
+class Modal extends React.Component {
+    render() {
+        if (this.props.isOpen === false)
+            return null
+
+        let modalStyle = {
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            zIndex: '9999',
+            background: '#9de1f7'
+        }
+
+        if (this.props.width && this.props.height) {
+            modalStyle.width = this.props.width + 'px',
+                modalStyle.height = this.props.height + 'px',
+                modalStyle.marginLeft = '-' + (this.props.width/2) + 'px',
+                modalStyle.marginTop = '-' + (this.props.height/2) + 'px',
+                modalStyle.transform = null,
+                modalStyle.padding = 10 + 'px'
+        }
+
+        if (this.props.style) {
+            for (let key in this.props.style) {
+                modalStyle[key] = this.props.style[key]
+            }
+        }
+
+        let backdropStyle = {
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            top: '0px',
+            left: '0px',
+            zIndex: '9998',
+            background: 'rgba(0, 0, 0, 0.3)'
+        }
+
+        if (this.props.backdropStyle) {
+            for (let key in this.props.backdropStyle) {
+                backdropStyle[key] = this.props.backdropStyle[key]
+            }
+        }
+
+        return (
+            <div className={this.props.containerClassName}>
+                <div className={this.props.className} style={modalStyle}>
+                    {this.props.children}
+                </div>
+                {!this.props.noBackdrop &&
+                <div className={this.props.backdropClassName} style={backdropStyle}
+                     onClick={e => this.close(e)}/>}
+            </div>
+        )
+    }
+
+
+    close(e) {
+        e.preventDefault();
+
+        if (this.props.onClose) {
+            this.props.onClose()
+        }
+    }
+}
+
+
 class AddQuestion extends Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
+        this.state = { isModalOpen: false }
     }
     handleChange(event) {
         this.props.handleChange(event)
     }
     render() {
         return (
-            <div class = "marginstuff" className="addNewQuestion">
+            <div className="addNewQuestion">
                 <h3> Add New Question </h3>
-                <form onSubmit={this.props.onAddQuestionSubmit}>
-                    <input type="text"
-                           disabled={this.props.inEditMode}
-                           name="newQuestionText"
-                           placeholder="Please enter your question"
-                           value={this.props.newQuestionText}
-                           onChange={this.handleChange}
-                    />
-                    <select name="currentlySelectedTagToAdd" value={this.props.currentlySelectedTagToAdd} onChange={this.handleChange} disabled={this.props.inEditMode}>
-                        <option name="defaultTagOption"
-                                value="defaultOption"
-                                key="defaultOption">---Select a Tag!---</option>
-                        {Object.keys(this.props.tags).map(key => {
-                            return ( <option name="tagOption"
-                                             key={key}
-                                             value={key}>{this.props.tags[key].name}</option>
-                            )
-                        })}
-                    </select>
-                    <button disabled={this.props.inEditMode}>Add Question</button>
-                </form>
+                <button onClick={() => this.openModal()}>Open modal</button>
+                <Modal isOpen={this.state.isModalOpen} onClose={() => this.closeModal()}>
+                    <form onSubmit={this.props.onAddQuestionSubmit}>
+                        <input type="text"
+                               disabled={this.props.inEditMode}
+                               name="newQuestionText"
+                               placeholder="Please enter your question"
+                               value={this.props.newQuestionText}
+                               onChange={this.handleChange}
+                        />
+                        <select name="currentlySelectedTagToAdd" value={this.props.currentlySelectedTagToAdd} onChange={this.handleChange} disabled={this.props.inEditMode}>
+                            <option name="defaultTagOption"
+                                    value="defaultOption"
+                                    key="defaultOption">---Select a Tag!---</option>
+                            {Object.keys(this.props.tags).map(key => {
+                                return ( <option name="tagOption"
+                                                 key={key}
+                                                 value={key}>{this.props.tags[key].name}</option>
+                                )
+                            })}
+                        </select>
+                        <button disabled={this.props.inEditMode}>Add Question</button>
+                        <p><button onClick={() => this.closeModal()}>Close</button></p>
+                    </form>
+                </Modal>
             </div>
         )
+    }
+    openModal() {
+        this.setState({ isModalOpen: true })
+    }
+
+    closeModal() {
+        this.setState({ isModalOpen: false })
     }
 }
 
@@ -513,7 +592,7 @@ class Answers extends React.Component {
                 {Object.keys(this.props.answerData.answers).map((answerID) => {
                     return (
                         <div key={answerID}>
-                            <input type="text" name="answersInSelection" placeholder="Enter Answer Text Here"
+                            <input type="text" name="answersInSelection" placeholder="Enter Answer Text Here" maxlength="70" size="80"
                                    value={this.props.answerData.answers[answerID]} onChange={(event) => this.handleAnswerTextChange(event, answerID)}/>
                             <input type="checkbox" checked={this.props.answerData.correctanswers[answerID]} onChange={(event) => this.handleAnswerCorrectOrNot(event, answerID)}/>
                             <button type="button" onClick={(event) => this.deleteAnswerChoice(event, answerID)}> Delete </button>
