@@ -164,7 +164,7 @@ class QuizzesPage extends Component {
 
     render () {
         return <div class = "marginstuff">
-            <h1> Quizzes Page </h1>
+            <h1> MANAGE QUIZ</h1>
             <FilterQuizzes
                 tags={this.state.tags}
                 handleChange={this.handleChange}
@@ -211,12 +211,12 @@ class FilterQuizzes extends Component {
     render() {
         return(
             <div className = "marginstuff">
-                <div className="quizTagSearch">
+                <div className="marginTopBot">
                     <form onSubmit={this.props.onTagSearchSubmit}>
                         <select name="currentlySelectedTag" value={this.props.currentlySelectedTag} onChange={this.handleChange} disabled={this.props.inEditMode}>
                             <option name="defaultTagOption"
                                     value="defaultOption"
-                                    key="defaultOption">---Select a Tag!---</option>
+                                    key="defaultOption">---Select a Tag---</option>
                             {Object.keys(this.props.tags).map(key => {
                                 return ( <option name="tagOption"
                                                  key={key}
@@ -224,22 +224,18 @@ class FilterQuizzes extends Component {
                                 )
                             })}
                         </select>
-                        <button disabled={this.props.inEditMode}>Search For Quizzes With Tag </button>
+                        <button class = "marginRight btn btn-info" disabled={this.props.inEditMode}>FILTER TAG</button>
                     </form>
                 </div>
 
                 {this.props.quizFilterResults.length > 0 &&
-                <div className="quizSelection">
+                <div class="form-group">
                     {/* TODO: Must maintain concurrency: I.e. if a quiz is deleted by another admin, need to make sure
                             the currently selected quiz changed back to default, or alerts the user
                         */}
                     <form onSubmit={this.props.onSelectEditQuizSubmit}>
                         <select multiple class = "form-control" name="currentlySelectedQuiz" value={this.props.currentlySelectedQuiz}
                                 onChange={this.handleChange} disabled={this.props.inEditMode}>
-                            <option name="defaultQuizOption"
-                                    value="defaultOption"
-                                    key="defaultOption">---Please Select a Quiz---
-                            </option>
                             {this.props.quizFilterResults.map((item) => {
                                 return (
                                     <option name="quizToSelectOption"
@@ -248,7 +244,7 @@ class FilterQuizzes extends Component {
                                 )
                             })}
                         </select>
-                        <button disabled={this.props.inEditMode}> Edit!</button>
+                        <button class = "marginTopBot btn btn-info" disabled={this.props.inEditMode}> EDIT</button>
                     </form>
                 </div>
                 }
@@ -467,33 +463,40 @@ class AddQuiz extends Component {
     render() {
         return (
             <div class = "marginstuff">
-                <h3> Add New Quiz </h3>
-                <button onClick={() => this.openModal()}>Open modal</button>
-                <Modal isOpen={this.state.isModalOpen} onClose={() => this.closeModal()}>
-                    <form class = 'modalPad' onSubmit={this.props.onAddQuizSubmit}>
-                    <input type="text"
-                           disabled={this.props.inEditMode}
-                           name="newQuizText"
-                           placeholder="Please enter your quiz name"
-                           value={this.props.newQuizText}
-                           onChange={this.handleChange}
-                    />
-                    <select name="currentlySelectedTagToAdd" value={this.props.currentlySelectedTagToAdd} onChange={this.handleChange} disabled={this.props.inEditMode}>
-                        <option name="defaultTagOption"
-                                value="defaultOption"
-                                key="defaultOption">---Select a Tag!---</option>
-                        {Object.keys(this.props.tags).map(key => {
-                            return ( <option name="tagOption"
-                                             key={key}
-                                             value={key}>{this.props.tags[key].name}</option>
-                            )
-                        })}
-                    </select>
-                    <button disabled={this.props.inEditMode}>Add Quiz</button>
-                    <p><button onClick={() => this.closeModal()}>Close</button></p>
-                </form>
-                    
-                </Modal>
+                <button class = "btn btn-info" onClick={() => this.openModal()}>ADD QUIZ</button>
+                <div class ="roundedge">
+                    <Modal isOpen={this.state.isModalOpen} onClose={() => this.closeModal()}>
+                            <div class = 'roundedgetop modal-header'>    
+                                <h1>ADD A QUIZ </h1>
+                            </div>
+                            <form class = 'modalPad' onSubmit={this.props.onAddQuizSubmit}>
+                            <input type="text"
+                                   disabled={this.props.inEditMode}
+                                   name="newQuizText"
+                                   placeholder="Please enter your quiz name"
+                                   value={this.props.newQuizText}
+                                   onChange={this.handleChange}
+                            />
+                            <select name="currentlySelectedTagToAdd" value={this.props.currentlySelectedTagToAdd} onChange={this.handleChange} disabled={this.props.inEditMode}>
+                                <option name="defaultTagOption"
+                                        value="defaultOption"
+                                        key="defaultOption">---Select a Tag!---</option>
+                                {Object.keys(this.props.tags).map(key => {
+                                    return ( <option name="tagOption"
+                                                     key={key}
+                                                     value={key}>{this.props.tags[key].name}</option>
+                                    )
+                                })}
+                            </select>
+                               
+                            </form>
+                            <div class = "roundedgebot modal-header" >
+                                    <button class = "btn btn-info" disabled={this.props.inEditMode} onClick={() => this.closeModal()}>Add Quiz</button>
+                            </div> 
+                            
+                        
+                    </Modal>
+                </div>
                 
             </div>
         )
@@ -517,23 +520,11 @@ class Modal extends React.Component {
         left: '50%',
         transform: 'translate(-50%, -50%)',
         zIndex: '9999',
-        background: '#9de1f7'
+        backgroundColor: '#fff',
+        borderRadius: 20,
+        margin: '0 auto',
       }
 
-      if (this.props.width && this.props.height) {
-        modalStyle.width = this.props.width + 'px',
-        modalStyle.height = this.props.height + 'px',
-        modalStyle.marginLeft = '-' + (this.props.width/2) + 'px',
-        modalStyle.marginTop = '-' + (this.props.height/2) + 'px',
-        modalStyle.transform = null,
-        modalStyle.padding = 10 + 'px'
-      }
-
-      if (this.props.style) {
-        for (let key in this.props.style) {
-          modalStyle[key] = this.props.style[key]
-        }
-      }
 
       let backdropStyle = {
         position: 'absolute',
