@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "babel-preset-react": "^6.24.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-native": "^0.53.0",
@@ -26,10 +27,10 @@
   },
   "jest": {
     "preset": "react-native",
-    "transform" : {
+    "transform": {
       "^.+\\.js?$": "babel-jest"
     },
-     "transformIgnorePatterns": [
+    "transformIgnorePatterns": [
       "!node_modules/react-runtime"
     ]
   }

@@ -20,6 +20,7 @@ const NavigationAuth = () =>
       <Link to={routes.ACCOUNT}>Account</Link>
       <Link to={routes.QUIZZES}>Quizzes</Link>
       <Link to={routes.QUESTIONS}>Questions</Link>
+        <Link to={routes.GAME}>Game</Link>
       <SignOutButton />
     </div>
   </div>

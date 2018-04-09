@@ -2611,8 +2611,8 @@ fieldset:disabled a.btn {
 
 .btn-info:hover {
   color: #fff;
-  background-color: #ED7474;
-  border-color: #ED7474;
+  background-color: #138496;
+  border-color: #117a8b;
 }
 
 .btn-info:focus, .btn-info.focus {
@@ -9053,27 +9053,4 @@ img {
 .marginstuff{
   margin: 20px;
 }
-.modalPad{
-  padding: 20px;
-}
-.modal-header {
-    background-color: #9de1f7;
-    color: white;
-}
-.roundedgetop{
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-}
-.roundedgebot{
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-}
-.marginRight{
-  margin-left: 8px;
-}
-.marginTopBot{
-  margin-bottom: 8px;
-  margin-top: 8px;
-}
-
 /*# sourceMappingURL=bootstrap.css.map */
