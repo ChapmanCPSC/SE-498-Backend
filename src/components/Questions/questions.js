@@ -213,7 +213,7 @@ class FilterQuestions extends Component {
                 </div> */}
                     <div className="questionSelection">
                         {/* TODO: Must maintain concurrency: I.e. if a question is deleted by another admin, need to make sure
-                            the currently selected question changed back to default, or alerts the user
+                            the currently selected question changed back to default, or alert the user
                         */}
                         <form onSubmit={this.props.onSelectEditQuestionSubmit}>
                             <select multiple class = "form-control" name="currentlySelectedQuestion" value={this.props.currentlySelectedQuestion}
