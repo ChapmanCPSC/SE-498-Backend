@@ -558,6 +558,17 @@ class AddQuestion extends Component {
     }
 }
 
+class AddTag extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+
+    }
+    handleChange(event) {
+        this.props.handleChange(event)
+    }
+}
+
 class Answers extends React.Component {
     constructor(props) {
         super(props);
