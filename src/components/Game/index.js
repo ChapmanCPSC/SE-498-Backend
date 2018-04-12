@@ -3,7 +3,6 @@ import * as routes from '../../constants/routes';
 import { firebase } from '../../firebase';
 import { db } from '../../firebase';
 import * as utils from '../../utilities/utils.js'
-import '../css/bootstrap/dist/css/bootstrap.min.css';
 
 const GamePage = () =>
     <div class="container">
