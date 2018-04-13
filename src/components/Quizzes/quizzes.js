@@ -163,37 +163,41 @@ class QuizzesPage extends Component {
     }
 
     render () {
-        return <div class = "marginstuff">
-            <h1> MANAGE QUIZ</h1>
-            <FilterQuizzes
-                tags={this.state.tags}
-                handleChange={this.handleChange}
-                currentlySelectedTag={this.state.currentlySelectedTag}
-                onTagSearchSubmit={this.handleGetQuizzesWithTag}
-                onSelectEditQuizSubmit={this.handleGetQuizForEditFormSubmit}
-                currentlySelectedQuiz={this.state.currentlySelectedQuiz}
-                quizFilterResults={this.state.quizFilterResults}
-                inEditMode={this.state.inEditMode}/>
-            <AddQuiz
-                newQuizText={this.state.newQuizText}
-                onAddQuizSubmit={this.handleAddQuizSubmit}
-                handleChange={this.handleChange}
-                inEditMode={this.state.inEditMode}
-                currentlySelectedTagToAdd={this.state.currentlySelectedTagToAdd}
-                tags={this.state.tags}/>
-
-
-            <QuizEdit
-                selectedQuizForEditing={this.state.currentlySelectedQuiz}
-                inEditMode={this.state.inEditMode}
-                handleChange={this.handleChange}
-                handleExitEditMode={this.handleExitEditMode}
-                handleGetQuestionsWithTag={this.handleGetQuestionsWithTag}
-                currentlySelectedQuestion={this.state.currentlySelectedQuestion}
-                currentlySelectedTagForQuestionSearch={this.state.currentlySelectedTagForQuestionSearch}
-                questionFilterResults={this.state.questionFilterResults}
-                allQuestionNames={this.state.allQuestionNames}
-                tags={this.state.tags}/>
+        return <div > 
+            <div >
+                <div class = "center">
+                    <h1> MANAGE QUIZ</h1>
+                    <FilterQuizzes
+                        tags={this.state.tags}
+                        handleChange={this.handleChange}
+                        currentlySelectedTag={this.state.currentlySelectedTag}
+                        onTagSearchSubmit={this.handleGetQuizzesWithTag}
+                        onSelectEditQuizSubmit={this.handleGetQuizForEditFormSubmit}
+                        currentlySelectedQuiz={this.state.currentlySelectedQuiz}
+                        quizFilterResults={this.state.quizFilterResults}
+                        inEditMode={this.state.inEditMode}/>
+                    <AddQuiz
+                        newQuizText={this.state.newQuizText}
+                        onAddQuizSubmit={this.handleAddQuizSubmit}
+                        handleChange={this.handleChange}
+                        inEditMode={this.state.inEditMode}
+                        currentlySelectedTagToAdd={this.state.currentlySelectedTagToAdd}
+                        tags={this.state.tags}/>
+                </div>
+                <div>
+                    <QuizEdit
+                        selectedQuizForEditing={this.state.currentlySelectedQuiz}
+                        inEditMode={this.state.inEditMode}
+                        handleChange={this.handleChange}
+                        handleExitEditMode={this.handleExitEditMode}
+                        handleGetQuestionsWithTag={this.handleGetQuestionsWithTag}
+                        currentlySelectedQuestion={this.state.currentlySelectedQuestion}
+                        currentlySelectedTagForQuestionSearch={this.state.currentlySelectedTagForQuestionSearch}
+                        questionFilterResults={this.state.questionFilterResults}
+                        allQuestionNames={this.state.allQuestionNames}
+                        tags={this.state.tags}/>
+                </div>
+            </div>
         </div>
     }
 }
@@ -224,7 +228,7 @@ class FilterQuizzes extends Component {
                                 )
                             })}
                         </select>
-                        <button disabled={this.props.inEditMode}>Filter </button>
+                        <button class = "marginTopBot marginLeft btn btn-info" disabled={this.props.inEditMode}>Filter </button>
                     </form>
                 </div>
 
@@ -233,7 +237,7 @@ class FilterQuizzes extends Component {
                             the currently selected quiz changed back to default, or alerts the user
                         */}
                     <form onSubmit={this.props.onSelectEditQuizSubmit}>
-                        <select multiple class = "form-control" name="currentlySelectedQuiz" value={this.props.currentlySelectedQuiz}
+                        <select style={{width: 800 + 'px'}} class = "form-control" size = "10" name="currentlySelectedQuiz" value={this.props.currentlySelectedQuiz}
                                 onChange={this.handleChange} disabled={this.props.inEditMode}>
                             {this.props.quizFilterResults.length > 0 && this.props.quizFilterResults.map((item) => {
                                 return (
@@ -388,50 +392,58 @@ class QuizEdit extends Component {
         if(this.props.inEditMode && this.state.quizData !== undefined) {
             return(
                 <div>
-                    <div className="quizEditDiv">
+                    <div class = "marginstuff">
                         <form onSubmit={this.submitQuiz}>
                             <h1> Edit </h1>
-                            <button type="button" onClick={this.handleExitEditMode}> Go Back To Quiz Select </button>
-                            <h4> Quiz Name: </h4>
-                            <input type="text"
-                                   name="existingQuizText"
-                                   value={this.state.quizData.name}
-                                   placeholder="Enter Quiz Text Here" maxlength="90" size="100"
-                                   onChange={(event) => this.handleTextStateChange(event, "name")}/>
-                            <h4> Total Points </h4>
-                            {/* This needs to be determined automatically */}
-                            <input type="text"
-                                   disabled="true"
-                                   name="totalPoints"
-                                   value={this.state.quizData.points}
-                                   placeholder="Total Points for this quiz"
-                                   onChange={(event) => this.handleTextStateChange(event, "points")}/>
                             <div>
-                                <h5> Available in Practice Mode? </h5>
-                                <input type="checkbox" checked={this.state.quizData.available} onChange={(event) => this.handleCheckBoxStateChange(event, "available")}/>
-                            </div>
-                            <div>
-                                <h5> Visible to Students? </h5>
-                                <input type="checkbox" checked={this.state.quizData.visible} onChange={(event) => this.handleCheckBoxStateChange(event, "visible")}/>
-                            </div>
-                            <h4> Questions in Quiz </h4>
-                            {Object.keys(this.state.quizData.questions).map((quizID) => {
-                                return (
-                                    <div key={quizID}>
-                                        <input type="text" name="questionsInSelection" disabled="true" maxlength="90" size="100"
-                                               value={this.props.allQuestionNames[quizID].name} />
-                                        <button type="button" onClick={(event) => this.deleteQuestionFromQuiz(event, quizID)}> Delete </button>
+                                <div class = "row">
+                                    <div class = "column">
+                                        <div align = "left">
+                                            <button type="button" class = "marginTopBot marginLeft btn btn-info" onClick={this.handleExitEditMode}> RETURN TO QUIZ LIST </button>
+                                            <h4> Quiz Name: </h4>
+                                            <input type="text"
+                                                   name="existingQuizText"
+                                                   value={this.state.quizData.name}
+                                                   placeholder="Enter Quiz Text Here" maxlength="60" size="70"
+                                                   onChange={(event) => this.handleTextStateChange(event, "name")}/>
+                                            <h4> Total Points </h4>
+                                            {/* This needs to be determined automatically */}
+                                            <input type="text"
+                                                   disabled="true"
+                                                   name="totalPoints"
+                                                   value={this.state.quizData.points}
+                                                   placeholder="Total Points for this quiz"
+                                                   onChange={(event) => this.handleTextStateChange(event, "points")}/>
+                                            <div>
+                                                <h5> Available in Practice Mode? </h5>
+                                                <input type="checkbox" checked={this.state.quizData.available} onChange={(event) => this.handleCheckBoxStateChange(event, "available")}/>
+                                            </div>
+                                            <div>
+                                                <h5> Visible to Students? </h5>
+                                                <input type="checkbox" checked={this.state.quizData.visible} onChange={(event) => this.handleCheckBoxStateChange(event, "visible")}/>
+                                            </div>
+                                        </div>
                                     </div>
-                                )
-                            })}
-                            <button>Submit Changes!</button>
-                        </form>
-                        <form onSubmit={this.deleteQuiz}>
-                            <h4> Want to delete the quiz? </h4>
-                            <button> Delete (PERMANENT)</button>
+                                    <div class = "column">
+                                        <div align = "left">
+                                            <h4> Questions in Quiz </h4>
+                                            {Object.keys(this.state.quizData.questions).map((quizID) => {
+                                                return (
+                                                    <div key={quizID}>
+                                                        <textarea class = "form-control" name="questionsInSelection" disabled="true" maxlength="60" size="3"
+                                                               value={this.props.allQuestionNames[quizID].name} />
+                                                        <button type="button" class = "marginTopBot marginLeft btn btn-info" onClick={(event) => this.deleteQuestionFromQuiz(event, quizID)}> Delete </button>
+                                                    </div>
+                                                )
+                                            })}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
 
                     </div>
+                    <div class ="marginstuff">
                         <AddQuestionToQuiz
                             addQuestionToQuiz={this.addQuestionToQuiz}
                             handleChange={this.handleChange}
@@ -441,6 +453,11 @@ class QuizEdit extends Component {
                             questionFilterResults={this.props.questionFilterResults}
                             tags={this.props.tags}
                             />
+                    </div>
+                    <form class = "marginstuff" onSubmit={this.deleteQuiz}>
+                            <button class = "marginTopBot marginLeft btn btn-info">SUBMIT</button>
+                            <button class = "marginTopBot marginLeft btn btn-info" > DELETE </button>
+                    </form>
                 </div>
 
             )
@@ -461,7 +478,7 @@ class AddQuiz extends Component {
     render() {
         return (
             <div class = "marginstuff">
-                <button class = "btn btn-info" onClick={() => this.openModal()}>ADD QUIZ</button>
+                <button class = "btn btn-info" disabled={this.props.inEditMode} onClick={() => this.openModal()}>ADD QUIZ</button>
                 <div class ="roundedge">
                     <Modal isOpen={this.state.isModalOpen} onClose={() => this.closeModal()}>
                             <div class = 'roundedgetop modal-header'>
@@ -489,7 +506,7 @@ class AddQuiz extends Component {
 
                             </form>
                             <div class = "roundedgebot modal-header" >
-                                    <button class = "btn btn-info" disabled={this.props.inEditMode} onClick={() => this.closeModal()}>Add Quiz</button>
+                                    <button class = "btn btn-info" disabled={this.props.inEditMode} onClick={() => this.closeModal()}>ADD</button>
                             </div>
 
 
@@ -593,7 +610,7 @@ class AddQuestionToQuiz extends Component {
                                 )
                             })}
                         </select>
-                        <button disabled={this.props.inEditMode}>Search For Questions With Tag </button>
+                        <button class = "marginTopBot marginLeft btn btn-info" disabled={this.props.inEditMode}>Search For Questions With Tag </button>
                     </form>
                 </div>
                 {this.props.questionFilterResults.length > 0 &&
@@ -602,7 +619,7 @@ class AddQuestionToQuiz extends Component {
                                             the currently selected question changed back to default, or alerts the user
                                         */}
                     <form onSubmit={this.props.addQuestionToQuiz}>
-                        <select name="currentlySelectedQuestion" value={this.props.currentlySelectedQuestion}
+                        <select class = "form-control" size = "5" name="currentlySelectedQuestion" value={this.props.currentlySelectedQuestion}
                                 onChange={this.handleChange} disabled={this.props.inEditMode}>
                             <option name="defaultQuestionOption"
                                     value="defaultOption"
@@ -616,7 +633,7 @@ class AddQuestionToQuiz extends Component {
                                 )
                             })}
                         </select>
-                        <button disabled={this.props.inEditMode}> Add Question To Quiz!</button>
+                        <button class = "marginTopBot marginLeft btn btn-info" disabled={this.props.inEditMode}> Add Question To Quiz!</button>
                     </form>
                 </div>
                 }
@@ -625,8 +642,5 @@ class AddQuestionToQuiz extends Component {
 
     }
 }
-
-
-
 
 export default QuizzesPage;
