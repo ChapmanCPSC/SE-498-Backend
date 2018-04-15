@@ -120,8 +120,8 @@ class QuestionsPage extends Component {
 
     render () {
         return (
-            <div className="wholeQuestionPage">
-                <h1>Questions Page</h1> {/* Header for the Question Creation/Editing Page */}
+            <div class = "center">
+                <h1>MANAGE QUESTIONS</h1> {/* Header for the Question Creation/Editing Page */}
 
                 {/* Here is the box for searching/filtering questions */}
                 <FilterQuestions
@@ -181,13 +181,14 @@ class FilterQuestions extends Component {
     }
     render() {
         return(
-            <div className = "marginstuff">
+            <div className="marginstuff">
                 <div className="questionTagSearch">
                     <form onSubmit={this.props.onTagSearchSubmit}>
-                        <select name="currentlySelectedTag" value={this.props.currentlySelectedTag} onChange={this.handleChange} disabled={this.props.inEditMode}>
+                        <select name="currentlySelectedTag" value={this.props.currentlySelectedTag}
+                                onChange={this.handleChange} disabled={this.props.inEditMode}>
                             <option name="defaultTagOption"
                                     value="defaultOption"
-                                    key="defaultOption">---Select a Tag!---</option>
+                                    key="defaultOption" >--Please Select a Tag!--</option>
                             {Object.keys(this.props.tags).map(key => {
                                 return ( <option name="tagOption"
                                                  key={key}
@@ -195,7 +196,7 @@ class FilterQuestions extends Component {
                                 )
                             })}
                         </select>
-                        <button disabled={this.props.inEditMode}>Search For Questions With Tag </button>
+                        <button class = "marginTopBot marginLeft btn btn-info" disabled={this.props.inEditMode}>Filter </button>
                     </form>
                 </div>
                 {/* Here is a box for searching for a question in the database by tag
@@ -210,19 +211,14 @@ class FilterQuestions extends Component {
                         <button>Search</button>
                     </form>
                 </div> */}
-                {this.props.questionFilterResults.length > 0 &&
                     <div className="questionSelection">
                         {/* TODO: Must maintain concurrency: I.e. if a question is deleted by another admin, need to make sure
-                            the currently selected question changed back to default, or alerts the user
+                            the currently selected question changed back to default, or alert the user
                         */}
                         <form onSubmit={this.props.onSelectEditQuestionSubmit}>
-                            <select name="currentlySelectedQuestion" value={this.props.currentlySelectedQuestion}
+                            <select style={{width: 800 + 'px'}} class = "form-control" size = "10" name="currentlySelectedQuestion" value={this.props.currentlySelectedQuestion}
                                     onChange={this.handleChange} disabled={this.props.inEditMode}>
-                                <option name="defaultQuestionOption"
-                                        value="defaultOption"
-                                        key="defaultOption">---Please Select a Question---
-                                </option>
-                                {this.props.questionFilterResults.map((item) => {
+                                {this.props.questionFilterResults.length > 0 && this.props.questionFilterResults.map((item) => {
                                     return (
                                         <option name="questionToSelectOption"
                                                 key={item.id}
@@ -230,10 +226,9 @@ class FilterQuestions extends Component {
                                     )
                                 })}
                             </select>
-                            <button disabled={this.props.inEditMode}> Edit!</button>
+                            <button class = "marginTopBot btn btn-info"disabled={this.props.inEditMode}> Edit!</button>
                         </form>
                     </div>
-                }
             </div>
         )
     }
@@ -343,18 +338,22 @@ class QuestionEdit extends Component {
     }
 
     addAnswerChoice(event) {
-        let id = utils.generateAnswerID(); {/*  Generate A ID for the answer key */}
-        {/* This is REALLY inefficient and we need another way of doing this without nested assigns*/}
-        this.setState({
-            answerData: Object.assign({}, this.state.answerData, {
-                answers : Object.assign({}, this.state.answerData.answers, {
-                    [id] : "",
+        if(Object.keys(this.state.answerData.answers).length !== 4) {
+            let id = utils.generateAnswerID(); {/*  Generate A ID for the answer key */}
+            this.setState({
+                answerData: Object.assign({}, this.state.answerData, {
+                    answers : Object.assign({}, this.state.answerData.answers, {
+                        [id] : "",
+                    }),
+                    correctanswers : Object.assign({}, this.state.answerData.correctanswers, {
+                        [id] : false,
+                    }),
                 }),
-                correctanswers : Object.assign({}, this.state.answerData.correctanswers, {
-                    [id] : false,
-                }),
-            }),
-        });
+            });
+        }
+        else {
+            {/* Alert user */}
+        }
     }
 
     submitQuestion(event) {
@@ -396,7 +395,7 @@ class QuestionEdit extends Component {
     render() {
         if(this.props.inEditMode && this.state.questionData !== undefined && this.state.answerData !== undefined) {
             return(
-                <div className="questionEditDiv">
+                <div class = "marginstuff" className="questionEditDiv">
                     <form onSubmit={this.submitQuestion}>
                         <h1> Edit </h1>
                         <button type="button" onClick={this.handleExitEditMode}> Go Back To Question Select </button>
@@ -404,7 +403,7 @@ class QuestionEdit extends Component {
                         <input type="text"
                                name="existingQuestionText"
                                value={this.state.questionData.name}
-                               placeholder="Enter Question Text Here"
+                               placeholder="Enter Question Text Here" maxlength="90" size="100"
                                onChange={(event) => this.handleTextStateChange(event, "name")}/>
                         <h4> Points </h4>
                         <input type="text"
@@ -441,41 +440,111 @@ class QuestionEdit extends Component {
 }
 
 
+class Modal extends React.Component {
+    render() {
+      if (this.props.isOpen === false)
+        return null
+
+      let modalStyle = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        zIndex: '9999',
+        backgroundColor: '#fff',
+        borderRadius: 20,
+        margin: '0 auto',
+      }
+
+
+      let backdropStyle = {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        top: '0px',
+        left: '0px',
+        zIndex: '9998',
+        background: 'rgba(0, 0, 0, 0.3)'
+      }
+
+      if (this.props.backdropStyle) {
+        for (let key in this.props.backdropStyle) {
+          backdropStyle[key] = this.props.backdropStyle[key]
+        }
+      }
+
+      return (
+        <div className={this.props.containerClassName}>
+          <div className={this.props.className} style={modalStyle}>
+            {this.props.children}
+          </div>
+          {!this.props.noBackdrop &&
+              <div className={this.props.backdropClassName} style={backdropStyle}
+                   onClick={e => this.close(e)}/>}
+        </div>
+      )
+    }
+
+    close(e) {
+        e.preventDefault();
+
+        if (this.props.onClose) {
+            this.props.onClose()
+        }
+    }
+}
+
+
 class AddQuestion extends Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
+        this.state = { isModalOpen: false }
     }
     handleChange(event) {
         this.props.handleChange(event)
     }
     render() {
         return (
-            <div className="addNewQuestion">
-                <h3> Add New Question </h3>
-                <form onSubmit={this.props.onAddQuestionSubmit}>
-                    <input type="text"
-                           disabled={this.props.inEditMode}
-                           name="newQuestionText"
-                           placeholder="Please enter your question"
-                           value={this.props.newQuestionText}
-                           onChange={this.handleChange}
-                    />
-                    <select name="currentlySelectedTagToAdd" value={this.props.currentlySelectedTagToAdd} onChange={this.handleChange} disabled={this.props.inEditMode}>
-                        <option name="defaultTagOption"
-                                value="defaultOption"
-                                key="defaultOption">---Select a Tag!---</option>
-                        {Object.keys(this.props.tags).map(key => {
-                            return ( <option name="tagOption"
-                                             key={key}
-                                             value={key}>{this.props.tags[key].name}</option>
-                            )
-                        })}
-                    </select>
-                    <button disabled={this.props.inEditMode}>Add Question</button>
-                </form>
+            <div class = "marginstuff">
+                <button class = "btn btn-info" onClick={() => this.openModal()}>ADD QUESTIONS</button>
+                <Modal isOpen={this.state.isModalOpen} onClose={() => this.closeModal()}>
+                    <div class = 'roundedgetop modal-header'>
+                        <h1>ADD A QUESTION</h1>
+                    </div>
+                    <form class = 'modalPad'onSubmit={this.props.onAddQuestionSubmit}>
+                        <input type="text"
+                               disabled={this.props.inEditMode}
+                               name="newQuestionText"
+                               placeholder="Please enter your question"
+                               value={this.props.newQuestionText}
+                               onChange={this.handleChange}
+                        />
+                        <select name="currentlySelectedTagToAdd" value={this.props.currentlySelectedTagToAdd} onChange={this.handleChange} disabled={this.props.inEditMode}>
+                            <option name="defaultTagOption"
+                                    value="defaultOption"
+                                    key="defaultOption">---Select a Tag!---</option>
+                            {Object.keys(this.props.tags).map(key => {
+                                return ( <option name="tagOption"
+                                                 key={key}
+                                                 value={key}>{this.props.tags[key].name}</option>
+                                )
+                            })}
+                        </select>
+                    </form>
+                    <div class = "roundedgebot modal-header" >
+                        <button class = "btn btn-info" disabled={this.props.inEditMode} onClick={() => this.closeModal()}>ADD</button>
+                    </div>
+                </Modal>
             </div>
         )
+    }
+    openModal() {
+        this.setState({ isModalOpen: true })
+    }
+
+    closeModal() {
+        this.setState({ isModalOpen: false })
     }
 }
 
@@ -513,7 +582,7 @@ class Answers extends React.Component {
                 {Object.keys(this.props.answerData.answers).map((answerID) => {
                     return (
                         <div key={answerID}>
-                            <input type="text" name="answersInSelection" placeholder="Enter Answer Text Here"
+                            <input type="text" name="answersInSelection" placeholder="Enter Answer Text Here" maxlength="70" size="80"
                                    value={this.props.answerData.answers[answerID]} onChange={(event) => this.handleAnswerTextChange(event, answerID)}/>
                             <input type="checkbox" checked={this.props.answerData.correctanswers[answerID]} onChange={(event) => this.handleAnswerCorrectOrNot(event, answerID)}/>
                             <button type="button" onClick={(event) => this.deleteAnswerChoice(event, answerID)}> Delete </button>

@@ -3,7 +3,6 @@ import * as routes from '../../constants/routes';
 import { firebase } from '../../firebase';
 import { db } from '../../firebase';
 import * as utils from '../../utilities/utils.js'
-import '../css/bootstrap/dist/css/bootstrap.min.css';
 
 const GamePage = () =>
     <div class="container">
@@ -11,33 +10,42 @@ const GamePage = () =>
             <div class="col-lg-12 text-center">
                 <h1 class="mt-5">Quiz Game</h1>
                 <p class="lead">Create a Quiz Game</p>
+                <ul class="list-unstyled">
+                    <li>Bootstrap 4.0.0</li>
+                </ul>
                 <GameCreation/>
             </div>
         </div>
     </div>
-
-class GameCreation extends Component
-{
-    constructor() {
-        super();
+var facultyData = {
+    courses : courses,
+    name: name,
+};
+class GameCreation extends Component {
+    constructor(props) {
+        super(props);
         this.state = {
             currentlySelectedQuiz: "defaultOption",
+            currentlySelectedFaculty: "d31b1d9547b0467aa443",
         };
     }
+    displayFaculty() {
+        db.getQuestionWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
+            this.setState({questionData : snapshot.val(), questionDataInitialLoad : snapshot.val()});
+            console.log("2. FB 1!");
+        });
+        db.getFacultyCourses(this.props.currentlySelectedFaculty).once('value', (snapshot) => {
+            facultyData = (snapshot.val())
+        });
 
-    render()
-    {
+        return firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
+            var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+            // ...
+        });
+    }
+    render() {
         return (
-            <form>
-                <div class="form-group row">
-                    <label for="quizInput" class = "col-form-label">Search for Quiz</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control-plaintext">Start typing...</input>
-                    </div>
-                </div>
-
-                <button class="btn btn-info"> Create Game </button>
-            </form>
+            <button class="btn btn-info"> Create Game </button>
         )
     }
 }
