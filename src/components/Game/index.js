@@ -11,15 +11,13 @@ const GamePage = () =>
             <div class="col-lg-12 text-center">
                 <h1 class="mt-5">Quiz Game</h1>
                 <p class="lead">Create a Quiz Game</p>
-                <ul class="list-unstyled">
-                    <li>Bootstrap 4.0.0</li>
-                </ul>
                 <GameCreation/>
             </div>
         </div>
     </div>
 
-class GameCreation extends Component {
+class GameCreation extends Component
+{
     constructor() {
         super();
         this.state = {
@@ -27,9 +25,19 @@ class GameCreation extends Component {
         };
     }
 
-    render() {
+    render()
+    {
         return (
-            <button class="btn btn-info"> Create Game </button>
+            <form>
+                <div class="form-group row">
+                    <label for="quizInput" class = "col-form-label">Search for Quiz</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control-plaintext">Start typing...</input>
+                    </div>
+                </div>
+
+                <button class="btn btn-info"> Create Game </button>
+            </form>
         )
     }
 }
