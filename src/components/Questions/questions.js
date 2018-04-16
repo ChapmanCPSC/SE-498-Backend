@@ -180,43 +180,48 @@ class FilterQuestions extends Component {
         this.props.handleChange(event)
     }
     render() {
-        return(
-            <div className="marginstuff">
-                <div className="questionTagSearch">
-                    <form onSubmit={this.props.onTagSearchSubmit}>
-                        <select name="currentlySelectedTag" value={this.props.currentlySelectedTag}
-                                onChange={this.handleChange} disabled={this.props.inEditMode}>
-                            <option name="defaultTagOption"
-                                    value="defaultOption"
-                                    key="defaultOption" >--Please Select a Tag!--</option>
-                            {Object.keys(this.props.tags).map(key => {
-                                return ( <option name="tagOption"
-                                                 key={key}
-                                                 value={key}>{this.props.tags[key].name}</option>
-                                )
-                            })}
-                        </select>
-                        <button class = "marginTopBot marginLeft btn btn-info" disabled={this.props.inEditMode}>Filter </button>
-                    </form>
-                </div>
-                {/* Here is a box for searching for a question in the database by tag
-                <div className="questionSearch">
-                    <form onSubmit={this.handleSearchForQuestion}>
-                        <input type="text"
-                               name="searchQuestionName"
-                               placeholder="Enter the name of the question to search for"
-                               value={this.state.searchQuestionName}
-                               onChange={this.handleChange}
-                        />
-                        <button>Search</button>
-                    </form>
-                </div> */}
+        if(!this.props.inEditMode) {
+            return (
+                <div className="marginstuff">
+                    <div className="questionTagSearch">
+                        <form onSubmit={this.props.onTagSearchSubmit}>
+                            <select name="currentlySelectedTag" value={this.props.currentlySelectedTag}
+                                    onChange={this.handleChange} disabled={this.props.inEditMode}>
+                                <option name="defaultTagOption"
+                                        value="defaultOption"
+                                        key="defaultOption">--Please Select a Tag!--
+                                </option>
+                                {Object.keys(this.props.tags).map(key => {
+                                    return (<option name="tagOption"
+                                                    key={key}
+                                                    value={key}>{this.props.tags[key].name}</option>
+                                    )
+                                })}
+                            </select>
+                            <button class="marginTopBot marginLeft btn btn-info"
+                                    disabled={this.props.inEditMode}>Filter
+                            </button>
+                        </form>
+                    </div>
+                    {/* Here is a box for searching for a question in the database by tag
+            <div className="questionSearch">
+                <form onSubmit={this.handleSearchForQuestion}>
+                    <input type="text"
+                           name="searchQuestionName"
+                           placeholder="Enter the name of the question to search for"
+                           value={this.state.searchQuestionName}
+                           onChange={this.handleChange}
+                    />
+                    <button>Search</button>
+                </form>
+            </div> */}
                     <div className="questionSelection">
                         {/* TODO: Must maintain concurrency: I.e. if a question is deleted by another admin, need to make sure
-                            the currently selected question changed back to default, or alert the user
-                        */}
+                        the currently selected question changed back to default, or alert the user
+                    */}
                         <form onSubmit={this.props.onSelectEditQuestionSubmit}>
-                            <select style={{width: 800 + 'px'}} class = "form-control" size = "10" name="currentlySelectedQuestion" value={this.props.currentlySelectedQuestion}
+                            <select style={{width: 800 + 'px'}} class="form-control" size="10"
+                                    name="currentlySelectedQuestion" value={this.props.currentlySelectedQuestion}
                                     onChange={this.handleChange} disabled={this.props.inEditMode}>
                                 {this.props.questionFilterResults.length > 0 && this.props.questionFilterResults.map((item) => {
                                     return (
@@ -226,11 +231,15 @@ class FilterQuestions extends Component {
                                     )
                                 })}
                             </select>
-                            <button class = "marginTopBot btn btn-info"disabled={this.props.inEditMode}> Edit!</button>
+                            <button class="marginTopBot btn btn-info" disabled={this.props.inEditMode}> Edit!</button>
                         </form>
                     </div>
-            </div>
-        )
+                </div>
+            )
+        }
+        else {
+            return null;
+        }
     }
 }
 
