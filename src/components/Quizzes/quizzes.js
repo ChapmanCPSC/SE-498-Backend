@@ -174,6 +174,7 @@ class QuizzesPage extends Component {
                         onTagSearchSubmit={this.handleGetQuizzesWithTag}
                         onSelectEditQuizSubmit={this.handleGetQuizForEditFormSubmit}
                         currentlySelectedQuiz={this.state.currentlySelectedQuiz}
+                        allQuizNames={this.state.allQuizNames}
                         quizFilterResults={this.state.quizFilterResults}
                         inEditMode={this.state.inEditMode}/>
                     <AddQuiz
@@ -245,11 +246,16 @@ class FilterQuizzes extends Component {
                             <select style={{width: 800 + 'px'}} class="form-control" size="10"
                                     name="currentlySelectedQuiz" value={this.props.currentlySelectedQuiz}
                                     onChange={this.handleChange} disabled={this.props.inEditMode}>
-                                {this.props.quizFilterResults.length > 0 && this.props.quizFilterResults.map((item) => {
+                                {this.props.quizFilterResults.length > 0 ? this.props.quizFilterResults.map((item) => {
                                     return (
                                         <option name="quizToSelectOption"
                                                 key={item.id}
                                                 value={item.id}>{item.quizText}</option>
+                                    )
+                                }) : Object.keys(this.props.allQuizNames).map(id => {
+                                    return (<option name="quizToSelectOption"
+                                    key={id}
+                                    value={id}>{this.props.allQuizNames[id].name}</option>
                                     )
                                 })}
                             </select>

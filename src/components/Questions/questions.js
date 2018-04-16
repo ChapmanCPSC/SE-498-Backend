@@ -131,6 +131,7 @@ class QuestionsPage extends Component {
                     onTagSearchSubmit={this.handleGetQuestionsWithTag}
                     onSelectEditQuestionSubmit={this.handleGetQuestionForEditFormSubmit}
                     currentlySelectedQuestion={this.state.currentlySelectedQuestion}
+                    allQuestionNames={this.state.allQuestionNames}
                     questionFilterResults={this.state.questionFilterResults}
                     inEditMode={this.state.inEditMode}/>
 
@@ -223,11 +224,16 @@ class FilterQuestions extends Component {
                             <select style={{width: 800 + 'px'}} class="form-control" size="10"
                                     name="currentlySelectedQuestion" value={this.props.currentlySelectedQuestion}
                                     onChange={this.handleChange} disabled={this.props.inEditMode}>
-                                {this.props.questionFilterResults.length > 0 && this.props.questionFilterResults.map((item) => {
+                                {this.props.questionFilterResults.length > 0 ? this.props.questionFilterResults.map((item) => {
                                     return (
                                         <option name="questionToSelectOption"
                                                 key={item.id}
                                                 value={item.id}>{item.questionText}</option>
+                                    )
+                                }) : Object.keys(this.props.allQuestionNames).map(id => {
+                                    return (<option name="questionToSelectOption"
+                                                    key={id}
+                                                    value={id}>{this.props.allQuestionNames[id].name}</option>
                                     )
                                 })}
                             </select>
