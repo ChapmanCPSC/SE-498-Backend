@@ -18,8 +18,8 @@ const GamePage = () =>
         </div>
     </div>
 var facultyData = {
-    courses : courses,
-    name: name,
+    courses : undefined,
+    name: undefined,
 };
 class GameCreation extends Component {
     constructor(props) {
@@ -28,24 +28,30 @@ class GameCreation extends Component {
             currentlySelectedQuiz: "defaultOption",
             currentlySelectedFaculty: "d31b1d9547b0467aa443",
         };
+        this.displayFaculty();
     }
     displayFaculty() {
-        db.getQuestionWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
-            this.setState({questionData : snapshot.val(), questionDataInitialLoad : snapshot.val()});
-            console.log("2. FB 1!");
-        });
+        // db.getQuestionWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
+        //     this.setState({questionData : snapshot.val(), questionDataInitialLoad : snapshot.val()});
+        //     console.log("2. FB 1!");
+        // });
         db.getFacultyCourses(this.props.currentlySelectedFaculty).once('value', (snapshot) => {
-            facultyData = (snapshot.val())
+            facultyData.courses = (snapshot.val());
         });
-
-        return firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
-            var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-            // ...
+        db.getFacultyName(this.props.currentlySelectedFaculty).once('value', (snapshot) => {
+            facultyData.name = (snapshot.val());
         });
+        // return firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
+        //     var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+        //     // ...
+        // });
     }
     render() {
         return (
-            <button class="btn btn-info"> Create Game </button>
+            <form>
+                <p>Hello, {facultyData.name}! </p>
+                <button class="btn btn-info"> Create Game </button>
+            </form>
         )
     }
 }

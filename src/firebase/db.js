@@ -61,4 +61,7 @@ export function getSpecificTagReference(tagID) {
 export function getFacultyCourses(facID){
     return db.ref('faculty/' + facID + 'courses' )
 }
+export function getFacultyName(facID){
+    return db.ref('faculty/' + facID + 'name' )
+}
 // Other db APIs ...
