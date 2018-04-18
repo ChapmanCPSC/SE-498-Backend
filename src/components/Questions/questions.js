@@ -36,18 +36,17 @@ class QuestionsPage extends Component {
         let that = this;
         if (this.state.currentlySelectedTagToAdd !== "defaultOption") {
             console.log("Test Here");
-            {/* Need to be sure this works well with the filters */
-            }
+            // Need to be sure this works well with the filters
             const quesRef = db.getQuestionReference();
 
             let currDate = new Date();
             let dateAdd = currDate.toISOString().split('T')[0];
             let timeAdd = currDate.toTimeString().split(' ')[0];
 
-            {/* This push operation is all client-side. I.e., we can run it without worrying about asynchronous issues */}
+            // This push operation is all client-side. I.e., we can run it without worrying about asynchronous issues
             let newAddition = quesRef.push();
             let keyVal = newAddition.key;
-            {/* This next section must utilize Promises to ensure that it all operates synchronously */}
+            // This next section must utilize Promises to ensure that it all operates synchronously
             let newQuestionData = {
                 name: this.state.newQuestionText,
                 datecreated: dateAdd,
@@ -101,7 +100,7 @@ class QuestionsPage extends Component {
     handleGetQuestionsWithTag(event) {
         event.preventDefault();
         if (this.state.currentlySelectedTag !== "defaultOption") {
-            {/* Iterate through selected tag, find the questions that have that tag, then set the state? */}
+            // Iterate through selected tag, find the questions that have that tag, then set the state?
             this.setState({ currentlySelectedQuestion : "defaultOption"});
             let stateToSet = [];
             for (let quesID in this.state.tags[this.state.currentlySelectedTag].questions) {
@@ -260,7 +259,7 @@ const InitialQuestionEditState = {
 class QuestionEdit extends Component {
     constructor(props) {
         super(props);
-        {/* Actual state is listed above in the constant var called InitialQuestionEditState*/}
+        // Actual state is listed above in the constant var called InitialQuestionEditState
         this.state = InitialQuestionEditState;
 
         this.handleChange = this.handleChange.bind(this);
@@ -280,9 +279,9 @@ class QuestionEdit extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.inEditMode && nextProps.inEditMode) {
-            {/* 1. If you are not in edit mode, but have requested to go into edit mode */}
-            {/* Grab the data listed in Firebase so the user can edit! */}
-            {/* Data Should be copied into a local structure */}
+            // 1. If you are not in edit mode, but have requested to go into edit mode
+            // Grab the data listed in Firebase so the user can edit!
+            // Data Should be copied into a local structure
             console.log("1. We are beginning");
             db.getQuestionWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
                 this.setState({questionData : snapshot.val(), questionDataInitialLoad : snapshot.val()});
@@ -295,8 +294,8 @@ class QuestionEdit extends Component {
             console.log("4. We are done with Firebase!");
         }
         else if (this.props.inEditMode && !nextProps.inEditMode) {
-            {/* 2. If you are in edit mode, but have requested to switch out back to filtering and selecting questions */}
-            {/* Reset your state back to nothing! So clear everything you've done so far*/}
+            // 2. If you are in edit mode, but have requested to switch out back to filtering and selecting questions
+            // Reset your state back to nothing! So clear everything you've done so far
             this.reset();
 
         }
@@ -322,7 +321,7 @@ class QuestionEdit extends Component {
     }
 
     handleChangeAnswerText(event, id) {
-        {/* This is REALLY inefficient and we need another way of doing this without nested assigns*/}
+        // This is REALLY inefficient and we need another way of doing this without nested assigns
         this.setState({
             answerData: Object.assign({}, this.state.answerData, {
                 answers : Object.assign({}, this.state.answerData.answers, {
@@ -333,7 +332,7 @@ class QuestionEdit extends Component {
     }
 
     handleChangeAnswerCorrectness(event, id) {
-        {/* This is REALLY inefficient and we need another way of doing this without nested assigns*/}
+        // This is REALLY inefficient and we need another way of doing this without nested assigns
         this.setState({
             answerData: Object.assign({}, this.state.answerData, {
                 correctanswers : Object.assign({}, this.state.answerData.correctanswers, {
@@ -354,7 +353,7 @@ class QuestionEdit extends Component {
 
     addAnswerChoice(event) {
         if(Object.keys(this.state.answerData.answers).length !== 4) {
-            let id = utils.generateAnswerID(); {/*  Generate A ID for the answer key */}
+            let id = utils.generateAnswerID(); //  Generate A ID for the answer key
             this.setState({
                 answerData: Object.assign({}, this.state.answerData, {
                     answers : Object.assign({}, this.state.answerData.answers, {
@@ -367,7 +366,7 @@ class QuestionEdit extends Component {
             });
         }
         else {
-            {/* Alert user */}
+            // Alert user
         }
     }
 
@@ -388,11 +387,11 @@ class QuestionEdit extends Component {
         event.preventDefault();
         let deletes = {};
         let that = this;
-        {/* Need to firstly ensure that you are removing tags and other linked information */}
+        // Need to firstly ensure that you are removing tags and other linked information
         Object.keys(this.state.questionDataInitialLoad.tags).forEach(key => {
             deletes['/tag/' + key + '/questions/' + this.props.selectedQuestionForEditing] = null;
         });
-        {/* Be sure to delete quiz relationships too! Let them know that they no longer can use this question */}
+        // Be sure to delete quiz relationships too! Let them know that they no longer can use this question
         if(this.state.questionDataInitialLoad.quizzes !== undefined) {
             Object.keys(this.state.questionDataInitialLoad.quizzes).forEach(key => {
                 deletes['/quiz/' + key + '/questions/' + this.props.selectedQuestionForEditing] = null;

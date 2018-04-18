@@ -45,7 +45,7 @@ class QuizzesPage extends Component {
     handleGetQuestionsWithTag(event) {
         event.preventDefault();
         if (this.state.currentlySelectedTagForQuestionSearch !== "defaultOption") {
-            {/* Iterate through selected tag, find the questions that have that tag, then set the state? */}
+            // Iterate through selected tag, find the questions that have that tag, then set the state?
             this.setState({ currentlySelectedQuestion : "defaultOption"});
             let stateToSet = [];
             for (let quesID in this.state.tags[this.state.currentlySelectedTagForQuestionSearch].questions) {
@@ -79,18 +79,18 @@ class QuizzesPage extends Component {
 
         let that = this;
         if (this.state.currentlySelectedTagToAdd !== "defaultOption") {
-            {/* Need to be sure this works well with the filters */
-            }
+            // Need to be sure this works well with the filters
+
             const quizRef = db.getQuizReference();
 
             let currDate = new Date();
             let dateAdd = currDate.toISOString().split('T')[0];
             let timeAdd = currDate.toTimeString().split(' ')[0];
 
-            {/* This push operation is all client-side. I.e., we can run it without worrying about asynchronous issues */}
+            // This push operation is all client-side. I.e., we can run it without worrying about asynchronous issues
             let newAddition = quizRef.push();
             let keyVal = newAddition.key;
-            {/* This next section must utilize Promises to ensure that it all operates synchronously */}
+            // This next section must utilize Promises to ensure that it all operates synchronously
             let newQuizData = {
                 name: this.state.newQuizText,
                 available: false,
@@ -124,7 +124,7 @@ class QuizzesPage extends Component {
     handleGetQuizzesWithTag(event) {
         event.preventDefault();
         if (this.state.currentlySelectedTag !== "defaultOption") {
-            {/* Iterate through selected tag, find the quizzes that have that tag, then set the state? */}
+            // Iterate through selected tag, find the quizzes that have that tag, then set the state?
             this.setState({ currentlySelectedQuiz : "defaultOption"});
             let stateToSet = [];
             for (let quizID in this.state.tags[this.state.currentlySelectedTag].quizzes) {
@@ -279,7 +279,7 @@ const InitialQuizEditState = {
 class QuizEdit extends Component {
     constructor(props) {
         super(props);
-        {/* Actual state is listed above in the constant var called InitialQuizEditState*/}
+        // Actual state is listed above in the constant var called InitialQuizEditState
         this.state = InitialQuizEditState;
 
         this.handleChange = this.handleChange.bind(this);
@@ -327,7 +327,7 @@ class QuizEdit extends Component {
 
     addQuestionToQuiz(event) {
         event.preventDefault();
-        {/* Firstly, need to ensure that the question does not already belong to the quiz! */}
+        // Firstly, need to ensure that the question does not already belong to the quiz!
         if (!(this.props.currentlySelectedQuestion in this.state.quizData)) {
             this.setState({
                 quizData: Object.assign({}, this.state.quizData, {
@@ -349,16 +349,16 @@ class QuizEdit extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.inEditMode && nextProps.inEditMode) {
-            {/* 1. If you are not in edit mode, but have requested to go into edit mode */}
-            {/* Grab the data listed in Firebase so the user can edit! */}
-            {/* Data Should be copied into a local structure */}
+            // 1. If you are not in edit mode, but have requested to go into edit mode
+            // Grab the data listed in Firebase so the user can edit!
+            // Data Should be copied into a local structure
             db.getQuizWithID(this.props.selectedQuizForEditing).once('value', (snapshot) => {
                 this.setState({quizData : snapshot.val(), quizDataInitialLoad : snapshot.val()});
             });
         }
         else if (this.props.inEditMode && !nextProps.inEditMode) {
-            {/* 2. If you are in edit mode, but have requested to switch out back to filtering and selecting quizzes */}
-            {/* Reset your state back to nothing! So clear everything you've done so far*/}
+            // 2. If you are in edit mode, but have requested to switch out back to filtering and selecting quizzes
+            // Reset your state back to nothing! So clear everything you've done so far*/}
             this.reset();
         }
     }
@@ -369,11 +369,11 @@ class QuizEdit extends Component {
         let that = this;
         updates['/quiz/' + this.props.selectedQuizForEditing] = this.state.quizData;
         updates['/quiz-name/' + this.props.selectedQuizForEditing ] = {name: this.state.quizData.name};
-        {/* Be sure to update question relationships too! Let them know that they are part of the quiz */}
+        // Be sure to update question relationships too! Let them know that they are part of the quiz
         Object.keys(this.state.quizData.questions).forEach(key => {
             updates['/question/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = true;
         });
-        {/* Here we do a set difference with the initial backup, to see if anything was deleted ( and thus set to null to delete it) */}
+        // Here we do a set difference with the initial backup, to see if anything was deleted ( and thus set to null to delete it)
         Object.keys(this.state.quizDataInitialLoad.questions).forEach(key => {
             if (!(key in this.state.quizData.questions)) {
                 updates['/question/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = null;
@@ -388,11 +388,11 @@ class QuizEdit extends Component {
         event.preventDefault();
         let deletes = {};
         let that = this;
-        {/* Need to firstly ensure that you are removing tags and other linked information */}
+        // Need to firstly ensure that you are removing tags and other linked information
         Object.keys(this.state.quizDataInitialLoad.tags).forEach(key => {
             deletes['/tag/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = null;
         });
-        {/* Be sure to delete question relationships too! Let them know that they are no longer a part of the quiz */}
+        // Be sure to delete question relationships too! Let them know that they are no longer a part of the quiz
         Object.keys(this.state.quizDataInitialLoad.questions).forEach(key => {
             deletes['/question/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = null;
         });
