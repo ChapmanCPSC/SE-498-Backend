@@ -8972,16 +8972,6 @@ a.text-dark:hover, a.text-dark:focus {
     border: 1px solid #ddd !important;
   }
 }
-@font-face{
-  font-family: 'futura';
-  src: url('./font/futuramedium.ttf');
-}
-*{
-  font-family: futura;
-}
-body {
-  background-color: #E0E0E0;
-}
 .customBut{
   background-color: #9de1f7;
   border:0px;
