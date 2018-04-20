@@ -3,6 +3,7 @@ import * as routes from '../../constants/routes';
 import { firebase } from '../../firebase';
 import { db } from '../../firebase';
 import * as utils from '../../utilities/utils.js'
+import {getFacultyName} from "../../firebase/db";
 
 const GamePage = () =>
     <div class="container">
@@ -17,8 +18,8 @@ const GamePage = () =>
             </div>
         </div>
     </div>
-var facultyData = {
-    courses : undefined,
+let facultyData = {
+    courses : [],
     name: undefined,
 };
 class GameCreation extends Component {
@@ -27,29 +28,41 @@ class GameCreation extends Component {
         this.state = {
             currentlySelectedQuiz: "defaultOption",
             currentlySelectedFaculty: "d31b1d9547b0467aa443",
+            currentName: ''
         };
-        this.displayFaculty();
+        //this.handleSubmit = this.handleSubmit.bind(this);
+
     }
-    displayFaculty() {
-        // db.getQuestionWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
-        //     this.setState({questionData : snapshot.val(), questionDataInitialLoad : snapshot.val()});
-        //     console.log("2. FB 1!");
+    // handleSubmit(e){
+    //     e.preventDefault();
+    //     const ref = db.getFacultyName(this.state.currentlySelectedFaculty);
+    //     const fac = {
+    //         name : this.state.currentName
+    //     }
+    //     ref.push(fac);
+    //     this.setState({
+    //        currentName: ''
+    //     });
+    // }
+    componentDidMount () {
+
+
+        // db.getFacultyCourses(this.state.currentlySelectedFaculty).once('value', (snapshot) => {
+        //     facultyData.courses = (snapshot.val());
         // });
-        db.getFacultyCourses(this.props.currentlySelectedFaculty).once('value', (snapshot) => {
-            facultyData.courses = (snapshot.val());
+        db.getFacultyName(this.state.currentlySelectedFaculty).on('value', (snapshot) => {
+            let name = snapshot.val();
+            console.log(name);
+            this.setState({
+                currentName: name
+            });
         });
-        db.getFacultyName(this.props.currentlySelectedFaculty).once('value', (snapshot) => {
-            facultyData.name = (snapshot.val());
-        });
-        // return firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
-        //     var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-        //     // ...
-        // });
     }
+
     render() {
         return (
             <form>
-                <p>Hello, {facultyData.name}! </p>
+                <p>Hello, {this.state.currentName}! </p>
                 <button class="btn btn-info"> Create Game </button>
             </form>
         )
