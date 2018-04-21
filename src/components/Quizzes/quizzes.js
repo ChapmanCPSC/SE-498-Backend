@@ -77,7 +77,7 @@ class QuizzesPage extends Component {
         event.preventDefault();
         this.setState({inEditMode: false,
             currentlySelectedQuiz : Object.keys(this.state.allQuizNames)[0], // Since we reset the page back to showing all quiz names (not filtered), select first option!
-            currentlySelectedQuestion: "defaultOption",
+            currentlySelectedQuestion: Object.keys(this.state.allQuestionNames)[0], // Same as above, just now for the AddQuestionToQuiz Component
             currentlySelectedTag : "defaultOption",
             currentlySelectedTagForQuestionSearch: "defaultOption",
             quizFilterResults : false,
@@ -194,7 +194,7 @@ class QuizzesPage extends Component {
     }
 
     render () {
-        return <div > 
+        return <div >
             <div >
                 <div class = "center">
                     <h1> MANAGE QUIZ</h1>
@@ -493,6 +493,7 @@ class QuizEdit extends Component {
                     <div class ="marginstuff">
                         <AddQuestionToQuiz
                             addQuestionToQuiz={this.addQuestionToQuiz}
+                            allQuestionNames={this.props.allQuestionNames}
                             handleChange={this.handleChange}
                             handleGetQuestionsWithTag={this.handleGetQuestionsWithTag}
                             currentlySelectedQuestion={this.props.currentlySelectedQuestion}
@@ -525,48 +526,57 @@ class AddQuiz extends Component {
         this.props.handleChange(event)
     }
     render() {
-        return (
-            <div class = "marginstuff">
-                <button class = "btn btn-info" disabled={this.props.inEditMode} onClick={() => this.openModal()}>ADD QUIZ</button>
-                <div class ="roundedge">
-                    <Modal isOpen={this.state.isModalOpen} onClose={() => this.closeModal()}>
-                            <div class = 'roundedgetop modal-header'>
+        if(!this.props.inEditMode) {
+            return (
+                <div class="marginstuff">
+                    <button class="btn btn-info" disabled={this.props.inEditMode} onClick={() => this.openModal()}>ADD
+                        QUIZ
+                    </button>
+                    <div class="roundedge">
+                        <Modal isOpen={this.state.isModalOpen} onClose={() => this.closeModal()}>
+                            <div class='roundedgetop modal-header'>
                                 <h1>ADD A QUIZ </h1>
                             </div>
-                            <form class = 'modalPad' onSubmit={this.props.onAddQuizSubmit}>
-                            <input type="text"
-                                   disabled={this.props.inEditMode}
-                                   name="newQuizText"
-                                   placeholder="Please enter your quiz name"
-                                   value={this.props.newQuizText}
-                                   onChange={this.handleChange}
-                            />
-                            <select name="currentlySelectedTagToAdd" value={this.props.currentlySelectedTagToAdd} onChange={this.handleChange} disabled={this.props.inEditMode}>
-                                <option name="defaultTagOption"
-                                        value="defaultOption"
-                                        key="defaultOption">---Select a Tag!---</option>
-                                {Object.keys(this.props.tags).map(key => {
-                                    return ( <option name="tagOption"
-                                                     key={key}
-                                                     value={key}>{this.props.tags[key].name}</option>
-                                    )
-                                })}
-                            </select>
+                            <form class='modalPad' onSubmit={this.props.onAddQuizSubmit}>
+                                <input type="text"
+                                       disabled={this.props.inEditMode}
+                                       name="newQuizText"
+                                       placeholder="Please enter your quiz name"
+                                       value={this.props.newQuizText}
+                                       onChange={this.handleChange}
+                                />
+                                <select name="currentlySelectedTagToAdd" value={this.props.currentlySelectedTagToAdd}
+                                        onChange={this.handleChange} disabled={this.props.inEditMode}>
+                                    <option name="defaultTagOption"
+                                            value="defaultOption"
+                                            key="defaultOption">---Select a Tag!---
+                                    </option>
+                                    {Object.keys(this.props.tags).map(key => {
+                                        return (<option name="tagOption"
+                                                        key={key}
+                                                        value={key}>{this.props.tags[key].name}</option>
+                                        )
+                                    })}
+                                </select>
 
-                            <div className="roundedgebot modal-header">
-                                <button className="btn btn-info" disabled={this.props.inEditMode}
-                                        >ADD
-                                </button>
-                            </div>
+                                <div className="roundedgebot modal-header">
+                                    <button className="btn btn-info" disabled={this.props.inEditMode}
+                                    >ADD
+                                    </button>
+                                </div>
 
-                            </form >
+                            </form>
 
 
-                    </Modal>
+                        </Modal>
+                    </div>
+
                 </div>
-                
-            </div>
-        )
+            )
+        }
+        else {
+            return null;
+        }
     }
     openModal() {
       this.setState({ isModalOpen: true })
@@ -662,29 +672,38 @@ class AddQuestionToQuiz extends Component {
                                 )
                             })}
                         </select>
-                        <button class = "marginTopBot marginLeft btn btn-info" disabled={this.props.inEditMode}>Search For Questions With Tag </button>
+                        <button class="marginTopBot marginLeft btn btn-info"
+                                disabled={this.props.inEditMode}>Filter
+                        </button>
                     </form>
                 </div>
-                {this.props.questionFilterResults.length > 0 &&
+
                 <div className="questionSelection">
                     {/* TODO: Must maintain concurrency: I.e. if a question is deleted by another admin, need to make sure
                                             the currently selected question changed back to default, or alerts the user
                                         */}
                     <form onSubmit={this.props.addQuestionToQuiz}>
-                        <select class = "form-control" size = "5" name="currentlySelectedQuestion" value={this.props.currentlySelectedQuestion}
+                        <select style={{width: 800 + 'px'}} class = "form-control" size = "5" name="currentlySelectedQuestion" value={this.props.currentlySelectedQuestion}
                                 onChange={this.handleChange} disabled={this.props.inEditMode}>
-                            {this.props.questionFilterResults.map((item) => {
+
+                            {this.props.questionFilterResults.length > 0 ? this.props.questionFilterResults.map((item) => {
                                 return (
                                     <option name="questionToSelectOption"
                                             key={item.id}
                                             value={item.id}>{item.questionText}</option>
                                 )
+                            }) : Object.keys(this.props.allQuestionNames).map(id => {
+                                return (<option name="questionToSelectOption"
+                                key={id}
+                                value={id}>{this.props.allQuestionNames[id].name}</option>
+                                )
                             })}
+
                         </select>
                         <button class = "marginTopBot marginLeft btn btn-info" disabled={this.props.inEditMode}> Add Question To Quiz!</button>
                     </form>
                 </div>
-                }
+
             </div>
         );
 
