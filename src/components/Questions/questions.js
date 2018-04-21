@@ -203,18 +203,7 @@ class FilterQuestions extends Component {
                             </button>
                         </form>
                     </div>
-                    {/* Here is a box for searching for a question in the database by tag
-            <div className="questionSearch">
-                <form onSubmit={this.handleSearchForQuestion}>
-                    <input type="text"
-                           name="searchQuestionName"
-                           placeholder="Enter the name of the question to search for"
-                           value={this.state.searchQuestionName}
-                           onChange={this.handleChange}
-                    />
-                    <button>Search</button>
-                </form>
-            </div> */}
+                    
                     <div className="questionSelection">
                         {/* TODO: Must maintain concurrency: I.e. if a question is deleted by another admin, need to make sure
                         the currently selected question changed back to default, or alert the user
