@@ -470,9 +470,11 @@ class QuizEdit extends Component {
                             tags={this.props.tags}
                             />
                     </div>
-                    <form class = "marginstuff" onSubmit={this.deleteQuiz}>
-                            <button class = "marginTopBot marginLeft btn btn-info">SUBMIT</button>
-                            <button class = "marginTopBot marginLeft btn btn-info" > DELETE </button>
+                    <form class = "marginstuff" onSubmit={this.submitQuiz}>
+                            <button class = "marginTopBot marginLeft btn btn-info" > SUBMIT </button>
+                    </form>
+                    <form className="marginstuff" onSubmit={this.deleteQuiz}>
+                        <button className="marginTopBot marginLeft btn btn-info">DELETE</button>
                     </form>
                 </div>
 
@@ -520,10 +522,13 @@ class AddQuiz extends Component {
                                 })}
                             </select>
 
-                            </form>
-                            <div class = "roundedgebot modal-header" >
-                                    <button class = "btn btn-info" disabled={this.props.inEditMode} onClick={() => this.closeModal()}>ADD</button>
+                            <div className="roundedgebot modal-header">
+                                <button className="btn btn-info" disabled={this.props.inEditMode}
+                                        >ADD
+                                </button>
                             </div>
+
+                            </form >
 
 
                     </Modal>
