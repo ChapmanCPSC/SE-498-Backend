@@ -42,11 +42,13 @@ class QuizzesPage extends Component {
 
     }
 
+    // This handler function occurs whenever the user selects a question tag filter (in the select dropdown) when in the edit menu
+    // It displays a list of questions with the specified question tag, and auto-selects the option in order for it to be added quickly
     handleGetQuestionsWithTag(event) {
         event.preventDefault();
         if (this.state.currentlySelectedTagForQuestionSearch !== "defaultOption") {
             // Iterate through selected tag, find the questions that have that tag, then set the state?
-            this.setState({ currentlySelectedQuestion : "defaultOption"});
+
             let stateToSet = [];
             for (let quesID in this.state.tags[this.state.currentlySelectedTagForQuestionSearch].questions) {
                 if (this.state.tags[this.state.currentlySelectedTagForQuestionSearch].questions[quesID] === true) {
@@ -56,16 +58,25 @@ class QuizzesPage extends Component {
                     });
                 }
             }
-            this.setState({
-                questionFilterResults: stateToSet
-            });
+            if (stateToSet === undefined || stateToSet.length === 0) { // If no tags returned, we automatically just display All Question Names and select the highlighted option
+                this.setState({
+                    questionFilterResults: stateToSet,
+                    currentlySelectedQuestion : Object.keys(this.state.allQuestionNames)[0]
+                });
+            }
+            else { // we have found at least one quiz with the tag! So auto select the first
+                this.setState({
+                    questionFilterResults: stateToSet,
+                    currentlySelectedQuestion: stateToSet[0].id // Set to first item (keeps it in line with *select* box display of the first option)
+                });
+            }
         }
     }
 
     handleExitEditMode(event) {
         event.preventDefault();
         this.setState({inEditMode: false,
-            currentlySelectedQuiz : "defaultOption",
+            currentlySelectedQuiz : Object.keys(this.state.allQuizNames)[0], // Since we reset the page back to showing all quiz names (not filtered), select first option!
             currentlySelectedQuestion: "defaultOption",
             currentlySelectedTag : "defaultOption",
             currentlySelectedTagForQuestionSearch: "defaultOption",
@@ -125,7 +136,7 @@ class QuizzesPage extends Component {
         event.preventDefault();
         if (this.state.currentlySelectedTag !== "defaultOption") {
             // Iterate through selected tag, find the quizzes that have that tag, then set the state?
-            this.setState({ currentlySelectedQuiz : "defaultOption"});
+
             let stateToSet = [];
             for (let quizID in this.state.tags[this.state.currentlySelectedTag].quizzes) {
                 if (this.state.tags[this.state.currentlySelectedTag].quizzes[quizID] === true) {
@@ -135,9 +146,19 @@ class QuizzesPage extends Component {
                     });
                 }
             }
-            this.setState({
-                quizFilterResults: stateToSet
-            });
+            if (stateToSet === undefined || stateToSet.length === 0) { // If no tags returned, we automatically just display All Quiz Names and select the highlighted option
+                this.setState({
+                    quizFilterResults: stateToSet,
+                    currentlySelectedQuiz : Object.keys(this.state.allQuizNames)[0]
+                });
+            }
+            else { // we have found at least one quiz with the tag! So auto select the first
+                this.setState({
+                    quizFilterResults: stateToSet,
+                    currentlySelectedQuiz: stateToSet[0].id // Set to first item (keeps it in line with *select* box display of the first option)
+                });
+            }
+
         }
     }
 
@@ -150,15 +171,25 @@ class QuizzesPage extends Component {
         });
         db.getAllQuizNames().on('value', (snapshot) => {
             let quizVal = snapshot.val();
-            this.setState({
-                allQuizNames : quizVal
-            })
+            if (Object.keys(quizVal).length === 0) { // Nothing returned :-/
+                this.setState({
+                    allQuizNames : quizVal
+                });
+            }
+            else { // There is at least one returned quiz that exists in the DB, so we can autoselect the first option
+                this.setState({
+                    allQuizNames : quizVal,
+                    currentlySelectedQuiz : Object.keys(quizVal)[0] // Set the first selected quiz (for editing) to the first item that is auto-selected in the *select*
+                });
+            }
+
         });
         db.getAllQuestionNames().on('value', (snapshot) => {
             let quesVal = snapshot.val();
             this.setState({
-                allQuestionNames : quesVal
-            })
+                allQuestionNames : quesVal,
+                currentlySelectedQuestion : Object.keys(quesVal)[0] // Set the first selected question (for adding to a quiz) to the first item that is auto-selected in the *select*
+            });
         });
     }
 
@@ -642,10 +673,6 @@ class AddQuestionToQuiz extends Component {
                     <form onSubmit={this.props.addQuestionToQuiz}>
                         <select class = "form-control" size = "5" name="currentlySelectedQuestion" value={this.props.currentlySelectedQuestion}
                                 onChange={this.handleChange} disabled={this.props.inEditMode}>
-                            <option name="defaultQuestionOption"
-                                    value="defaultOption"
-                                    key="defaultOption">---Please Select a Question---
-                            </option>
                             {this.props.questionFilterResults.map((item) => {
                                 return (
                                     <option name="questionToSelectOption"

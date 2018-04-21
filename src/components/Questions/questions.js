@@ -91,7 +91,7 @@ class QuestionsPage extends Component {
     handleExitEditMode(event) {
         event.preventDefault();
         this.setState({inEditMode: false,
-            currentlySelectedQuestion : "defaultOption",
+            currentlySelectedQuestion : Object.keys(this.state.allQuestionNames)[0], // Since we reset the page back to showing all question names (not filtered), select first option!
             currentlySelectedTag : "defaultOption",
             questionFilterResults : false
         });
@@ -101,7 +101,7 @@ class QuestionsPage extends Component {
         event.preventDefault();
         if (this.state.currentlySelectedTag !== "defaultOption") {
             // Iterate through selected tag, find the questions that have that tag, then set the state?
-            this.setState({ currentlySelectedQuestion : "defaultOption"});
+
             let stateToSet = [];
             for (let quesID in this.state.tags[this.state.currentlySelectedTag].questions) {
                 if (this.state.tags[this.state.currentlySelectedTag].questions[quesID] === true) {
@@ -111,9 +111,18 @@ class QuestionsPage extends Component {
                     });
                 }
             }
-            this.setState({
-                questionFilterResults: stateToSet
-            });
+            if (stateToSet === undefined || stateToSet.length === 0) { // If no tags returned, we automatically just display All Question Names and select the highlighted option
+                this.setState({
+                    questionFilterResults: stateToSet,
+                    currentlySelectedQuestion : Object.keys(this.state.allQuestionNames)[0]
+                });
+            }
+            else { // we have found at least one quiz with the tag! So auto select the first
+                this.setState({
+                    questionFilterResults: stateToSet,
+                    currentlySelectedQuestion: stateToSet[0].id // Set to first item (keeps it in line with *select* box display of the first option)
+                });
+            }
         }
     }
 
@@ -161,9 +170,17 @@ class QuestionsPage extends Component {
         });
         db.getAllQuestionNames().on('value', (snapshot) => {
             let quesVal = snapshot.val();
-            this.setState({
-                allQuestionNames : quesVal
-            })
+            if (Object.keys(quesVal).length === 0) {
+                this.setState({
+                    allQuestionNames : quesVal
+                })
+            }
+            else { // There is at least one returned question that exists in the DB, so we can autoselect the first option
+                this.setState({
+                    allQuestionNames : quesVal,
+                    currentlySelectedQuestion: Object.keys(quesVal)[0] // Set the first selected question (for editing) to the first item that is auto-selected in the *select*
+                })
+            }
         });
     }
     componentWillUnmount() {
