@@ -3,6 +3,7 @@ import * as routes from '../../constants/routes';
 import { firebase } from '../../firebase';
 import { db } from '../../firebase';
 import * as utils from '../../utilities/utils.js'
+import {getFacultyName} from "../../firebase/db";
 
 const GamePage = () =>
     <div class="container">
@@ -17,18 +18,53 @@ const GamePage = () =>
             </div>
         </div>
     </div>
-
+let facultyData = {
+    courses : [],
+    name: undefined,
+};
 class GameCreation extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             currentlySelectedQuiz: "defaultOption",
+            currentlySelectedFaculty: "d31b1d9547b0467aa443",
+            currentName: ''
         };
+        //this.handleSubmit = this.handleSubmit.bind(this);
+
+    }
+    // handleSubmit(e){
+    //     e.preventDefault();
+    //     const ref = db.getFacultyName(this.state.currentlySelectedFaculty);
+    //     const fac = {
+    //         name : this.state.currentName
+    //     }
+    //     ref.push(fac);
+    //     this.setState({
+    //        currentName: ''
+    //     });
+    // }
+    componentDidMount () {
+
+
+        // db.getFacultyCourses(this.state.currentlySelectedFaculty).once('value', (snapshot) => {
+        //     facultyData.courses = (snapshot.val());
+        // });
+        db.getFacultyName(this.state.currentlySelectedFaculty).on('value', (snapshot) => {
+            let name = snapshot.val();
+            console.log(name);
+            this.setState({
+                currentName: name
+            });
+        });
     }
 
     render() {
         return (
-            <button class="btn btn-info"> Create Game </button>
+            <form>
+                <p>Hello, {this.state.currentName}! </p>
+                <button class="btn btn-info"> Create Game </button>
+            </form>
         )
     }
 }
