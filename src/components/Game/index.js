@@ -11,27 +11,23 @@ const GamePage = () =>
             <div class="col-lg-12 text-center">
                 <h1 class="mt-5">Quiz Game</h1>
                 <p class="lead">Create a Quiz Game</p>
-                <ul class="list-unstyled">
-                    <li>Bootstrap 4.0.0</li>
-                </ul>
+
                 <GameCreation/>
             </div>
         </div>
     </div>
-let facultyData = {
-    courses : [],
-    name: undefined,
-};
+
 class GameCreation extends Component {
     constructor(props) {
         super(props);
         this.state = {
             currentlySelectedQuiz: "defaultOption",
             currentlySelectedFaculty: "d31b1d9547b0467aa443",
-            currentName: ''
+            currentName: '',
+            courses: []
         };
         //this.handleSubmit = this.handleSubmit.bind(this);
-
+        this.createGame = this.createGame.bind(this);
     }
     // handleSubmit(e){
     //     e.preventDefault();
@@ -45,11 +41,13 @@ class GameCreation extends Component {
     //     });
     // }
     componentDidMount () {
-
-
-        // db.getFacultyCourses(this.state.currentlySelectedFaculty).once('value', (snapshot) => {
-        //     facultyData.courses = (snapshot.val());
-        // });
+        db.getFacultyCourses(this.state.currentlySelectedFaculty).once('value', (snapshot) => {
+            let classes = snapshot.val();
+            console.log(classes);
+            this.setState({
+                courses: classes
+            })
+        });
         db.getFacultyName(this.state.currentlySelectedFaculty).on('value', (snapshot) => {
             let name = snapshot.val();
             console.log(name);
@@ -58,11 +56,22 @@ class GameCreation extends Component {
             });
         });
     }
+    createGame(){
 
+    }
     render() {
         return (
             <form>
                 <p>Hello, {this.state.currentName}! </p>
+                <div class="form-group">
+                    <select class="form-control" id="selectCourse" data-width="fit">
+                        <option>Select a Course</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
                 <button class="btn btn-info"> Create Game </button>
             </form>
         )
