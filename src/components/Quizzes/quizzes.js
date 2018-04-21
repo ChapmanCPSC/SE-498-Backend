@@ -109,7 +109,6 @@ class QuizzesPage extends Component {
                 courses : false,
                 datecreated: dateAdd,
                 lastused: false,
-                points: 100,
                 tags: {[this.state.currentlySelectedTagToAdd] : true},
                 questions: false,
                 timecreated: timeAdd
@@ -358,15 +357,18 @@ class QuizEdit extends Component {
 
     addQuestionToQuiz(event) {
         event.preventDefault();
+
         // Firstly, need to ensure that the question does not already belong to the quiz!
         if (!(this.props.currentlySelectedQuestion in this.state.quizData)) {
+            // Now set the state of your Edit Quiz component to be updated with the new question added
             this.setState({
                 quizData: Object.assign({}, this.state.quizData, {
                     questions : Object.assign({}, this.state.quizData.questions, {
-                        [this.props.currentlySelectedQuestion] : true,
+                        [this.props.currentlySelectedQuestion] : true, //Adding question to quiz
                     }),
                 }),
             });
+
         }
     }
 
@@ -453,14 +455,6 @@ class QuizEdit extends Component {
                                                    value={this.state.quizData.name}
                                                    placeholder="Enter Quiz Text Here" maxlength="60" size="70"
                                                    onChange={(event) => this.handleTextStateChange(event, "name")}/>
-                                            <h4> Total Points </h4>
-                                            {/* This needs to be determined automatically */}
-                                            <input type="text"
-                                                   disabled="true"
-                                                   name="totalPoints"
-                                                   value={this.state.quizData.points}
-                                                   placeholder="Total Points for this quiz"
-                                                   onChange={(event) => this.handleTextStateChange(event, "points")}/>
                                             <div>
                                                 <h5> Available in Practice Mode? </h5>
                                                 <input type="checkbox" checked={this.state.quizData.available} onChange={(event) => this.handleCheckBoxStateChange(event, "available")}/>

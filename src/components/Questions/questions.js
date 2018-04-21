@@ -358,10 +358,13 @@ class QuestionEdit extends Component {
     }
 
     addAnswerChoice(event) {
+        // Firstly, check to ensure we don't have more than 4 answers in the question!
         if(Object.keys(this.state.answerData.answers).length !== 4) {
             let id = utils.generateAnswerID(); //  Generate A ID for the answer key
+            // Now, use Object.assign to create a temporary state with the updated information, which will then be set into the actual React component state.
             this.setState({
                 answerData: Object.assign({}, this.state.answerData, {
+                    // Below, we are doing two more inner Object.assigns, due to different property values needing to be updated (two in this case: answers and correctanswers
                     answers : Object.assign({}, this.state.answerData.answers, {
                         [id] : "",
                     }),
