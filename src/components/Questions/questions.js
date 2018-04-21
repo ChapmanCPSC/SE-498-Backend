@@ -444,8 +444,10 @@ class QuestionEdit extends Component {
                         handleChangeAnswerCorrectness = {this.handleChangeAnswerCorrectness}
                         deleteAnswerChoice = {this.deleteAnswerChoice}
                         addAnswerChoice = {this.addAnswerChoice}/>
-
-                        <button>Submit Changes!</button>
+                    </form>
+                    <form onSubmit={this.submitQuestion}>
+                        <h4> Want to submit the question? </h4>
+                        <button> Submit (PERMANENT)</button>
                     </form>
                     <form onSubmit={this.deleteQuestion}>
                         <h4> Want to delete the question? </h4>
@@ -551,10 +553,14 @@ class AddQuestion extends Component {
                                 )
                             })}
                         </select>
+
+                        <div className="roundedgebot modal-header">
+                            <button className="btn btn-info" disabled={this.props.inEditMode}>
+                                ADD
+                            </button>
+                        </div>
                     </form>
-                    <div class = "roundedgebot modal-header" >
-                        <button class = "btn btn-info" disabled={this.props.inEditMode} onClick={() => this.closeModal()}>ADD</button>
-                    </div>
+
                 </Modal>
             </div>
         )
