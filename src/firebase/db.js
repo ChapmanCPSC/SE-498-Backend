@@ -51,7 +51,6 @@ export function getAllQuestionNames() {
 export function getAllQuizNames() {
     return db.ref('quiz-name')
 }
-
 export function getTagReference() {
     return db.ref('tag')
 }
@@ -63,5 +62,8 @@ export function getFacultyName(facID){
 }
 export function getFacultyCourses(facID){
     return db.ref('faculty/' + facID + "/courses")
+}
+export function getGames() {
+    return db.ref('game')
 }
 // Other db APIs ...

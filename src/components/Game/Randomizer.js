@@ -1,11 +1,16 @@
 import { db } from '../../firebase';
 import { firebase } from '../../firebase';
-
+import { time } from 'react-time';
 class Randomizer {
     constructor(){
-
+        this.state = {
+            newquizID: 0,
+            newGamePin : 0
+        }
         this.generatePin = this.generatePin.bind(this);
         this.updatePin = this.updatePin.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     };
 
     generatePin(){
@@ -13,8 +18,29 @@ class Randomizer {
         return val;
     }
     updatePin(quizID){
-        //check if game exists
-        //create game
+        this.setState = {
+            newquizID: quizID
+        };
         var val = this.generatePin();
+        this.setState = {
+            newGamePin: val
+        }
+        this.handleSubmit();
+    }
+    handleSubmit(e){
+        e.preventDefault();
+        const ref = db.getGames();
+        let currentTime = new Date();
+        const newGame = {
+            datecreated: currentTime,
+            gamepin: this.state.newGamePin,
+            quiz: this.state.newquizID,
+            students: [] //fix this later, neeed to get students from course info
+        }
+        ref.push(newGame);
+        this.setState({
+            newquizID: 0,
+            newGamePin : 0
+        })
     }
 }
