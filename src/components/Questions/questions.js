@@ -288,6 +288,7 @@ class QuestionEdit extends Component {
         this.deleteQuestion = this.deleteQuestion.bind(this);
         this.addTagToQuestion = this.addTagToQuestion.bind(this);
         this.removeTagFromQuestion = this.removeTagFromQuestion.bind(this);
+        this.removeQuestionImage = this.removeQuestionImage.bind(this);
         this.onDrop = this.onDrop.bind(this);
     }
     reset() {
@@ -416,18 +417,33 @@ class QuestionEdit extends Component {
         // Connect to Firebase and commit the updates! After you receive the callback stating the update was successful, exit edit mode
         db.getFullDBReference().update(updates).then(function () {
             // First, let's check and see if we used to not have an image on the question, and now an image has been added
-            if(that.state.questionDataInitialLoad.imageforquestion === false && that.state.questionData.imageforquestion === true) {
-                //storage.getQuestionImagesFolder
-                return true
+            if(that.state.questionDataInitialLoad.imageforquestion === false && that.state.questionData.imageforquestion) {
+                storage.getQuestionImagesFolderRef().child(that.props.selectedQuestionForEditing + "/" + that.state.questionImage.name)
+                    .put(that.state.questionImage).then(function(snapshot) {
+                        // File successfully uploaded
+                        console.log("success!");
+                        return true
+                }).catch(function(error) {
+                    console.log("Error in upload");
+                });
             }
             // If not the first, let's check to see if there used to be an image on the question, but now it has been removed
-            else if (that.state.questionDataInitialLoad.imageforquestion === true && that.state.questionData.imageforquestion === false) {
-                return true
+            else if (that.state.questionDataInitialLoad.imageforquestion && that.state.questionData.imageforquestion === false) {
+                storage.getStorageRef().child(that.state.questionDataInitialLoad.imageurl)
+                    .delete().then(function(snapshot) {
+                    // File successfully deleted
+                    console.log("Delete Successful");
+                    return true
+                }).catch(function(error) {
+                    console.log("Error?");
+                });
             }
             // If we had an image on the question before, but are "swapping it out" for a new one"
-            else if (that.state.questionDataInitialLoad.imageforquestion === true && that.state.questionDataInitialLoad.imageurl !== that.state.questionData.imageurl) {
+            else if (that.state.questionDataInitialLoad.imageforquestion && that.state.questionData.imageforquestion &&
+                (that.state.questionDataInitialLoad.imageurl !== that.state.questionData.imageurl)) {
                 return true
             }
+            return true
 
         }).then(function () {
             that.props.handleExitEditMode(event);
@@ -482,6 +498,17 @@ class QuestionEdit extends Component {
 
     }
 
+    removeQuestionImage(event) {
+        this.setState( {
+            questionImage : undefined, // Remove image file
+            // Also need to update questionData, flipping the boolean for imageforquestion to be true
+            questionData: Object.assign({}, this.state.questionData, {
+                imageforquestion : false,
+                imageurl : null, // null so it is removed in Firebase
+            }),
+        });
+    }
+
     onDrop(accepted, rejected) {
 
         if(accepted.length > 0) { // If we have a valid accepted file
@@ -490,7 +517,7 @@ class QuestionEdit extends Component {
                 // Also need to update questionData, flipping the boolean for imageforquestion to be true
                 questionData: Object.assign({}, this.state.questionData, {
                     imageforquestion : true,
-                    imageurl : "gs://cusp-quiz-app.appspot.com/images/questionimages/" + this.props.selectedQuestionForEditing + "/" + accepted[0].name,
+                    imageurl : "images/questionimages/" + this.props.selectedQuestionForEditing + "/" + accepted[0].name,
                     // Since the url should be at the same location as when we actually upload it, we can assume the above gs:// location
                     // File is not actually uploaded yet! That comes during the submitQuestion step (we are just holding data locally right now)
                 }),
@@ -514,6 +541,12 @@ class QuestionEdit extends Component {
                                 The image will be displayed above your question during a quiz game.
                             </p>
                         </Dropzone>
+                        {this.state.questionData.imageforquestion && // Only show this button if image attached
+                            <button type="button" onClick={this.removeQuestionImage}>
+                                Remove Image?
+                            </button>
+                        }
+
                         <h4> Question Name: </h4>
                         <input type="text"
                                name="existingQuestionText"
