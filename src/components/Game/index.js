@@ -4,7 +4,8 @@ import { firebase } from '../../firebase';
 import { db } from '../../firebase';
 import * as utils from '../../utilities/utils.js'
 import {getFacultyName} from "../../firebase/db";
-import { Randomizer } from 'Randomizer.js';
+import { Randomizer } from './Randomizer.js';
+
 const GamePage = () =>
     <div class="container">
         <div class="row">
