@@ -66,4 +66,3 @@ export function getFacultyCourses(facID){
 export function getGames() {
     return db.ref('game')
 }
-// Other db APIs ...

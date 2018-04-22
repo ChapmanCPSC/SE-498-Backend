@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import * as routes from '../../constants/routes';
 import { firebase } from '../../firebase';
 import { db } from '../../firebase';
+import { storage } from '../../firebase';
 import * as utils from '../../utilities/utils.js'
 import {TagModification} from '../TagModification/TagModification.js'
+import Dropzone from 'react-dropzone'
 
 class QuestionsPage extends Component {
     constructor (props) {
@@ -263,7 +265,9 @@ const InitialQuestionEditState = {
     questionData : undefined, // The JS Object with the whole question structure and data(from Firebase)
     answerData : undefined, // The JS Object with the whole answer structure and data (from Firebase)
     questionDataInitialLoad : undefined, // The JS Object with the whole question structure and data(from Firebase), before any changes are made to it
-    answerDataInitialLoad : undefined // The JS Object with the whole answer structure and data (from Firebase), before any changes are made to it
+    answerDataInitialLoad : undefined, // The JS Object with the whole answer structure and data (from Firebase), before any changes are made to it
+    questionImage: undefined, // An array which stores (1) question image the user uploads. After being confirmed for uploading, the url storage location is included in questionData
+    answerImages: undefined //An array which stores (2, 3, or 4) images for your question answers
 };
 
 class QuestionEdit extends Component {
@@ -284,6 +288,7 @@ class QuestionEdit extends Component {
         this.deleteQuestion = this.deleteQuestion.bind(this);
         this.addTagToQuestion = this.addTagToQuestion.bind(this);
         this.removeTagFromQuestion = this.removeTagFromQuestion.bind(this);
+        this.onDrop = this.onDrop.bind(this);
     }
     reset() {
         this.setState(InitialQuestionEditState);
@@ -408,10 +413,24 @@ class QuestionEdit extends Component {
         updates['/question-name/' + this.props.selectedQuestionForEditing ] = {name: this.state.questionData.name};
         updates['/choices/' + this.props.selectedQuestionForEditing] = this.state.answerData;
 
-        // Connect to Firebae and commit the updates! After you recieve the callback stating the update was successful, exit edit mode
+        // Connect to Firebase and commit the updates! After you receive the callback stating the update was successful, exit edit mode
         db.getFullDBReference().update(updates).then(function () {
-                that.props.handleExitEditMode(event);
+            // First, let's check and see if we used to not have an image on the question, and now an image has been added
+            if(that.state.questionDataInitialLoad.imageforquestion === false && that.state.questionData.imageforquestion === true) {
+                //storage.getQuestionImagesFolder
+                return true
+            }
+            // If not the first, let's check to see if there used to be an image on the question, but now it has been removed
+            else if (that.state.questionDataInitialLoad.imageforquestion === true && that.state.questionData.imageforquestion === false) {
+                return true
+            }
+            // If we had an image on the question before, but are "swapping it out" for a new one"
+            else if (that.state.questionDataInitialLoad.imageforquestion === true && that.state.questionDataInitialLoad.imageurl !== that.state.questionData.imageurl) {
+                return true
+            }
 
+        }).then(function () {
+            that.props.handleExitEditMode(event);
         });
     }
 
@@ -463,6 +482,23 @@ class QuestionEdit extends Component {
 
     }
 
+    onDrop(accepted, rejected) {
+
+        if(accepted.length > 0) { // If we have a valid accepted file
+            this.setState( {
+                questionImage : accepted[0], // Set the item that was dropped in as the image for the question. Since we disallow multiple files, this is always one file
+                // Also need to update questionData, flipping the boolean for imageforquestion to be true
+                questionData: Object.assign({}, this.state.questionData, {
+                    imageforquestion : true,
+                    imageurl : "gs://cusp-quiz-app.appspot.com/images/questionimages/" + this.props.selectedQuestionForEditing + "/" + accepted[0].name,
+                    // Since the url should be at the same location as when we actually upload it, we can assume the above gs:// location
+                    // File is not actually uploaded yet! That comes during the submitQuestion step (we are just holding data locally right now)
+                }),
+            });
+            console.log(accepted[0].name);
+        }
+    }
+
     render() {
         if(this.props.inEditMode && this.state.questionData !== undefined && this.state.answerData !== undefined) {
             return(
@@ -470,6 +506,14 @@ class QuestionEdit extends Component {
                     <form onSubmit={this.submitQuestion}>
                         <h1> Edit </h1>
                         <button type="button" onClick={this.handleExitEditMode}> Go Back To Question Select </button>
+                        <Dropzone
+                            accept="image/jpeg, image/png"
+                            multiple={false}
+                            onDrop={(accepted, rejected) => this.onDrop(accepted, rejected) }>
+                            <p> Want to add an Image to this question? Drag and drop a .jpeg or .png image file here (or click)!
+                                The image will be displayed above your question during a quiz game.
+                            </p>
+                        </Dropzone>
                         <h4> Question Name: </h4>
                         <input type="text"
                                name="existingQuestionText"
