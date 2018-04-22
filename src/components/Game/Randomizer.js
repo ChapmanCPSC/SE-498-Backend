@@ -2,31 +2,44 @@ import React, { Component } from 'react';
 import { db } from '../../firebase';
 import { firebase } from '../../firebase';
 import { time } from 'react-time';
+<<<<<<< HEAD
 export class Randomizer extends Component{
     constructor(){
         super();
+=======
+
+export class Randomizer extends Component {
+    constructor(props) {
+        super(props);
+>>>>>>> 65935c4a4a4473d485843edcfb33241a09c46b1a
         this.state = {
             newquizID: 0,
             newGamePin : 0
-        }
+        };
+
         this.generatePin = this.generatePin.bind(this);
         this.updatePin = this.updatePin.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     };
 
+    handleChange(event) {
+        this.setState({[event.target.name]: event.target.value});
+    }
+
     generatePin(){
-        var val = Math.floor(1000 + Math.random() * 9000);
-        return val;
+        return Math.floor(1000 + Math.random() * 9000);
     }
     updatePin(quizID){
         this.setState = {
             newquizID: quizID
         };
-        var val = this.generatePin();
+
+        let val = this.generatePin();
         this.setState = {
             newGamePin: val
-        }
+        };
+
         this.handleSubmit();
     }
     handleSubmit(e){
@@ -37,8 +50,9 @@ export class Randomizer extends Component{
             datecreated: currentTime,
             gamepin: this.state.newGamePin,
             quiz: this.state.newquizID,
-            students: [] //fix this later, neeed to get students from course info
-        }
+            students: [] //fix this later, need to get students from course info
+        };
+
         ref.push(newGame);
         this.setState({
             newquizID: 0,

@@ -584,43 +584,50 @@ class AddQuestion extends Component {
         this.props.handleChange(event)
     }
     render() {
-        return (
-            <div class = "marginstuff">
-                <button class = "btn btn-info" onClick={() => this.openModal()}>ADD QUESTIONS</button>
-                <Modal isOpen={this.state.isModalOpen} onClose={() => this.closeModal()}>
-                    <div class = 'roundedgetop modal-header'>
-                        <h1>ADD A QUESTION</h1>
-                    </div>
-                    <form class = 'modalPad' onSubmit={this.props.onAddQuestionSubmit}>
-                        <input type="text"
-                               disabled={this.props.inEditMode}
-                               name="newQuestionText"
-                               placeholder="Please enter your question"
-                               value={this.props.newQuestionText}
-                               onChange={this.handleChange}
-                        />
-                        <select name="currentlySelectedTagToAdd" value={this.props.currentlySelectedTagToAdd} onChange={this.handleChange} disabled={this.props.inEditMode}>
-                            <option name="defaultTagOption"
-                                    value="defaultOption"
-                                    key="defaultOption">---Select a Tag!---</option>
-                            {Object.keys(this.props.tags).map(key => {
-                                return ( <option name="tagOption"
-                                                 key={key}
-                                                 value={key}>{this.props.tags[key].name}</option>
-                                )
-                            })}
-                        </select>
-
-                        <div className="roundedgebot modal-header">
-                            <button className="btn btn-info" disabled={this.props.inEditMode}>
-                                ADD
-                            </button>
+        if(!this.props.inEditMode) {
+            return (
+                <div class="marginstuff">
+                    <button class="btn btn-info" onClick={() => this.openModal()}>ADD QUESTIONS</button>
+                    <Modal isOpen={this.state.isModalOpen} onClose={() => this.closeModal()}>
+                        <div class='roundedgetop modal-header'>
+                            <h1>ADD A QUESTION</h1>
                         </div>
-                    </form>
+                        <form class='modalPad' onSubmit={this.props.onAddQuestionSubmit}>
+                            <input type="text"
+                                   disabled={this.props.inEditMode}
+                                   name="newQuestionText"
+                                   placeholder="Please enter your question"
+                                   value={this.props.newQuestionText}
+                                   onChange={this.handleChange}
+                            />
+                            <select name="currentlySelectedTagToAdd" value={this.props.currentlySelectedTagToAdd}
+                                    onChange={this.handleChange} disabled={this.props.inEditMode}>
+                                <option name="defaultTagOption"
+                                        value="defaultOption"
+                                        key="defaultOption">---Select a Tag!---
+                                </option>
+                                {Object.keys(this.props.tags).map(key => {
+                                    return (<option name="tagOption"
+                                                    key={key}
+                                                    value={key}>{this.props.tags[key].name}</option>
+                                    )
+                                })}
+                            </select>
 
-                </Modal>
-            </div>
-        )
+                            <div className="roundedgebot modal-header">
+                                <button className="btn btn-info" disabled={this.props.inEditMode}>
+                                    ADD
+                                </button>
+                            </div>
+                        </form>
+
+                    </Modal>
+                </div>
+            )
+        }
+        else {
+            return null;
+        }
     }
     openModal() {
         this.setState({ isModalOpen: true })
