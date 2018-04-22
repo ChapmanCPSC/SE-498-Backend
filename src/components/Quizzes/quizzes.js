@@ -3,6 +3,7 @@ import * as routes from '../../constants/routes';
 import { firebase } from '../../firebase';
 import { db } from '../../firebase';
 import * as utils from '../../utilities/utils.js'
+import {TagModification} from '../TagModification/TagModification.js'
 
 class QuizzesPage extends Component {
     constructor (props) {
@@ -223,6 +224,7 @@ class QuizzesPage extends Component {
                         handleExitEditMode={this.handleExitEditMode}
                         handleGetQuestionsWithTag={this.handleGetQuestionsWithTag}
                         currentlySelectedQuestion={this.state.currentlySelectedQuestion}
+                        currentlySelectedTagToAdd={this.state.currentlySelectedTagToAdd}
                         currentlySelectedTagForQuestionSearch={this.state.currentlySelectedTagForQuestionSearch}
                         questionFilterResults={this.state.questionFilterResults}
                         allQuestionNames={this.state.allQuestionNames}
@@ -321,6 +323,8 @@ class QuizEdit extends Component {
         this.handleGetQuestionsWithTag = this.handleGetQuestionsWithTag.bind(this);
         this.submitQuiz = this.submitQuiz.bind(this);
         this.deleteQuiz = this.deleteQuiz.bind(this);
+        this.addTagToQuiz = this.addTagToQuiz.bind(this);
+        this.removeTagFromQuiz = this.removeTagFromQuiz.bind(this);
     }
 
     reset() {
@@ -400,12 +404,27 @@ class QuizEdit extends Component {
         event.preventDefault();
         let updates = {};
         let that = this;
+
+
         updates['/quiz/' + this.props.selectedQuizForEditing] = this.state.quizData;
         updates['/quiz-name/' + this.props.selectedQuizForEditing ] = {name: this.state.quizData.name};
         // Be sure to update question relationships too! Let them know that they are part of the quiz
         Object.keys(this.state.quizData.questions).forEach(key => {
             updates['/question/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = true;
         });
+
+        // We will update the tags with the new and correct tag information (on the quiz)
+        Object.keys(this.state.quizData.tags).forEach(key => {
+            updates['/tag/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = true;
+        });
+
+        // Here we do a set difference with the initial backup (for duplicated tag data), to see if anything was deleted ( and thus set to null to delete it)
+        Object.keys(this.state.quizDataInitialLoad.tags).forEach(key => {
+            if (!(key in this.state.quizData.tags)) {
+                updates['/tag/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = null;
+            }
+        });
+
         // Here we do a set difference with the initial backup (on our duplicated question data), to see if anything was deleted ( and thus set to null to delete it)
         Object.keys(this.state.quizDataInitialLoad.questions).forEach(key => {
             if (!(key in this.state.quizData.questions)) {
@@ -437,6 +456,30 @@ class QuizEdit extends Component {
         });
     }
 
+    addTagToQuiz (event) {
+        event.preventDefault();
+
+        // This is REALLY inefficient and we need another way of doing this without nested assigns
+        this.setState({
+            quizData: Object.assign({}, this.state.quizData, {
+                tags : Object.assign({}, this.state.quizData.tags, {
+                    [this.props.currentlySelectedTagToAdd] : true,
+                }),
+            }),
+        });
+    }
+    removeTagFromQuiz(event, tagID) {
+        event.preventDefault();
+
+        if(Object.keys(this.state.quizData.tags).length !== 1) {
+            let removedKeyStateCopy = Object.assign({}, this.state);
+            delete removedKeyStateCopy.quizData.tags[tagID];
+            this.setState(removedKeyStateCopy);
+        }
+    }
+
+
+
     render() {
         if(this.props.inEditMode && this.state.quizData !== undefined) {
             return(
@@ -465,6 +508,17 @@ class QuizEdit extends Component {
                                             </div>
                                         </div>
                                     </div>
+
+                                    <TagModification
+                                        tags={this.props.tags}
+                                        inEditMode={this.props.inEditMode}
+                                        handleChange={this.props.handleChange}
+                                        handleAddTagToData={this.addTagToQuiz}
+                                        handleRemoveTagFromData={this.removeTagFromQuiz}
+                                        specificData={this.state.quizData}
+                                        currentlySelectedTagToAdd={this.props.currentlySelectedTagToAdd}
+                                    />
+
                                     <div class = "column">
                                         <div align = "left">
                                             <h4> Questions in Quiz </h4>
