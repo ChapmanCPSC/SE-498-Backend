@@ -406,7 +406,7 @@ class QuizEdit extends Component {
         Object.keys(this.state.quizData.questions).forEach(key => {
             updates['/question/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = true;
         });
-        // Here we do a set difference with the initial backup, to see if anything was deleted ( and thus set to null to delete it)
+        // Here we do a set difference with the initial backup (on our duplicated question data), to see if anything was deleted ( and thus set to null to delete it)
         Object.keys(this.state.quizDataInitialLoad.questions).forEach(key => {
             if (!(key in this.state.quizData.questions)) {
                 updates['/question/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = null;

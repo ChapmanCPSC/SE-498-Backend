@@ -3,6 +3,7 @@ import * as routes from '../../constants/routes';
 import { firebase } from '../../firebase';
 import { db } from '../../firebase';
 import * as utils from '../../utilities/utils.js'
+import {TagModification} from '../TagModification/TagModification.js'
 
 class QuestionsPage extends Component {
     constructor (props) {
@@ -93,6 +94,7 @@ class QuestionsPage extends Component {
         this.setState({inEditMode: false,
             currentlySelectedQuestion : Object.keys(this.state.allQuestionNames)[0], // Since we reset the page back to showing all question names (not filtered), select first option!
             currentlySelectedTag : "defaultOption",
+            currentlySelectedTagToAdd : "defaultOption",
             questionFilterResults : false
         });
     }
@@ -156,7 +158,9 @@ class QuestionsPage extends Component {
                     selectedQuestionForEditing={this.state.currentlySelectedQuestion}
                     inEditMode={this.state.inEditMode}
                     handleChange={this.handleChange}
-                    handleExitEditMode={this.handleExitEditMode}/>
+                    handleExitEditMode={this.handleExitEditMode}
+                    tags={this.state.tags}
+                    currentlySelectedTagToAdd={this.state.currentlySelectedTagToAdd}/>
                 {/* {this.state.currentlySelectedQuestion !== 'defaultOption' && this.renderEditForm()} */}
             </div>
         )
@@ -256,10 +260,10 @@ class FilterQuestions extends Component {
 
 
 const InitialQuestionEditState = {
-    questionData : undefined,
-    answerData : undefined,
-    questionDataInitialLoad : undefined,
-    answerDataInitialLoad : undefined
+    questionData : undefined, // The JS Object with the whole question structure and data(from Firebase)
+    answerData : undefined, // The JS Object with the whole answer structure and data (from Firebase)
+    questionDataInitialLoad : undefined, // The JS Object with the whole question structure and data(from Firebase), before any changes are made to it
+    answerDataInitialLoad : undefined // The JS Object with the whole answer structure and data (from Firebase), before any changes are made to it
 };
 
 class QuestionEdit extends Component {
@@ -278,6 +282,8 @@ class QuestionEdit extends Component {
         this.addAnswerChoice = this.addAnswerChoice.bind(this);
         this.deleteAnswerChoice = this.deleteAnswerChoice.bind(this);
         this.deleteQuestion = this.deleteQuestion.bind(this);
+        this.addTagToQuestion = this.addTagToQuestion.bind(this);
+        this.removeTagFromQuestion = this.removeTagFromQuestion.bind(this);
     }
     reset() {
         this.setState(InitialQuestionEditState);
@@ -381,14 +387,31 @@ class QuestionEdit extends Component {
 
     submitQuestion(event) {
         event.preventDefault();
-        let updates = {};
-        let that = this;
-        updates['/question/' + this.props.selectedQuestionForEditing] = this.state.questionData;
 
+        let updates = {}; // our updates! We update the question/ object, our tags within the tags/ object, the question-name/ object, & our answer choices/
+        let that = this; // necessary for callback below
+
+
+        // We will update the tags with the new and correct tag information (on the question)
+        Object.keys(this.state.questionData.tags).forEach(key => {
+            updates['/tag/' + key + '/questions/' + this.props.selectedQuestionForEditing] = true;
+        });
+
+        // Here we do a set difference with the initial backup (for duplicated tag data), to see if anything was deleted ( and thus set to null to delete it)
+        Object.keys(this.state.questionDataInitialLoad.tags).forEach(key => {
+            if (!(key in this.state.questionData.tags)) {
+                updates['/tag/' + key + '/questions/' + this.props.selectedQuestionForEditing] = null;
+            }
+        });
+
+        updates['/question/' + this.props.selectedQuestionForEditing] = this.state.questionData;
         updates['/question-name/' + this.props.selectedQuestionForEditing ] = {name: this.state.questionData.name};
         updates['/choices/' + this.props.selectedQuestionForEditing] = this.state.answerData;
+
+        // Connect to Firebae and commit the updates! After you recieve the callback stating the update was successful, exit edit mode
         db.getFullDBReference().update(updates).then(function () {
-            that.props.handleExitEditMode(event);
+                that.props.handleExitEditMode(event);
+
         });
     }
 
@@ -415,6 +438,31 @@ class QuestionEdit extends Component {
         });
     }
 
+    addTagToQuestion (event) {
+        event.preventDefault();
+
+        // This is REALLY inefficient and we need another way of doing this without nested assigns
+        this.setState({
+            questionData: Object.assign({}, this.state.questionData, {
+                tags : Object.assign({}, this.state.questionData.tags, {
+                    [this.props.currentlySelectedTagToAdd] : true,
+                }),
+            }),
+        });
+
+    }
+
+    removeTagFromQuestion (event, tagID) {
+        event.preventDefault();
+
+        if(Object.keys(this.state.questionData.tags).length !== 1) {
+            let removedKeyStateCopy = Object.assign({}, this.state);
+            delete removedKeyStateCopy.questionData.tags[tagID];
+            this.setState(removedKeyStateCopy);
+        }
+
+    }
+
     render() {
         if(this.props.inEditMode && this.state.questionData !== undefined && this.state.answerData !== undefined) {
             return(
@@ -434,11 +482,17 @@ class QuestionEdit extends Component {
                                value={this.state.questionData.points}
                                placeholder="Points gained on correct answer"
                                onChange={(event) => this.handleTextStateChange(event, "points")}/>
-                        {/*
-                        <input type="text"
-                               name="tagForQuestionEdit"
-                               placeholder="Enter Tag Here"
-                               value={this.state.questionData.tags.} onChange={this.handleChange} /> */}
+
+                        <TagModification
+                            tags={this.props.tags}
+                            inEditMode={this.props.inEditMode}
+                            handleChange={this.props.handleChange}
+                            handleAddTagToData={this.addTagToQuestion}
+                            handleRemoveTagFromData={this.removeTagFromQuestion}
+                            specificData={this.state.questionData}
+                            currentlySelectedTagToAdd={this.props.currentlySelectedTagToAdd}
+                        />
+
 
                         <Answers
                         answerData ={this.state.answerData}
@@ -537,7 +591,7 @@ class AddQuestion extends Component {
                     <div class = 'roundedgetop modal-header'>
                         <h1>ADD A QUESTION</h1>
                     </div>
-                    <form class = 'modalPad'onSubmit={this.props.onAddQuestionSubmit}>
+                    <form class = 'modalPad' onSubmit={this.props.onAddQuestionSubmit}>
                         <input type="text"
                                disabled={this.props.inEditMode}
                                name="newQuestionText"
@@ -574,17 +628,6 @@ class AddQuestion extends Component {
 
     closeModal() {
         this.setState({ isModalOpen: false })
-    }
-}
-
-class AddTag extends React.Component {
-    constructor(props) {
-        super(props);
-        this.handleChange = this.handleChange.bind(this);
-
-    }
-    handleChange(event) {
-        this.props.handleChange(event)
     }
 }
 
