@@ -3,8 +3,8 @@ import * as routes from '../../constants/routes';
 import { firebase } from '../../firebase';
 import { db } from '../../firebase';
 import * as utils from '../../utilities/utils.js'
-import {getFacultyName} from "../../firebase/db";
-import { Randomizer } from 'Randomizer.js';
+import {getFacultyName} from "../../firebase/db"
+import { Randomizer } from "./Randomizer"
 const GamePage = () =>
     <div class="container">
         <div class="row">

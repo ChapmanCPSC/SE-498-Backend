@@ -1,8 +1,10 @@
+import React, { Component } from 'react';
 import { db } from '../../firebase';
 import { firebase } from '../../firebase';
 import { time } from 'react-time';
-class Randomizer {
+export class Randomizer extends Component{
     constructor(){
+        super();
         this.state = {
             newquizID: 0,
             newGamePin : 0
