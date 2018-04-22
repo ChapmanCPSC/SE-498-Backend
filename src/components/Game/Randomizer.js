@@ -2,16 +2,10 @@ import React, { Component } from 'react';
 import { db } from '../../firebase';
 import { firebase } from '../../firebase';
 import { time } from 'react-time';
-<<<<<<< HEAD
-export class Randomizer extends Component{
-    constructor(){
-        super();
-=======
 
 export class Randomizer extends Component {
     constructor(props) {
         super(props);
->>>>>>> 65935c4a4a4473d485843edcfb33241a09c46b1a
         this.state = {
             newquizID: 0,
             newGamePin : 0
