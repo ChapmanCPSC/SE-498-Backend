@@ -3,6 +3,7 @@ import * as routes from '../../constants/routes';
 import { firebase } from '../../firebase';
 import { db } from '../../firebase';
 import * as utils from '../../utilities/utils.js'
+import {TagModification} from '../TagModification/TagModification.js'
 
 class QuestionsPage extends Component {
     constructor (props) {
@@ -91,8 +92,9 @@ class QuestionsPage extends Component {
     handleExitEditMode(event) {
         event.preventDefault();
         this.setState({inEditMode: false,
-            currentlySelectedQuestion : "defaultOption",
+            currentlySelectedQuestion : Object.keys(this.state.allQuestionNames)[0], // Since we reset the page back to showing all question names (not filtered), select first option!
             currentlySelectedTag : "defaultOption",
+            currentlySelectedTagToAdd : "defaultOption",
             questionFilterResults : false
         });
     }
@@ -101,7 +103,7 @@ class QuestionsPage extends Component {
         event.preventDefault();
         if (this.state.currentlySelectedTag !== "defaultOption") {
             // Iterate through selected tag, find the questions that have that tag, then set the state?
-            this.setState({ currentlySelectedQuestion : "defaultOption"});
+
             let stateToSet = [];
             for (let quesID in this.state.tags[this.state.currentlySelectedTag].questions) {
                 if (this.state.tags[this.state.currentlySelectedTag].questions[quesID] === true) {
@@ -111,9 +113,18 @@ class QuestionsPage extends Component {
                     });
                 }
             }
-            this.setState({
-                questionFilterResults: stateToSet
-            });
+            if (stateToSet === undefined || stateToSet.length === 0) { // If no tags returned, we automatically just display All Question Names and select the highlighted option
+                this.setState({
+                    questionFilterResults: stateToSet,
+                    currentlySelectedQuestion : Object.keys(this.state.allQuestionNames)[0]
+                });
+            }
+            else { // we have found at least one quiz with the tag! So auto select the first
+                this.setState({
+                    questionFilterResults: stateToSet,
+                    currentlySelectedQuestion: stateToSet[0].id // Set to first item (keeps it in line with *select* box display of the first option)
+                });
+            }
         }
     }
 
@@ -147,7 +158,9 @@ class QuestionsPage extends Component {
                     selectedQuestionForEditing={this.state.currentlySelectedQuestion}
                     inEditMode={this.state.inEditMode}
                     handleChange={this.handleChange}
-                    handleExitEditMode={this.handleExitEditMode}/>
+                    handleExitEditMode={this.handleExitEditMode}
+                    tags={this.state.tags}
+                    currentlySelectedTagToAdd={this.state.currentlySelectedTagToAdd}/>
                 {/* {this.state.currentlySelectedQuestion !== 'defaultOption' && this.renderEditForm()} */}
             </div>
         )
@@ -161,9 +174,17 @@ class QuestionsPage extends Component {
         });
         db.getAllQuestionNames().on('value', (snapshot) => {
             let quesVal = snapshot.val();
-            this.setState({
-                allQuestionNames : quesVal
-            })
+            if (Object.keys(quesVal).length === 0) {
+                this.setState({
+                    allQuestionNames : quesVal
+                })
+            }
+            else { // There is at least one returned question that exists in the DB, so we can autoselect the first option
+                this.setState({
+                    allQuestionNames : quesVal,
+                    currentlySelectedQuestion: Object.keys(quesVal)[0] // Set the first selected question (for editing) to the first item that is auto-selected in the *select*
+                })
+            }
         });
     }
     componentWillUnmount() {
@@ -203,18 +224,7 @@ class FilterQuestions extends Component {
                             </button>
                         </form>
                     </div>
-                    {/* Here is a box for searching for a question in the database by tag
-            <div className="questionSearch">
-                <form onSubmit={this.handleSearchForQuestion}>
-                    <input type="text"
-                           name="searchQuestionName"
-                           placeholder="Enter the name of the question to search for"
-                           value={this.state.searchQuestionName}
-                           onChange={this.handleChange}
-                    />
-                    <button>Search</button>
-                </form>
-            </div> */}
+                    
                     <div className="questionSelection">
                         {/* TODO: Must maintain concurrency: I.e. if a question is deleted by another admin, need to make sure
                         the currently selected question changed back to default, or alert the user
@@ -250,10 +260,10 @@ class FilterQuestions extends Component {
 
 
 const InitialQuestionEditState = {
-    questionData : undefined,
-    answerData : undefined,
-    questionDataInitialLoad : undefined,
-    answerDataInitialLoad : undefined
+    questionData : undefined, // The JS Object with the whole question structure and data(from Firebase)
+    answerData : undefined, // The JS Object with the whole answer structure and data (from Firebase)
+    questionDataInitialLoad : undefined, // The JS Object with the whole question structure and data(from Firebase), before any changes are made to it
+    answerDataInitialLoad : undefined // The JS Object with the whole answer structure and data (from Firebase), before any changes are made to it
 };
 
 class QuestionEdit extends Component {
@@ -272,6 +282,8 @@ class QuestionEdit extends Component {
         this.addAnswerChoice = this.addAnswerChoice.bind(this);
         this.deleteAnswerChoice = this.deleteAnswerChoice.bind(this);
         this.deleteQuestion = this.deleteQuestion.bind(this);
+        this.addTagToQuestion = this.addTagToQuestion.bind(this);
+        this.removeTagFromQuestion = this.removeTagFromQuestion.bind(this);
     }
     reset() {
         this.setState(InitialQuestionEditState);
@@ -352,10 +364,13 @@ class QuestionEdit extends Component {
     }
 
     addAnswerChoice(event) {
+        // Firstly, check to ensure we don't have more than 4 answers in the question!
         if(Object.keys(this.state.answerData.answers).length !== 4) {
             let id = utils.generateAnswerID(); //  Generate A ID for the answer key
+            // Now, use Object.assign to create a temporary state with the updated information, which will then be set into the actual React component state.
             this.setState({
                 answerData: Object.assign({}, this.state.answerData, {
+                    // Below, we are doing two more inner Object.assigns, due to different property values needing to be updated (two in this case: answers and correctanswers
                     answers : Object.assign({}, this.state.answerData.answers, {
                         [id] : "",
                     }),
@@ -372,14 +387,31 @@ class QuestionEdit extends Component {
 
     submitQuestion(event) {
         event.preventDefault();
-        let updates = {};
-        let that = this;
-        updates['/question/' + this.props.selectedQuestionForEditing] = this.state.questionData;
 
+        let updates = {}; // our updates! We update the question/ object, our tags within the tags/ object, the question-name/ object, & our answer choices/
+        let that = this; // necessary for callback below
+
+
+        // We will update the tags with the new and correct tag information (on the question)
+        Object.keys(this.state.questionData.tags).forEach(key => {
+            updates['/tag/' + key + '/questions/' + this.props.selectedQuestionForEditing] = true;
+        });
+
+        // Here we do a set difference with the initial backup (for duplicated tag data), to see if anything was deleted ( and thus set to null to delete it)
+        Object.keys(this.state.questionDataInitialLoad.tags).forEach(key => {
+            if (!(key in this.state.questionData.tags)) {
+                updates['/tag/' + key + '/questions/' + this.props.selectedQuestionForEditing] = null;
+            }
+        });
+
+        updates['/question/' + this.props.selectedQuestionForEditing] = this.state.questionData;
         updates['/question-name/' + this.props.selectedQuestionForEditing ] = {name: this.state.questionData.name};
         updates['/choices/' + this.props.selectedQuestionForEditing] = this.state.answerData;
+
+        // Connect to Firebae and commit the updates! After you recieve the callback stating the update was successful, exit edit mode
         db.getFullDBReference().update(updates).then(function () {
-            that.props.handleExitEditMode(event);
+                that.props.handleExitEditMode(event);
+
         });
     }
 
@@ -406,6 +438,31 @@ class QuestionEdit extends Component {
         });
     }
 
+    addTagToQuestion (event) {
+        event.preventDefault();
+
+        // This is REALLY inefficient and we need another way of doing this without nested assigns
+        this.setState({
+            questionData: Object.assign({}, this.state.questionData, {
+                tags : Object.assign({}, this.state.questionData.tags, {
+                    [this.props.currentlySelectedTagToAdd] : true,
+                }),
+            }),
+        });
+
+    }
+
+    removeTagFromQuestion (event, tagID) {
+        event.preventDefault();
+
+        if(Object.keys(this.state.questionData.tags).length !== 1) {
+            let removedKeyStateCopy = Object.assign({}, this.state);
+            delete removedKeyStateCopy.questionData.tags[tagID];
+            this.setState(removedKeyStateCopy);
+        }
+
+    }
+
     render() {
         if(this.props.inEditMode && this.state.questionData !== undefined && this.state.answerData !== undefined) {
             return(
@@ -425,11 +482,17 @@ class QuestionEdit extends Component {
                                value={this.state.questionData.points}
                                placeholder="Points gained on correct answer"
                                onChange={(event) => this.handleTextStateChange(event, "points")}/>
-                        {/*
-                        <input type="text"
-                               name="tagForQuestionEdit"
-                               placeholder="Enter Tag Here"
-                               value={this.state.questionData.tags.} onChange={this.handleChange} /> */}
+
+                        <TagModification
+                            tags={this.props.tags}
+                            inEditMode={this.props.inEditMode}
+                            handleChange={this.props.handleChange}
+                            handleAddTagToData={this.addTagToQuestion}
+                            handleRemoveTagFromData={this.removeTagFromQuestion}
+                            specificData={this.state.questionData}
+                            currentlySelectedTagToAdd={this.props.currentlySelectedTagToAdd}
+                        />
+
 
                         <Answers
                         answerData ={this.state.answerData}
@@ -438,8 +501,10 @@ class QuestionEdit extends Component {
                         handleChangeAnswerCorrectness = {this.handleChangeAnswerCorrectness}
                         deleteAnswerChoice = {this.deleteAnswerChoice}
                         addAnswerChoice = {this.addAnswerChoice}/>
-
-                        <button>Submit Changes!</button>
+                    </form>
+                    <form onSubmit={this.submitQuestion}>
+                        <h4> Want to submit the question? </h4>
+                        <button> Submit (PERMANENT)</button>
                     </form>
                     <form onSubmit={this.deleteQuestion}>
                         <h4> Want to delete the question? </h4>
@@ -526,7 +591,7 @@ class AddQuestion extends Component {
                     <div class = 'roundedgetop modal-header'>
                         <h1>ADD A QUESTION</h1>
                     </div>
-                    <form class = 'modalPad'onSubmit={this.props.onAddQuestionSubmit}>
+                    <form class = 'modalPad' onSubmit={this.props.onAddQuestionSubmit}>
                         <input type="text"
                                disabled={this.props.inEditMode}
                                name="newQuestionText"
@@ -545,10 +610,14 @@ class AddQuestion extends Component {
                                 )
                             })}
                         </select>
+
+                        <div className="roundedgebot modal-header">
+                            <button className="btn btn-info" disabled={this.props.inEditMode}>
+                                ADD
+                            </button>
+                        </div>
                     </form>
-                    <div class = "roundedgebot modal-header" >
-                        <button class = "btn btn-info" disabled={this.props.inEditMode} onClick={() => this.closeModal()}>ADD</button>
-                    </div>
+
                 </Modal>
             </div>
         )
@@ -559,17 +628,6 @@ class AddQuestion extends Component {
 
     closeModal() {
         this.setState({ isModalOpen: false })
-    }
-}
-
-class AddTag extends React.Component {
-    constructor(props) {
-        super(props);
-        this.handleChange = this.handleChange.bind(this);
-
-    }
-    handleChange(event) {
-        this.props.handleChange(event)
     }
 }
 
