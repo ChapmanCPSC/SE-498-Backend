@@ -304,10 +304,23 @@ class QuestionEdit extends Component {
             // Grab the data listed in Firebase so the user can edit!
             // Data Should be copied into a local structure
             console.log("1. We are beginning");
+            let that = this;
             db.getQuestionWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
-                this.setState({questionData : snapshot.val(), questionDataInitialLoad : snapshot.val()});
+                let snapVal = snapshot.val();
+                if (snapVal.imageforquestion) { // Load in existing image(s), if one (and/or additional answer images) is already on a question
+                    storage.getStorageRef().child(snapVal.imageurl).getDownloadURL().then(function(url) {
+                        that.setState({questionData : snapshot.val(), questionDataInitialLoad : snapshot.val(),
+                            questionImageDataURL : url
+                        });
+                    });
+                }
+                else { // Else just set the state regularly
+                    this.setState({questionData : snapshot.val(), questionDataInitialLoad : snapshot.val()});
+                }
                 console.log("2. FB 1!");
             });
+
+
             db.getQuestionAnswersWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
                 this.setState({answerData : snapshot.val(), answerDataInitialLoad : snapshot.val()});
                 console.log("3. FB 2!");
@@ -396,6 +409,8 @@ class QuestionEdit extends Component {
 
     submitQuestion(event) {
         event.preventDefault();
+
+        // Need to start a loading spinner here
 
         let updates = {}; // our updates! We update the question/ object, our tags within the tags/ object, the question-name/ object, & our answer choices/
         let that = this; // necessary for callback below
@@ -526,7 +541,7 @@ class QuestionEdit extends Component {
             // Also need to update questionData, flipping the boolean for imageforquestion to be true
             questionData: Object.assign({}, this.state.questionData, {
                 imageforquestion : false,
-                imageurl : null, // null so it is removed in Firebase
+                imageurl : null, // null so it is removed in the Firebase database when committed
             }),
         });
     }
@@ -589,7 +604,7 @@ class QuestionEdit extends Component {
                         <input type="text"
                                name="existingQuestionText"
                                value={this.state.questionData.name}
-                               placeholder="Enter Question Text Here" maxlength="90" size="100"
+                               placeholder="Enter Question Text Here" maxLength="90" size="100"
                                onChange={(event) => this.handleTextStateChange(event, "name")}/>
                         <h4> Points </h4>
                         <input type="text"
@@ -787,7 +802,7 @@ class Answers extends React.Component {
                 {Object.keys(this.props.answerData.answers).map((answerID) => {
                     return (
                         <div key={answerID}>
-                            <input type="text" name="answersInSelection" placeholder="Enter Answer Text Here" maxlength="70" size="80"
+                            <input type="text" name="answersInSelection" placeholder="Enter Answer Text Here" maxLength="70" size="80"
                                    value={this.props.answerData.answers[answerID]} onChange={(event) => this.handleAnswerTextChange(event, answerID)}/>
                             <input type="checkbox" checked={this.props.answerData.correctanswers[answerID]} onChange={(event) => this.handleAnswerCorrectOrNot(event, answerID)}/>
                             <button type="button" onClick={(event) => this.deleteAnswerChoice(event, answerID)}> Delete </button>
