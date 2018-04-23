@@ -419,37 +419,55 @@ class QuestionEdit extends Component {
 
         // Connect to Firebase and commit the updates! After you receive the callback stating the update was successful, exit edit mode
         db.getFullDBReference().update(updates).then(function () {
+            console.log("1st Update!");
+
             // First, let's check and see if we used to not have an image on the question, and now an image has been added
             if(that.state.questionDataInitialLoad.imageforquestion === false && that.state.questionData.imageforquestion) {
+
                 storage.getQuestionImagesFolderRef().child(that.props.selectedQuestionForEditing + "/" + that.state.questionImage.name)
                     .put(that.state.questionImage).then(function(snapshot) {
-                        // File successfully uploaded
-                        console.log("success!");
-                        return true
+                    // File successfully uploaded
+                    console.log("Add Successful");
+                    that.props.handleExitEditMode(event);
                 }).catch(function(error) {
                     console.log("Error in upload");
                 });
+
             }
             // If not the first, let's check to see if there used to be an image on the question, but now it has been removed
             else if (that.state.questionDataInitialLoad.imageforquestion && that.state.questionData.imageforquestion === false) {
-                storage.getStorageRef().child(that.state.questionDataInitialLoad.imageurl)
-                    .delete().then(function(snapshot) {
+
+                storage.getStorageRef().child(that.state.questionDataInitialLoad.imageurl).delete().then(function(snapshot) {
                     // File successfully deleted
+                    console.log("1.5");
                     console.log("Delete Successful");
-                    return true
+                    that.props.handleExitEditMode(event);
                 }).catch(function(error) {
-                    console.log("Error?");
+                    console.log("Error");
                 });
+
             }
             // If we had an image on the question before, but are "swapping it out" for a new one"
             else if (that.state.questionDataInitialLoad.imageforquestion && that.state.questionData.imageforquestion &&
                 (that.state.questionDataInitialLoad.imageurl !== that.state.questionData.imageurl)) {
-                return true
-            }
-            return true
 
-        }).then(function () {
-            that.props.handleExitEditMode(event);
+                // Delete Existing Image
+                storage.getStorageRef().child(that.state.questionDataInitialLoad.imageurl).delete().then(function() {
+                    // File successfully deleted
+                    console.log("Delete Successful");
+                }).then(function () {
+                    storage.getQuestionImagesFolderRef().child(that.props.selectedQuestionForEditing + "/" + that.state.questionImage.name)
+                        .put(that.state.questionImage).then(function () {
+                        // File successfully uploaded
+                        console.log("success in 3!");
+                        that.props.handleExitEditMode(event);
+                    });
+                });
+            }
+            else {
+                console.log("2nd Exit!!");
+                that.props.handleExitEditMode(event);
+            }
         });
     }
 
