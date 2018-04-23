@@ -580,7 +580,7 @@ class QuestionEdit extends Component {
                 <div class = "marginstuff" className="questionEditDiv">
                     <form onSubmit={this.submitQuestion}>
                         <h1> Edit </h1>
-                        <button type="button" onClick={this.handleExitEditMode}> Go Back To Question Select </button>
+                        <button type="button" className="btn btn-info" onClick={this.handleExitEditMode}> Go Back To Question Select </button>
                         <div className="questionImageDiv" >
                             <Dropzone
                                 accept="image/jpeg, image/png"
@@ -599,12 +599,12 @@ class QuestionEdit extends Component {
                                 </div>
                             }
                         </div>
-
                         <h4> Question Name: </h4>
-                        <input type="text"
+                        <textarea
                                name="existingQuestionText"
                                value={this.state.questionData.name}
-                               placeholder="Enter Question Text Here" maxLength="90" size="100"
+                               placeholder="Enter Question Text Here" maxLength="90" rows="5"
+                               cols="60"
                                onChange={(event) => this.handleTextStateChange(event, "name")}/>
                         <h4> Points </h4>
                         <input type="text"
@@ -634,11 +634,11 @@ class QuestionEdit extends Component {
                     </form>
                     <form onSubmit={this.submitQuestion}>
                         <h4> Want to submit the question? </h4>
-                        <button> Submit (PERMANENT)</button>
+                        <button className="btn btn-info"> Submit (PERMANENT)</button>
                     </form>
                     <form onSubmit={this.deleteQuestion}>
                         <h4> Want to delete the question? </h4>
-                        <button> Delete (PERMANENT)</button>
+                        <button className="btn btn-info"> Delete (PERMANENT)</button>
                     </form>
 
                 </div>
@@ -805,11 +805,11 @@ class Answers extends React.Component {
                             <input type="text" name="answersInSelection" placeholder="Enter Answer Text Here" maxLength="70" size="80"
                                    value={this.props.answerData.answers[answerID]} onChange={(event) => this.handleAnswerTextChange(event, answerID)}/>
                             <input type="checkbox" checked={this.props.answerData.correctanswers[answerID]} onChange={(event) => this.handleAnswerCorrectOrNot(event, answerID)}/>
-                            <button type="button" onClick={(event) => this.deleteAnswerChoice(event, answerID)}> Delete </button>
+                            <button type="button" className="btn btn-info marginTopBot" onClick={(event) => this.deleteAnswerChoice(event, answerID)}> Delete </button>
                         </div>
                     )
                 })}
-                <button type ="button" onClick={this.addNewAnswerChoice}> Add New Answer Choice </button>
+                <button type ="button" className="btn btn-info" onClick={this.addNewAnswerChoice}> Add New Answer Choice </button>
             </div>
         )
     }

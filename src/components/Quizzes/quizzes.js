@@ -506,21 +506,13 @@ class QuizEdit extends Component {
                                                 <h5> Visible to Students? </h5>
                                                 <input type="checkbox" checked={this.state.quizData.visible} onChange={(event) => this.handleCheckBoxStateChange(event, "visible")}/>
                                             </div>
+
                                         </div>
                                     </div>
 
-                                    <TagModification
-                                        tags={this.props.tags}
-                                        inEditMode={this.props.inEditMode}
-                                        handleChange={this.props.handleChange}
-                                        handleAddTagToData={this.addTagToQuiz}
-                                        handleRemoveTagFromData={this.removeTagFromQuiz}
-                                        specificData={this.state.quizData}
-                                        currentlySelectedTagToAdd={this.props.currentlySelectedTagToAdd}
-                                    />
 
                                     <div class = "column">
-                                        <div align = "left">
+                                        <div align = "right">
                                             <h4> Questions in Quiz </h4>
                                             {Object.keys(this.state.quizData.questions).map((quizID) => {
                                                 return (
@@ -537,6 +529,17 @@ class QuizEdit extends Component {
                             </div>
                         </form>
 
+                    </div>
+                    <div class ="marginstuff">
+                        <TagModification
+                            tags={this.props.tags}
+                            inEditMode={this.props.inEditMode}
+                            handleChange={this.props.handleChange}
+                            handleAddTagToData={this.addTagToQuiz}
+                            handleRemoveTagFromData={this.removeTagFromQuiz}
+                            specificData={this.state.quizData}
+                            currentlySelectedTagToAdd={this.props.currentlySelectedTagToAdd}
+                        />
                     </div>
                     <div class ="marginstuff">
                         <AddQuestionToQuiz

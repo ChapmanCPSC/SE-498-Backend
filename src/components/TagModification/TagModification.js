@@ -15,7 +15,7 @@ export class TagModification extends Component {
 
     render() {
         return (
-            <div className="columnForTag">
+            <div class="tagmod">
                 <div align="left">
                     {/* IMPORTANT! - Right now (the below name) is the same name as the one we use for adding questions/quizzes*/}
                     <select name="currentlySelectedTagToAdd"
@@ -43,9 +43,9 @@ export class TagModification extends Component {
                     {Object.keys(this.props.specificData.tags).map((tagID) => { {/*Here you can plug in either quiz or question data for specificData*/}
                         return (
                             <div key={tagID}>
-                            <textarea className="form-control" name="tagsInEditComponent"
-                                      disabled="true" maxLength="60" size="3"
-                                      value={this.props.tags[tagID].name}/> {/* Must implement this a higher component (with state!)*/}
+                            <button class = "btn no-click" name="tagsInEditComponent" >
+                                    {this.props.tags[tagID].name}
+                                </button> {/* Must implement this a higher component (with state!)*/}
                                 <button type="button" className="marginTopBot marginLeft btn btn-info"
                                         onClick={(event) => this.props.handleRemoveTagFromData(event, tagID)}> Delete
                                 </button> {/* Must implement the above function in a higher component (with state!)*/}
