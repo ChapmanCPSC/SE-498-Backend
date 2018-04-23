@@ -266,8 +266,11 @@ const InitialQuestionEditState = {
     answerData : undefined, // The JS Object with the whole answer structure and data (from Firebase)
     questionDataInitialLoad : undefined, // The JS Object with the whole question structure and data(from Firebase), before any changes are made to it
     answerDataInitialLoad : undefined, // The JS Object with the whole answer structure and data (from Firebase), before any changes are made to it
+    // Below: Image files and converted Image Data URLS (for display locally on the user's browser)
     questionImage: undefined, // An array which stores (1) question image the user uploads. After being confirmed for uploading, the url storage location is included in questionData
-    answerImages: undefined //An array which stores (2, 3, or 4) images for your question answers
+    answerImages: undefined, //An array which stores (2, 3, or 4) images for your question answers
+    questionImageDataURL: undefined, // a single DataURL for the question image
+    answerImageDataURL: undefined, // This will be an array of URLs
 };
 
 class QuestionEdit extends Component {
@@ -501,6 +504,7 @@ class QuestionEdit extends Component {
     removeQuestionImage(event) {
         this.setState( {
             questionImage : undefined, // Remove image file
+            questionImageDataURL: undefined, // Remove converted Data URL
             // Also need to update questionData, flipping the boolean for imageforquestion to be true
             questionData: Object.assign({}, this.state.questionData, {
                 imageforquestion : false,
@@ -510,19 +514,30 @@ class QuestionEdit extends Component {
     }
 
     onDrop(accepted, rejected) {
-
         if(accepted.length > 0) { // If we have a valid accepted file
-            this.setState( {
-                questionImage : accepted[0], // Set the item that was dropped in as the image for the question. Since we disallow multiple files, this is always one file
-                // Also need to update questionData, flipping the boolean for imageforquestion to be true
-                questionData: Object.assign({}, this.state.questionData, {
-                    imageforquestion : true,
-                    imageurl : "images/questionimages/" + this.props.selectedQuestionForEditing + "/" + accepted[0].name,
-                    // Since the url should be at the same location as when we actually upload it, we can assume the above gs:// location
-                    // File is not actually uploaded yet! That comes during the submitQuestion step (we are just holding data locally right now)
-                }),
-            });
-            console.log(accepted[0].name);
+
+            // Firstly,
+            let reader = new FileReader(); // create a new file reader to read our File (questionImage)
+            let that = this;
+
+            // Secondly, set the state to have the most recent information for the new image
+            // Here we create a callback function to occur after the data is read in and successfully coverted
+            reader.onload = function() {
+                that.setState( {
+                    questionImage : accepted[0], // Set the item that was dropped in as the image for the question. Since we disallow multiple files, this is always one file
+                    questionImageDataURL : reader.result, // Set the completed, converted local URL for the image
+                    // Also need to update questionData, flipping the boolean for imageforquestion to be true
+                    questionData: Object.assign({}, that.state.questionData, {
+                        imageforquestion : true,
+                        imageurl : "images/questionimages/" + that.props.selectedQuestionForEditing + "/" + accepted[0].name,
+                        // Since the url should be at the same location as when we actually upload it, we can assume the above gs:// location
+                        // File is not actually uploaded yet! That comes during the submitQuestion step (we are just holding data locally right now)
+                    }),
+                });
+                console.log(accepted[0].name);
+            };
+
+            reader.readAsDataURL(accepted[0]);
         }
     }
 
@@ -533,19 +548,24 @@ class QuestionEdit extends Component {
                     <form onSubmit={this.submitQuestion}>
                         <h1> Edit </h1>
                         <button type="button" onClick={this.handleExitEditMode}> Go Back To Question Select </button>
-                        <Dropzone
-                            accept="image/jpeg, image/png"
-                            multiple={false}
-                            onDrop={(accepted, rejected) => this.onDrop(accepted, rejected) }>
-                            <p> Want to add an Image to this question? Drag and drop a .jpeg or .png image file here (or click)!
-                                The image will be displayed above your question during a quiz game.
-                            </p>
-                        </Dropzone>
-                        {this.state.questionData.imageforquestion && // Only show this button if image attached
-                            <button type="button" onClick={this.removeQuestionImage}>
-                                Remove Image?
-                            </button>
-                        }
+                        <div className="questionImageDiv" >
+                            <Dropzone
+                                accept="image/jpeg, image/png"
+                                multiple={false}
+                                onDrop={(accepted, rejected) => this.onDrop(accepted, rejected) }>
+                                <p> Want to add an Image to this question? Drag and drop a .jpeg or .png image file here (or click)!
+                                    The image will be displayed above your question during a quiz game.
+                                </p>
+                            </Dropzone>
+                            {this.state.questionData.imageforquestion && // Only show this image and button if image attached
+                                <div>
+                                    <img src={this.state.questionImageDataURL} />
+                                    <button type="button" onClick={this.removeQuestionImage}>
+                                        Remove Image?
+                                    </button>
+                                </div>
+                            }
+                        </div>
 
                         <h4> Question Name: </h4>
                         <input type="text"
