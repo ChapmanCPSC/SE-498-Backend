@@ -22,7 +22,7 @@ class GameCreation extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentlySelectedQuiz: "defaultOption",
+            currentlySelectedQuiz: "L98Of2v1Q1E6fSFFg6g",
             currentlySelectedFaculty: "d31b1d9547b0467aa443",
             currentName: '',
             courses: []
@@ -58,7 +58,7 @@ class GameCreation extends Component {
         });
     }
     createGame(){
-
+        Randomizer.createPin(this.currentlySelectedQuiz);
     }
     render() {
         return (
@@ -73,7 +73,7 @@ class GameCreation extends Component {
                         <option>5</option>
                     </select>
                 </div>
-                <button class="btn btn-info"> Create Game </button>
+                <button class="btn btn-info" onClick={this.createGame}> Create Game </button>
             </form>
         )
     }
