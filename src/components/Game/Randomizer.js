@@ -12,7 +12,7 @@ export class Randomizer extends Component {
         };
 
         this.generatePin = this.generatePin.bind(this);
-        this.updatePin = this.updatePin.bind(this);
+        this.createPin = this.createPin.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     };
@@ -24,7 +24,7 @@ export class Randomizer extends Component {
     generatePin(){
         return Math.floor(1000 + Math.random() * 9000);
     }
-    updatePin(quizID){
+    createPin(quizID){
         this.setState = {
             newquizID: quizID
         };
