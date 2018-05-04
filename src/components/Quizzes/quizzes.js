@@ -562,18 +562,6 @@ class QuizEdit extends Component {
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <AddQuestionToQuiz
-                                        addQuestionToQuiz={this.addQuestionToQuiz}
-                                        allQuestionNames={this.props.allQuestionNames}
-                                        handleChange={this.handleChange}
-                                        handleGetQuestionsWithTag={this.handleGetQuestionsWithTag}
-                                        currentlySelectedQuestion={this.props.currentlySelectedQuestion}
-                                        currentlySelectedTagForQuestionSearch={this.props.currentlySelectedTagForQuestionSearch}
-                                        questionFilterResults={this.props.questionFilterResults}
-                                        tags={this.props.tags}
-                                    />
-                                </div>
-                                <div className="row">
                                     <div className="col-12 col-sm-6 col-lg-8">
                                         <div className="card mb-8 box-shadow">
                                             <div className="card-header">
@@ -599,6 +587,18 @@ class QuizEdit extends Component {
                                 </div>
                             </form>
 
+                        <div className="row">
+                            <AddQuestionToQuiz
+                                addQuestionToQuiz={this.addQuestionToQuiz}
+                                allQuestionNames={this.props.allQuestionNames}
+                                handleChange={this.handleChange}
+                                handleGetQuestionsWithTag={this.handleGetQuestionsWithTag}
+                                currentlySelectedQuestion={this.props.currentlySelectedQuestion}
+                                currentlySelectedTagForQuestionSearch={this.props.currentlySelectedTagForQuestionSearch}
+                                questionFilterResults={this.props.questionFilterResults}
+                                tags={this.props.tags}
+                            />
+                        </div>
 
                         <form className = "marginstuff" onSubmit={this.submitQuiz}>
                                 <button className = "marginTopBot marginLeft btn btn-info" > SUBMIT </button>
