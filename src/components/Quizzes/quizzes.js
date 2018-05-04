@@ -280,8 +280,7 @@ class FilterQuizzes extends Component {
                             quiz may have. Then, hit the "Filter" button to display quizzes with that tag! Select your quiz and then hit "Edit" to begin
                             alterations.</p>
                             <div className="container">
-                                
-                                <form onSubmit={this.props.onTagSearchSubmit}>
+                                <form className="mb-3" onSubmit={this.props.onTagSearchSubmit}>
                                     <div className="form-group row">
                                         <select name="currentlySelectedTag" className="form-control"
                                                 value={this.props.currentlySelectedTag}
@@ -299,7 +298,7 @@ class FilterQuizzes extends Component {
                                         </select>
                                     </div>
                                     <button className="btn btn-primary btn-block"
-                                            disabled={this.props.inEditMode}>Filter
+                                            disabled={this.props.inEditMode}> Filter
                                     </button>
                                 </form>
 
@@ -309,7 +308,7 @@ class FilterQuizzes extends Component {
 
                                 <form onSubmit={this.props.onSelectEditQuizSubmit}>
                                     <div className="form-group row">
-                                        <select  className="form-control" size="10"
+                                        <select className="form-control" size="10"
                                                 name="currentlySelectedQuiz" value={this.props.currentlySelectedQuiz}
                                                 onChange={this.handleChange} disabled={this.props.inEditMode}>
                                             {this.props.quizFilterResults.length > 0 ? this.props.quizFilterResults.map((item) => {
@@ -628,20 +627,18 @@ class AddQuiz extends Component {
                             <p> Want to add a new quiz to the QuizEdu system? Just click below! Be sure to select an initial tag for the quiz question</p>
                             <div className="container">
                                 <form onSubmit={this.props.onAddQuizSubmit}>
-                                    <div className="formRow">
-                                        <div className="form-group">
-                                            <input type="text"
-                                                   className="form-control"
-                                                   id="quizNameLabel"
-                                                   disabled={this.props.inEditMode}
-                                                   name="newQuizText"
-                                                   placeholder="Please enter your quiz name"
-                                                   value={this.props.newQuizText}
-                                                   onChange={this.handleChange}
-                                            />
-                                        </div>
+                                    <div className="form-group row">
+                                        <input type="text"
+                                               className="form-control"
+                                               id="quizNameLabel"
+                                               disabled={this.props.inEditMode}
+                                               name="newQuizText"
+                                               placeholder="Please enter your quiz name"
+                                               value={this.props.newQuizText}
+                                               onChange={this.handleChange}
+                                        />
                                     </div>
-                                    <div className="form-control col-md-10">
+                                    <div className="form-group col-md-10">
                                         <select name="currentlySelectedTagToAdd" className="form-control"
                                                 value={this.props.currentlySelectedTagToAdd}
                                                 onChange={this.handleChange} disabled={this.props.inEditMode}>
