@@ -194,44 +194,63 @@ class QuizzesPage extends Component {
     }
 
     render () {
-        return <div >
-            <div >
-                <div class = "center">
-                    <h1> MANAGE QUIZ</h1>
-                    <FilterQuizzes
-                        tags={this.state.tags}
-                        handleChange={this.handleChange}
-                        currentlySelectedTag={this.state.currentlySelectedTag}
-                        onTagSearchSubmit={this.handleGetQuizzesWithTag}
-                        onSelectEditQuizSubmit={this.handleGetQuizForEditFormSubmit}
-                        currentlySelectedQuiz={this.state.currentlySelectedQuiz}
-                        allQuizNames={this.state.allQuizNames}
-                        quizFilterResults={this.state.quizFilterResults}
-                        inEditMode={this.state.inEditMode}/>
-                    <AddQuiz
-                        newQuizText={this.state.newQuizText}
-                        onAddQuizSubmit={this.handleAddQuizSubmit}
-                        handleChange={this.handleChange}
-                        inEditMode={this.state.inEditMode}
-                        currentlySelectedTagToAdd={this.state.currentlySelectedTagToAdd}
-                        tags={this.state.tags}/>
-                </div>
-                <div>
-                    <QuizEdit
-                        selectedQuizForEditing={this.state.currentlySelectedQuiz}
-                        inEditMode={this.state.inEditMode}
-                        handleChange={this.handleChange}
-                        handleExitEditMode={this.handleExitEditMode}
-                        handleGetQuestionsWithTag={this.handleGetQuestionsWithTag}
-                        currentlySelectedQuestion={this.state.currentlySelectedQuestion}
-                        currentlySelectedTagToAdd={this.state.currentlySelectedTagToAdd}
-                        currentlySelectedTagForQuestionSearch={this.state.currentlySelectedTagForQuestionSearch}
-                        questionFilterResults={this.state.questionFilterResults}
-                        allQuestionNames={this.state.allQuestionNames}
-                        tags={this.state.tags}/>
-                </div>
+        return (
+            <div>
+                <main role="main">
+                    <div >
+                        <div className="jumbotron">
+                            <div className="container">
+                                <h1 className="display-3"> Quiz Manager</h1>
+                                <p> Welcome to the Quiz Management page! Here you can create, edit, and delete quizzes for use within the QuizEdu iOS application.
+                                    Please select
+                                </p>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="container">
+                                <AddQuiz
+                                    newQuizText={this.state.newQuizText}
+                                    onAddQuizSubmit={this.handleAddQuizSubmit}
+                                    handleChange={this.handleChange}
+                                    inEditMode={this.state.inEditMode}
+                                    currentlySelectedTagToAdd={this.state.currentlySelectedTagToAdd}
+                                    tags={this.state.tags}/>
+                            </div>
+                            <div className = "center">
+                                <FilterQuizzes
+                                    tags={this.state.tags}
+                                    handleChange={this.handleChange}
+                                    currentlySelectedTag={this.state.currentlySelectedTag}
+                                    onTagSearchSubmit={this.handleGetQuizzesWithTag}
+                                    onSelectEditQuizSubmit={this.handleGetQuizForEditFormSubmit}
+                                    currentlySelectedQuiz={this.state.currentlySelectedQuiz}
+                                    allQuizNames={this.state.allQuizNames}
+                                    quizFilterResults={this.state.quizFilterResults}
+                                    inEditMode={this.state.inEditMode}/>
+                            </div>
+                        </div>
+                        <div>
+                            <QuizEdit
+                                selectedQuizForEditing={this.state.currentlySelectedQuiz}
+                                inEditMode={this.state.inEditMode}
+                                handleChange={this.handleChange}
+                                handleExitEditMode={this.handleExitEditMode}
+                                handleGetQuestionsWithTag={this.handleGetQuestionsWithTag}
+                                currentlySelectedQuestion={this.state.currentlySelectedQuestion}
+                                currentlySelectedTagToAdd={this.state.currentlySelectedTagToAdd}
+                                currentlySelectedTagForQuestionSearch={this.state.currentlySelectedTagForQuestionSearch}
+                                questionFilterResults={this.state.questionFilterResults}
+                                allQuestionNames={this.state.allQuestionNames}
+                                tags={this.state.tags}/>
+                        </div>
+                    </div>
+                </main>
+                <hr />
+                <footer className="container">
+                    <p>Developed by Chapman University</p>
+                </footer>
             </div>
-        </div>
+        )
     }
 }
 
@@ -484,27 +503,30 @@ class QuizEdit extends Component {
         if(this.props.inEditMode && this.state.quizData !== undefined) {
             return(
                 <div>
-                    <div class = "marginstuff">
+                    <div className = "marginstuff">
                         <form onSubmit={this.submitQuiz}>
                             <h1> Edit </h1>
                             <div>
-                                <div class = "row">
-                                    <div class = "column">
+                                <div className = "row">
+                                    <div className = "column">
                                         <div align = "left">
-                                            <button type="button" class = "marginTopBot marginLeft btn btn-info" onClick={this.handleExitEditMode}> RETURN TO QUIZ LIST </button>
+                                            <div className="form-group">
+
+                                            </div>
+                                            <button type="button" className = "marginTopBot marginLeft btn btn-info" onClick={this.handleExitEditMode}> RETURN TO QUIZ LIST </button>
                                             <h4> Quiz Name: </h4>
                                             <input type="text"
                                                    name="existingQuizText"
                                                    value={this.state.quizData.name}
-                                                   placeholder="Enter Quiz Text Here" maxlength="60" size="70"
+                                                   placeholder="Enter Quiz Text Here" maxLength="60" size="70"
                                                    onChange={(event) => this.handleTextStateChange(event, "name")}/>
-                                            <div>
-                                                <h5> Available in Practice Mode? </h5>
-                                                <input type="checkbox" checked={this.state.quizData.available} onChange={(event) => this.handleCheckBoxStateChange(event, "available")}/>
-                                            </div>
-                                            <div>
-                                                <h5> Visible to Students? </h5>
-                                                <input type="checkbox" checked={this.state.quizData.visible} onChange={(event) => this.handleCheckBoxStateChange(event, "visible")}/>
+                                            <div className="form-check form-check-inline">
+                                                <input className="form-check-input" id="practiceModeCheck" type="checkbox" checked={this.state.quizData.available} onChange={(event) => this.handleCheckBoxStateChange(event, "available")}/>
+                                                <label className="form-check-label" htmlFor="practiceModeCheck">Available in Practice Mode?</label>
+                                            </div >
+                                            <div className="form-check form-check-inline">
+                                                <input className="form-check-input" id="visibleCheck" type="checkbox" checked={this.state.quizData.visible} onChange={(event) => this.handleCheckBoxStateChange(event, "visible")}/>
+                                                <label className="form-check-label" htmlFor="visibleCheck"> Visible to Students? </label>
                                             </div>
 
                                         </div>
@@ -579,49 +601,40 @@ class AddQuiz extends Component {
     render() {
         if(!this.props.inEditMode) {
             return (
-                <div class="marginstuff">
-                    <button class="btn btn-info" disabled={this.props.inEditMode} onClick={() => this.openModal()}>ADD
-                        QUIZ
-                    </button>
-                    <div class="roundedge">
-                        <Modal isOpen={this.state.isModalOpen} onClose={() => this.closeModal()}>
-                            <div class='roundedgetop modal-header'>
-                                <h1>ADD A QUIZ </h1>
-                            </div>
-                            <form class='modalPad' onSubmit={this.props.onAddQuizSubmit}>
-                                <input type="text"
-                                       disabled={this.props.inEditMode}
-                                       name="newQuizText"
-                                       placeholder="Please enter your quiz name"
-                                       value={this.props.newQuizText}
-                                       onChange={this.handleChange}
-                                />
-                                <select name="currentlySelectedTagToAdd" value={this.props.currentlySelectedTagToAdd}
-                                        onChange={this.handleChange} disabled={this.props.inEditMode}>
-                                    <option name="defaultTagOption"
-                                            value="defaultOption"
-                                            key="defaultOption">---Select a Tag!---
-                                    </option>
-                                    {Object.keys(this.props.tags).map(key => {
-                                        return (<option name="tagOption"
-                                                        key={key}
-                                                        value={key}>{this.props.tags[key].name}</option>
-                                        )
-                                    })}
-                                </select>
-
-                                <div className="roundedgebot modal-header">
-                                    <button className="btn btn-info" disabled={this.props.inEditMode}
-                                    >ADD
-                                    </button>
-                                </div>
-
-                            </form>
-
-
-                        </Modal>
+                <div className="card-deck mb-3 text-center">
+                    <div className="card mb-4 box-shadow">
+                        <div className="card-header">
+                            <h4 className="my-0 font-weight-normal">Add New Quiz!</h4>
+                        </div>
+                        <div className="card-body">
+                            <p> Want to add a new quiz to the QuizEdu system? Just click below! Be sure to select an initial tag for the quiz question</p>
+                        </div>
+                        <form className='modalPad' onSubmit={this.props.onAddQuizSubmit}>
+                            <input type="text"
+                                   disabled={this.props.inEditMode}
+                                   name="newQuizText"
+                                   placeholder="Please enter your quiz name"
+                                   value={this.props.newQuizText}
+                                   onChange={this.handleChange}
+                            />
+                            <select name="currentlySelectedTagToAdd" value={this.props.currentlySelectedTagToAdd}
+                                    onChange={this.handleChange} disabled={this.props.inEditMode}>
+                                <option name="defaultTagOption"
+                                        value="defaultOption"
+                                        key="defaultOption">---Select a Tag!---
+                                </option>
+                                {Object.keys(this.props.tags).map(key => {
+                                    return (<option name="tagOption"
+                                                    key={key}
+                                                    value={key}>{this.props.tags[key].name}</option>
+                                    )
+                                })}
+                            </select>
+                            <button className="btn btn-info" disabled={this.props.inEditMode}
+                            >ADD
+                            </button>
+                        </form>
                     </div>
-
                 </div>
             )
         }
