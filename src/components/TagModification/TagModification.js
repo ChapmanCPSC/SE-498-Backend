@@ -47,8 +47,8 @@ export class TagModification extends Component {
                         <h4> Tags</h4>
                         {Object.keys(this.props.specificData.tags).map((tagID) => { {/*Here you can plug in either quiz or question data for specificData*/}
                             return (
-                                <div key={tagID}>
-                                <button class = "btn no-click" name="tagsInEditComponent" >
+                                <div key={tagID} className="d-inline">
+                                <button className = "btn no-click" name="tagsInEditComponent" >
                                         {this.props.tags[tagID].name}
                                     </button> {/* Must implement this a higher component (with state!)*/}
                                     <button type="button" className=" btn btn-info"

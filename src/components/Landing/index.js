@@ -2,7 +2,7 @@ import firebase, {auth, provider} from "../../firebase/firebase";
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import * as routes from '../../constants/routes';
-import logo from '../images/pharmacylogo_clean.png';
+import logo from '../images/LogoLogin.png';
 
 const LandingPage = () =>
     <div align = 'center'>
@@ -59,9 +59,9 @@ class SignInForm extends Component {
     render() {
         return (
             this.state.user ?
-                <button onClick={this.logout}>Log Out</button>
+                <button onClick={this.logout} className="btn btn-light btn-lg" >Log Out</button>
                 :
-                <button onClick={this.login}>Log In</button>
+                <button onClick={this.login} className="btn btn-light btn-lg">Log In</button>
         )
     }
 }

@@ -549,7 +549,7 @@ class QuizEdit extends Component {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="col-6 col-lg-4">
+                                    <div className="col-12 col-sm-6 col-lg-8">
                                         <TagModification
                                             tags={this.props.tags}
                                             inEditMode={this.props.inEditMode}
@@ -560,6 +560,18 @@ class QuizEdit extends Component {
                                             currentlySelectedTagToAdd={this.props.currentlySelectedTagToAdd}
                                         />
                                     </div>
+                                </div>
+                                <div className="row">
+                                    <AddQuestionToQuiz
+                                        addQuestionToQuiz={this.addQuestionToQuiz}
+                                        allQuestionNames={this.props.allQuestionNames}
+                                        handleChange={this.handleChange}
+                                        handleGetQuestionsWithTag={this.handleGetQuestionsWithTag}
+                                        currentlySelectedQuestion={this.props.currentlySelectedQuestion}
+                                        currentlySelectedTagForQuestionSearch={this.props.currentlySelectedTagForQuestionSearch}
+                                        questionFilterResults={this.props.questionFilterResults}
+                                        tags={this.props.tags}
+                                    />
                                 </div>
                                 <div className="row">
                                     <div className="col-12 col-sm-6 col-lg-8">
@@ -586,21 +598,6 @@ class QuizEdit extends Component {
                                     </div>
                                 </div>
                             </form>
-                        <div className="row">
-
-                        </div>
-                        <div >
-                            <AddQuestionToQuiz
-                                addQuestionToQuiz={this.addQuestionToQuiz}
-                                allQuestionNames={this.props.allQuestionNames}
-                                handleChange={this.handleChange}
-                                handleGetQuestionsWithTag={this.handleGetQuestionsWithTag}
-                                currentlySelectedQuestion={this.props.currentlySelectedQuestion}
-                                currentlySelectedTagForQuestionSearch={this.props.currentlySelectedTagForQuestionSearch}
-                                questionFilterResults={this.props.questionFilterResults}
-                                tags={this.props.tags}
-                                />
-                        </div>
 
 
                         <form className = "marginstuff" onSubmit={this.submitQuiz}>
