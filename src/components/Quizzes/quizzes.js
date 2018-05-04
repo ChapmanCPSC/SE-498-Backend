@@ -271,7 +271,6 @@ class FilterQuizzes extends Component {
     render() {
         if(!this.props.inEditMode) {
             return (
-                <div className="card-deck mb-3 text-center">
                     <div className="card mb-4 box-shadow">
                         <div className="card-header">
                             <h4 className="my-0 font-weight-normal">Edit Existing Quiz</h4>
@@ -280,54 +279,60 @@ class FilterQuizzes extends Component {
                             <p> If you would like to edit or remove a pre-existing quiz, use the tool below! Begin by selecting the tag you believe the
                             quiz may have. Then, hit the "Filter" button to display quizzes with that tag! Select your quiz and then hit "Edit" to begin
                             alterations.</p>
-                        </div>
-                        <div className="marginTopBot">
-                            <form onSubmit={this.props.onTagSearchSubmit}>
-                                <select name="currentlySelectedTag" value={this.props.currentlySelectedTag}
-                                        onChange={this.handleChange} disabled={this.props.inEditMode}>
-                                    <option name="defaultTagOption"
-                                            value="defaultOption"
-                                            key="defaultOption">---Select a Tag---
-                                    </option>
-                                    {Object.keys(this.props.tags).map(key => {
-                                        return (<option name="tagOption"
-                                                        key={key}
-                                                        value={key}>{this.props.tags[key].name}</option>
-                                        )
-                                    })}
-                                </select>
-                                <button class="marginTopBot marginLeft btn btn-info"
-                                        disabled={this.props.inEditMode}>Filter
-                                </button>
-                            </form>
-                        </div>
+                            <div className="container">
+                                
+                                <form onSubmit={this.props.onTagSearchSubmit}>
+                                    <div className="form-group row">
+                                        <select name="currentlySelectedTag" className="form-control"
+                                                value={this.props.currentlySelectedTag}
+                                                onChange={this.handleChange} disabled={this.props.inEditMode}>
+                                            <option name="defaultTagOption"
+                                                    value="defaultOption"
+                                                    key="defaultOption">---Select a Tag---
+                                            </option>
+                                            {Object.keys(this.props.tags).map(key => {
+                                                return (<option name="tagOption"
+                                                                key={key}
+                                                                value={key}>{this.props.tags[key].name}</option>
+                                                )
+                                            })}
+                                        </select>
+                                    </div>
+                                    <button className="btn btn-primary btn-block"
+                                            disabled={this.props.inEditMode}>Filter
+                                    </button>
+                                </form>
 
-                        <div className="quizSelection">
-                            {/* TODO: Must maintain concurrency: I.e. if a quiz is deleted by another admin, need to make sure
-                                the currently selected quiz changed back to default, or alerts the user
-                            */}
-                            <form onSubmit={this.props.onSelectEditQuizSubmit}>
-                                <select style={{width: 800 + 'px'}} class="form-control" size="10"
-                                        name="currentlySelectedQuiz" value={this.props.currentlySelectedQuiz}
-                                        onChange={this.handleChange} disabled={this.props.inEditMode}>
-                                    {this.props.quizFilterResults.length > 0 ? this.props.quizFilterResults.map((item) => {
-                                        return (
-                                            <option name="quizToSelectOption"
-                                                    key={item.id}
-                                                    value={item.id}>{item.quizText}</option>
-                                        )
-                                    }) : Object.keys(this.props.allQuizNames).map(id => {
-                                        return (<option name="quizToSelectOption"
-                                        key={id}
-                                        value={id}>{this.props.allQuizNames[id].name}</option>
-                                        )
-                                    })}
-                                </select>
-                                <button class="marginTopBot btn btn-info" disabled={this.props.inEditMode}> EDIT</button>
-                            </form>
+                                {/* TODO: Must maintain concurrency: I.e. if a quiz is deleted by another admin, need to make sure
+                                    the currently selected quiz changed back to default, or alerts the user
+                                */}
+
+                                <form onSubmit={this.props.onSelectEditQuizSubmit}>
+                                    <div className="form-group row">
+                                        <select  className="form-control" size="10"
+                                                name="currentlySelectedQuiz" value={this.props.currentlySelectedQuiz}
+                                                onChange={this.handleChange} disabled={this.props.inEditMode}>
+                                            {this.props.quizFilterResults.length > 0 ? this.props.quizFilterResults.map((item) => {
+                                                return (
+                                                    <option name="quizToSelectOption"
+                                                            key={item.id}
+                                                            value={item.id}>{item.quizText}</option>
+                                                )
+                                            }) : Object.keys(this.props.allQuizNames).map(id => {
+                                                return (<option name="quizToSelectOption"
+                                                key={id}
+                                                value={id}>{this.props.allQuizNames[id].name}</option>
+                                                )
+                                            })}
+                                        </select>
+                                    </div>
+                                    <button className="btn btn-primary btn-block"
+                                            disabled={this.props.inEditMode}> Edit
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
             )
         }
         else {
@@ -615,52 +620,50 @@ class AddQuiz extends Component {
     render() {
         if(!this.props.inEditMode) {
             return (
-                <div className="card-deck mb-3 text-center">
                     <div className="card mb-4 box-shadow">
                         <div className="card-header">
                             <h4 className="my-0 font-weight-normal">Add New Quiz!</h4>
                         </div>
                         <div className="card-body">
                             <p> Want to add a new quiz to the QuizEdu system? Just click below! Be sure to select an initial tag for the quiz question</p>
+                            <div className="container">
+                                <form onSubmit={this.props.onAddQuizSubmit}>
+                                    <div className="formRow">
+                                        <div className="form-group">
+                                            <input type="text"
+                                                   className="form-control"
+                                                   id="quizNameLabel"
+                                                   disabled={this.props.inEditMode}
+                                                   name="newQuizText"
+                                                   placeholder="Please enter your quiz name"
+                                                   value={this.props.newQuizText}
+                                                   onChange={this.handleChange}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="form-control col-md-10">
+                                        <select name="currentlySelectedTagToAdd" className="form-control"
+                                                value={this.props.currentlySelectedTagToAdd}
+                                                onChange={this.handleChange} disabled={this.props.inEditMode}>
+                                            <option name="defaultTagOption"
+                                                    value="defaultOption"
+                                                    key="defaultOption">---Select a Tag!---
+                                            </option>
+                                            {Object.keys(this.props.tags).map(key => {
+                                                return (<option name="tagOption"
+                                                                key={key}
+                                                                value={key}>{this.props.tags[key].name}</option>
+                                                )
+                                            })}
+                                        </select>
+                                    </div>
+                                    <button className="btn btn-info btn-block " disabled={this.props.inEditMode}
+                                    >Add
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                        <form onSubmit={this.props.onAddQuizSubmit}>
-                            <div className="formRow">
-                                <div className="form-group">
-                                    <input type="text"
-                                           className="form-control"
-                                           id="quizNameLabel"
-                                           disabled={this.props.inEditMode}
-                                           name="newQuizText"
-                                           placeholder="Please enter your quiz name"
-                                           value={this.props.newQuizText}
-                                           onChange={this.handleChange}
-                                    />
-                                </div>
-                            </div>
-                            <div className="formRow">
-                                <div className="form-control col-md-10">
-                                    <select name="currentlySelectedTagToAdd" className="form-control"
-                                            value={this.props.currentlySelectedTagToAdd}
-                                            onChange={this.handleChange} disabled={this.props.inEditMode}>
-                                        <option name="defaultTagOption"
-                                                value="defaultOption"
-                                                key="defaultOption">---Select a Tag!---
-                                        </option>
-                                        {Object.keys(this.props.tags).map(key => {
-                                            return (<option name="tagOption"
-                                                            key={key}
-                                                            value={key}>{this.props.tags[key].name}</option>
-                                            )
-                                        })}
-                                    </select>
-                                </div>
-                                <button className="btn btn-primary" disabled={this.props.inEditMode}
-                                >ADD
-                                </button>
-                            </div>
-                        </form>
                     </div>
-                </div>
             )
         }
         else {
