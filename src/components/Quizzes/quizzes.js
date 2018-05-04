@@ -548,10 +548,21 @@ class QuizEdit extends Component {
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
+                                    <div className="col-6 col-lg-4">
+                                        <TagModification
+                                            tags={this.props.tags}
+                                            inEditMode={this.props.inEditMode}
+                                            handleChange={this.props.handleChange}
+                                            handleAddTagToData={this.addTagToQuiz}
+                                            handleRemoveTagFromData={this.removeTagFromQuiz}
+                                            specificData={this.state.quizData}
+                                            currentlySelectedTagToAdd={this.props.currentlySelectedTagToAdd}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="row">
                                     <div className="col-12 col-sm-6 col-lg-8">
-
                                         <div className="card mb-8 box-shadow">
                                             <div className="card-header">
                                                 <h4 className="my-0 font-weight-normal">Questions in Quiz</h4>
@@ -576,17 +587,7 @@ class QuizEdit extends Component {
                                 </div>
                             </form>
                         <div className="row">
-                            <div className="col-6 col-lg-4">
-                                <TagModification
-                                    tags={this.props.tags}
-                                    inEditMode={this.props.inEditMode}
-                                    handleChange={this.props.handleChange}
-                                    handleAddTagToData={this.addTagToQuiz}
-                                    handleRemoveTagFromData={this.removeTagFromQuiz}
-                                    specificData={this.state.quizData}
-                                    currentlySelectedTagToAdd={this.props.currentlySelectedTagToAdd}
-                                />
-                            </div>
+
                         </div>
                         <div >
                             <AddQuestionToQuiz
