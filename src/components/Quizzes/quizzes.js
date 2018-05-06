@@ -517,9 +517,8 @@ class QuizEdit extends Component {
             return(
                 <div>
                     <div className = "marginstuff">
-                        <h1> Edit </h1>
                         <button type="button" className = "btn btn-info" onClick={this.handleExitEditMode}> RETURN TO QUIZ LIST </button>
-                            <form onSubmit={this.submitQuiz}>
+                            <form className="mb-3" onSubmit={this.submitQuiz}>
                                 <div className="row">
                                     <div className="col-6 col-lg-4">
 
@@ -531,20 +530,22 @@ class QuizEdit extends Component {
                                                 <p> Here, you can edit the Quiz Name, set whether or not the quiz is available to be used in practice mode,
                                                 or set whether or not the quiz is visible to students</p>
                                                 <div className="container">
-                                                    <h4> Quiz Name: </h4>
-                                                    <input type="text"
-                                                           name="existingQuizText"
-                                                           value={this.state.quizData.name}
-                                                           placeholder="Enter Quiz Text Here" maxLength="60"
-                                                           onChange={(event) => this.handleTextStateChange(event, "name")}/>
-                                                    <div className="form-check form-check-inline">
+                                                    <div className="form-group row">
+                                                        <input type="text" className="form-control"
+                                                               name="existingQuizText"
+                                                               value={this.state.quizData.name}
+                                                               placeholder="Enter Quiz Text Here" maxLength="60"
+                                                               onChange={(event) => this.handleTextStateChange(event, "name")}/>
+                                                    </div>
+                                                    <div className="form-check row">
                                                         <input className="form-check-input" id="practiceModeCheck" type="checkbox" checked={this.state.quizData.available} onChange={(event) => this.handleCheckBoxStateChange(event, "available")}/>
                                                         <label className="form-check-label" htmlFor="practiceModeCheck">Available in Practice Mode?</label>
-                                                    </div >
-                                                    <div className="form-check form-check-inline">
+                                                    </div>
+                                                    <div className="form-check row">
                                                         <input className="form-check-input" id="visibleCheck" type="checkbox" checked={this.state.quizData.visible} onChange={(event) => this.handleCheckBoxStateChange(event, "visible")}/>
                                                         <label className="form-check-label" htmlFor="visibleCheck"> Visible to Students? </label>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -570,11 +571,10 @@ class QuizEdit extends Component {
                                             <div className="card-body">
                                                 <p> Here is a list of all of the questions currently a part of your quiz!</p>
                                                 <div className="container">
-                                                    <h4> Questions in Quiz </h4>
                                                     {Object.keys(this.state.quizData.questions).map((quizID) => {
                                                         return (
-                                                            <div key={quizID}>
-                                                                <textarea class = "form-control" name="questionsInSelection" disabled="true" maxlength="60" size="3"
+                                                            <div className="form-group" key={quizID}>
+                                                                <textarea className = "form-control" name="questionsInSelection" disabled="true" maxlength="60" size="3"
                                                                        value={this.props.allQuestionNames[quizID].name} />
                                                                 <button type="button" class = "marginTopBot marginLeft btn btn-info" onClick={(event) => this.deleteQuestionFromQuiz(event, quizID)}> Delete </button>
                                                             </div>
@@ -765,20 +765,28 @@ class AddQuestionToQuiz extends Component {
                     <p> Want to add a Question to this Quiz? Use the Tag Filtering box to search for the question you' like to add, then hit add!</p>
                     <div className="container">
                         <form onSubmit={this.props.handleGetQuestionsWithTag}>
-                            <select name="currentlySelectedTagForQuestionSearch" value={this.props.currentlySelectedTagForQuestionSearch} onChange={this.handleChange} disabled={this.props.inEditMode}>
-                                <option name="defaultTagOption"
-                                        value="defaultOption"
-                                        key="defaultOption">---Select a Tag!---</option>
-                                {Object.keys(this.props.tags).map(key => {
-                                    return ( <option name="tagOption"
-                                                     key={key}
-                                                     value={key}>{this.props.tags[key].name}</option>
-                                    )
-                                })}
-                            </select>
-                            <button className="btn btn-info"
-                                    disabled={this.props.inEditMode}>Filter
-                            </button>
+                            <div className="row">
+                                <div className="form-group col-md-4 mb-3">
+                                    <select className="form-control"
+                                        name="currentlySelectedTagForQuestionSearch" value={this.props.currentlySelectedTagForQuestionSearch}
+                                        onChange={this.handleChange} disabled={this.props.inEditMode}>
+                                        <option name="defaultTagOption"
+                                                value="defaultOption"
+                                                key="defaultOption">---Select a Tag!---</option>
+                                        {Object.keys(this.props.tags).map(key => {
+                                            return ( <option name="tagOption"
+                                                             key={key}
+                                                             value={key}>{this.props.tags[key].name}</option>
+                                            )
+                                        })}
+                                    </select>
+                                </div>
+                                <div className="col-md-4 mb-3">
+                                    <button className="btn btn-info"
+                                            disabled={this.props.inEditMode}>Filter
+                                    </button>
+                                </div>
+                            </div>
                         </form>
 
                         <div className="questionSelection">
