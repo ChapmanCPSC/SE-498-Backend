@@ -794,7 +794,7 @@ class AddQuestionToQuiz extends Component {
                                                     the currently selected question changed back to default, or alerts the user
                                                 */}
                             <form onSubmit={this.props.addQuestionToQuiz}>
-                                <select style={{width: 800 + 'px'}} className = "form-control" size = "5" name="currentlySelectedQuestion" value={this.props.currentlySelectedQuestion}
+                                <select className = "form-control" size = "5" name="currentlySelectedQuestion" value={this.props.currentlySelectedQuestion}
                                         onChange={this.handleChange} disabled={this.props.inEditMode}>
 
                                     {this.props.questionFilterResults.length > 0 ? this.props.questionFilterResults.map((item) => {
