@@ -7,7 +7,7 @@ import * as routes from '../../constants/routes';
 
 const Navigation = ({ authUser }) =>
   <div>
-    <Favicon url="http://oflisback.github.io/react-favicon/public/img/github.ico" />
+    <Favicon url="http://oflisback.github.io/react-favicon/public/img/github.ico"/>
     { authUser
         ? <NavigationAuth />
         : <NavigationNonAuth />
@@ -16,7 +16,7 @@ const Navigation = ({ authUser }) =>
 
 const NavigationAuth = () =>
   <div>
-    <div class = "topnav">
+    <div className = "topnav">
       <Link to={routes.LANDING}>Landing</Link>
       <Link to={routes.ACCOUNT}>Account</Link>
       <Link to={routes.QUIZZES}>Quizzes</Link>
