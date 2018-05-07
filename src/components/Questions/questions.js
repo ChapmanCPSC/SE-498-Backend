@@ -71,7 +71,7 @@ class QuestionsPage extends Component {
                 that.setState({
                     newQuestionText : "",
                     currentlySelectedTagToAdd: "defaultOption",
-                    currentlySelectedQuestion : "defaultOption",
+                    currentlySelectedQuestion : Object.keys(that.state.allQuestionNames)[0],
                     currentlySelectedTag : "defaultOption"})
             });
 
@@ -176,12 +176,7 @@ class QuestionsPage extends Component {
         });
         db.getAllQuestionNames().on('value', (snapshot) => {
             let quesVal = snapshot.val();
-            if (Object.keys(quesVal).length === 0) {
-                this.setState({
-                    allQuestionNames : quesVal
-                })
-            }
-            else { // There is at least one returned question that exists in the DB, so we can autoselect the first option
+            if (quesVal) {
                 this.setState({
                     allQuestionNames : quesVal,
                     currentlySelectedQuestion: Object.keys(quesVal)[0] // Set the first selected question (for editing) to the first item that is auto-selected in the *select*
