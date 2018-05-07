@@ -124,7 +124,7 @@ class QuizzesPage extends Component {
                 that.setState({
                     newQuizText : "",
                     currentlySelectedTagToAdd: "defaultOption",
-                    currentlySelectedQuiz : "defaultOption",
+                    currentlySelectedQuiz : Object.keys(that.state.allQuizNames)[0],
                     currentlySelectedTag : "defaultOption"})
             });
 
@@ -171,12 +171,7 @@ class QuizzesPage extends Component {
         });
         db.getAllQuizNames().on('value', (snapshot) => {
             let quizVal = snapshot.val();
-            if (Object.keys(quizVal).length === 0) { // Nothing returned :-/
-                this.setState({
-                    allQuizNames : quizVal
-                });
-            }
-            else { // There is at least one returned quiz that exists in the DB, so we can autoselect the first option
+            if (quizVal) { // There is at least one returned quiz that exists in the DB, so we can autoselect the first option
                 this.setState({
                     allQuizNames : quizVal,
                     currentlySelectedQuiz : Object.keys(quizVal)[0] // Set the first selected quiz (for editing) to the first item that is auto-selected in the *select*
