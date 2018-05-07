@@ -762,7 +762,7 @@ class AddQuestionToQuiz extends Component {
                     <h4 className="my-0 font-weight-normal">Add Question to Quiz</h4>
                 </div>
                 <div className="card-body">
-                    <p> Want to add a Question to this Quiz? Use the Tag Filtering box to search for the question you' like to add, then hit add!</p>
+                    <p> Want to add a Question to this Quiz? Use the Tag Filtering box to search for the question you would like to add, then hit add!</p>
                     <div className="container">
 
                         <div className="row">
