@@ -54,7 +54,7 @@ export class TagModification extends Component {
                                         <button className = "btn no-click" name="tagsInEditComponent" >
                                             {this.props.tags[tagID].name}
                                         </button> {/* Must implement this a higher component (with state!)*/}
-                                        <button type="button" className=" btn btn-info"
+                                        <button type="button" className="btn btn-warning"
                                                 onClick={(event) => this.props.handleRemoveTagFromData(event, tagID)}> Delete
                                         </button> {/* Must implement the above function in a higher component (with state!)*/}
                                     </div>
