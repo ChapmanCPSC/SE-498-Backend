@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import Favicon from 'react-favicon';
 import SignOutButton from '../SignOut';
 import * as routes from '../../constants/routes';
+import { auth } from '../../firebase';
+import withAuthorization from '../Session/withAuthorization';
 
 const Navigation = ({ authUser }) =>
   <div>
@@ -22,7 +24,10 @@ const NavigationAuth = () =>
       <Link to={routes.QUIZZES}>Quizzes</Link>
       <Link to={routes.QUESTIONS}>Questions</Link>
       <Link to={routes.GAME}>Game</Link>
-      <SignOutButton />
+      <div class = "right">
+        
+        <Link to={routes.LANDING} onClick={auth.doSignOut}>Sign Out</Link>
+      </div>
     </div>
   </div>
 const NavigationNonAuth = () =>

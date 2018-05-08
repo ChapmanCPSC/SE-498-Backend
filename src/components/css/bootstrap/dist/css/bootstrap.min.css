@@ -29,6 +29,9 @@ body {
 	background-color: #ED7474;
 	color: white;
 }
+.right {
+	float: right;
+}
 .content{
 	padding-left: 16px;
 	font: 70px;
@@ -155,3 +158,15 @@ textarea {
 .no-click {
     pointer-events: none;
 }
+.right{
+	float:right;
+	overflow: hidden;
+	background-color: #56CCF2;
+}
+.right a {
+	background-color: #56CCF2;
+	padding: 12px;
+	font-size: 35px;
+	color: white;
+}
+
