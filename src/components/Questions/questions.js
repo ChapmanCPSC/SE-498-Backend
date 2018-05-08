@@ -624,7 +624,7 @@ class QuestionEdit extends Component {
                                         <textarea
                                                name="existingQuestionText" className="form-control"
                                                value={this.state.questionData.name}
-                                               placeholder="Enter Question Text Here" maxLength="90" rows="5"
+                                               placeholder="Enter Question Text Here" maxLength="200" rows="5"
                                                cols="60"
                                                onChange={(event) => this.handleTextStateChange(event, "name")}/>
                                       </div>

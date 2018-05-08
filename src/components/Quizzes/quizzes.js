@@ -544,7 +544,7 @@ class QuizEdit extends Component {
                                                 <input type="text" className="form-control"
                                                        name="existingQuizText"
                                                        value={this.state.quizData.name}
-                                                       placeholder="Enter Quiz Text Here" maxLength="60"
+                                                       placeholder="Enter Quiz Text Here" maxLength="200"
                                                        onChange={(event) => this.handleTextStateChange(event, "name")}/>
                                             </div>
                                             <div className="form-check row">
