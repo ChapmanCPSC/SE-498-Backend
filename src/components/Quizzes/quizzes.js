@@ -188,6 +188,11 @@ class QuizzesPage extends Component {
         });
     }
 
+    componentWillUnmount() {
+        db.getQuizReference().off();
+        db.getTagReference().off();
+    }
+
     render () {
         return (
             <div>

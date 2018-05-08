@@ -201,6 +201,7 @@ class QuestionsPage extends Component {
     }
     componentWillUnmount() {
         db.getQuestionReference().off();
+        db.getTagReference().off();
     }
 }
 
