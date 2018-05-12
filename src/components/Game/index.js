@@ -241,6 +241,7 @@ class FilterQuiz extends Component {
         return (
                 <div className="mb-3">
                     <div className="form-group row mb-3">
+                        <p> Select a course to pull up quizzes </p>
                         <select name="currentlySelectedCourse" className="form-control"
                                 value={this.props.currentlySelectedCourse}
                                 onChange={this.handleChange} >
@@ -253,12 +254,13 @@ class FilterQuiz extends Component {
                         </select>
                     </div>
                     <button onClick={this.props.findQuizzesInCourse} className="btn btn-success btn-block">
-                        Find Quizzes!
+                        Select Course
                     </button>
 
                 {this.props.quizzesInCourse.length > 0 && // Only display this select dropdown when there are quizzes to display
                     <div className="mt-3">
                         <div className="form-group row mb-3">
+                            <p> Select a quiz to create a game. </p>
                             <select name="currentlySelectedQuiz" className="form-control"
                                     value={this.props.currentlySelectedQuiz}
                                     onChange={this.handleChange}>
