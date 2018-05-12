@@ -586,7 +586,7 @@ class QuizEdit extends Component {
                                     <div className="card-body">
                                         <p> Here is a list of all of the questions currently a part of your quiz!</p>
                                         <div className="container">
-                                            {Object.keys(this.state.quizData.questions).map((quizID) => {
+                                            {this.state.quizData.questions && Object.keys(this.state.quizData.questions).map((quizID) => {
                                                 return (
                                                     <div className="form-group" key={quizID}>
                                                         <textarea className = "form-control" name="questionsInSelection" disabled="true" maxLength="60"

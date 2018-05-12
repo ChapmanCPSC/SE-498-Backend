@@ -25,13 +25,10 @@ export class Randomizer extends Component {
         return Math.floor(1000 + Math.random() * 9000);
     }
     createPin(quizID){
-        this.setState = {
-            newquizID: quizID
-        };
-
         let val = this.generatePin();
         this.setState = {
-            newGamePin: val
+            newGamePin: val,
+            newquizID: quizID
         };
 
         this.handleSubmit();

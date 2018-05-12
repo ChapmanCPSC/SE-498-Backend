@@ -69,3 +69,6 @@ export function getGames() {
 export function getCourseWithID(courseID) {
     return db.ref('course/' + courseID)
 }
+export function getCourseNames() {
+    return db.ref('course-name');
+}
