@@ -190,6 +190,8 @@ class QuizzesPage extends Component {
 
     componentWillUnmount() {
         db.getQuizReference().off();
+        db.getAllQuizNames().off();
+        db.getAllQuestionNames().off();
         db.getTagReference().off();
     }
 

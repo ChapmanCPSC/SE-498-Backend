@@ -35,6 +35,7 @@ class GameCreation extends Component {
             currentFaculty: "d31b1d9547b0467aa443",
             currentName: '',
             currentGame: {},
+            currentGameRef: {},
             courses: {},
             courseNames: {},
             allQuizNames: {},
@@ -42,26 +43,11 @@ class GameCreation extends Component {
         };
         //this.handleSubmit = this.handleSubmit.bind(this);
         this.createGame = this.createGame.bind(this);
-        this.validate = this.validate.bind(this);
         this.handleFilterByCourse = this.handleFilterByCourse.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.beginGame = this.beginGame.bind(this);
         this.displayPin = this.displayPin.bind(this);
         this.removeStudent = this.removeStudent.bind(this);
-    }
-    // handleSubmit(e){
-    //     e.preventDefault();
-    //     const ref = db.getFacultyName(this.state.currentlySelectedFaculty);
-    //     const fac = {
-    //         name : this.state.currentName
-    //     }
-    //     ref.push(fac);
-    //     this.setState({
-    //        currentName: ''
-    //     });
-    // }
-    validate(data){
-        let global = data;
     }
 
     handleChange(event) {
@@ -102,7 +88,19 @@ class GameCreation extends Component {
 
     beginGame(event) {
         event.preventDefault();
-        if (this.state.currentlySelectedQuiz !== "defaultOption") {
+        let that = this;
+        if (!this.state.currentGame.started) {
+            // Because this whole page uses a live, continuous listener for the game, we have to update it via the reference
+
+            let startedUpdate = {};
+            startedUpdate['/started'] = true; // Set started equal to true
+            this.state.currentGameRef.update(startedUpdate).then(function() { // Commit updates
+                // Switch to live game screen
+                that.setState ({
+                    currentScreen : 3
+                });
+            });
+
 
         }
 
@@ -137,7 +135,8 @@ class GameCreation extends Component {
                 pushedKey.on('value', (snapshot) => {
                     that.setState({
                         currentGame : snapshot.val(), // Set into state the current game object (will update live!)
-                        currentScreen : 2 // Move over to the PIN Display screen
+                        currentScreen : 2, // Move over to the PIN Display screen,
+                        currentGameRef : pushedKey
                     });
                 })
             });
@@ -179,10 +178,11 @@ class GameCreation extends Component {
     }
 
     componentWillUnmount() {
-        db.getFacultyCourses.off();
+        db.getFacultyCourses().off();
         db.getCourseNames().off();
         db.getAllQuizNames().off();
         // Need to also unmount the listener you set up in the function called 'Display Pin'
+        // Use this.state.currentGameRef
     }
 
     createGame(){
@@ -205,16 +205,27 @@ class GameCreation extends Component {
                 />
             )
         }
-        else if (this.state.currentScreen === 2) {
+        else if (this.state.currentScreen === 2 || this.state.currentScreen === 3) {
             return (
-                <PINScreen
-                    game={this.state.currentGame}
-                    removeStudent={this.removeStudent}
-                />
-            )
-        }
-        else if (this.state.currentScreen === 3) {
+                <div className="mb-3">
+                    {this.state.currentScreen === 2 &&
+                        <PINScreen
+                            game={this.state.currentGame}
+                            beginGame={this.beginGame}
+                        />
+                    }
+                    {this.state.currentScreen === 3 &&
+                        <LiveGameInfo
 
+                        />
+                    }
+                    <StudentsInGame
+                        game={this.state.currentGame}
+                        removeStudent={this.removeStudent}
+                    />
+                </div>
+
+            )
         }
     }
 }
@@ -269,35 +280,6 @@ class FilterQuiz extends Component {
                     </div>
                 }
                 </div>
-            /*
-             <form>
-                 <p>Hello, {this.state.currentName}! </p>
-                 <p> Please select a course below: </p>
-                 <div className="form-group">
-                     <select className="form-control" id="selectCourse" data-width="fit">
-                         <option>Select a Course</option>
-                         <option>2</option>
-                         <option>3</option>
-                         <option>4</option>
-                         <option>5</option>
-                     </select>
-                 </div>
-                 <ul>
-                     {this.state.courses.map((course) => {
-                         return (
-                             <li key={course.id}>
-                                 <h3>{course.id}</h3>
-                             </li>
-                         )
-                     })}
-
-                     {console.log("render selected Courses: " + this.state.selectedCourses)}
-
-
-                 </ul>
-                 <button className="btn btn-info" onClick={this.createGame}> Create Game</button>
-             </form>
-         */
         )
     }
 
@@ -320,7 +302,7 @@ class PINScreen extends Component {
     render() {
         // {this.props.game.key} --- USE THIS IF YOU WANT TO GET THE KEY FOR THE GAME OBJECT
         return (
-            <div className="mb-3">
+            <div>
                 <div className="form-group row mb-3">
                     <div className="jumbotron mx-auto">
                         <h1 className="display-1"> {this.props.game.gamepin} </h1>
@@ -328,21 +310,27 @@ class PINScreen extends Component {
                     </div>
                 </div>
                 <div className="form-group row mb-3">
-                    <button className="btn btn-primary btn-lg mx-auto">
+                    <button onClick={this.props.beginGame} className="btn btn-primary btn-lg mx-auto">
                         Start Game
                     </button>
                 </div>
-                <LiveGameInfo
-                    game={this.props.game}
-                    removeStudent={this.props.removeStudent}
-                />
             </div>
         )
     }
 }
 
-// Component which displays students within a quiz game (live!)
 class LiveGameInfo extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render () {
+        return null;
+    }
+}
+
+// Component which displays students within a quiz game (live!)
+class StudentsInGame extends Component {
     constructor(props) {
         super(props);
     }
@@ -350,13 +338,17 @@ class LiveGameInfo extends Component {
     render () {
         if(this.props.game.students) { // If students exists
             return (
-                <div className="list-group">
-                    {Object.keys(this.props.game.students).map((studentID) => {
-                        return (
-                            <a onClick={(event) => this.props.removeStudent(event, studentID)} className = "list-group-item list-group-item-action"> {studentID} </a>
-                        )
-                    }) }
+                <div className="container">
+                    <h1 className="display-4"> Students In Game </h1>
+                    <div className="list-group">
+                        {Object.keys(this.props.game.students).map((studentID) => {
+                            return (
+                                <a onClick={(event) => this.props.removeStudent(event, studentID)} className = "list-group-item list-group-item-action"> {studentID} </a>
+                            )
+                        }) }
+                    </div>
                 </div>
+
             )
         }
         else {
