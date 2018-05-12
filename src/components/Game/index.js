@@ -160,19 +160,16 @@ class GameCreation extends Component {
                 courses: tempState,
                 currentlySelectedCourse: Object.keys(tempState)[0]
             });
-            console.log("1");
         });
         db.getCourseNames().on('value', (snapshot) => {
             that.setState({
                 courseNames: snapshot.val()
             });
-            console.log("2");
         });
         db.getAllQuizNames().on('value', (snapshot) => {
             that.setState({
                 allQuizNames: snapshot.val()
             });
-            console.log("3");
         });
 
     }
@@ -343,7 +340,7 @@ class StudentsInGame extends Component {
                     <div className="list-group">
                         {Object.keys(this.props.game.students).map((studentID) => {
                             return (
-                                <a onClick={(event) => this.props.removeStudent(event, studentID)} className = "list-group-item list-group-item-action"> {studentID} </a>
+                                <a key={studentID} onClick={(event) => this.props.removeStudent(event, studentID)} className = "list-group-item list-group-item-action"> {studentID} </a>
                             )
                         }) }
                     </div>
