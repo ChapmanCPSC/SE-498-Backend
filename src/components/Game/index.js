@@ -29,10 +29,12 @@ class GameCreation extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            currentScreen : 1, // 1: Main Screen - 2: PIN Screen - 3: Game Screen
             currentlySelectedQuiz: "defaultOption",
             currentlySelectedCourse: "defaultOption",
             currentFaculty: "d31b1d9547b0467aa443",
             currentName: '',
+            currentGame: {},
             courses: {},
             courseNames: {},
             allQuizNames: {},
@@ -43,7 +45,9 @@ class GameCreation extends Component {
         this.validate = this.validate.bind(this);
         this.handleFilterByCourse = this.handleFilterByCourse.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.startGame = this.startGame.bind(this);
+        this.beginGame = this.beginGame.bind(this);
+        this.displayPin = this.displayPin.bind(this);
+        this.removeStudent = this.removeStudent.bind(this);
     }
     // handleSubmit(e){
     //     e.preventDefault();
@@ -66,7 +70,7 @@ class GameCreation extends Component {
 
     handleFilterByCourse (e) {
         e.preventDefault();
-        console.log("ewe tonight");
+
         let that = this;
         if (this.state.currentlySelectedCourse !== "defaultOption") {
             db.getCourseWithID(this.state.currentlySelectedCourse).once('value', (snapshot) => {
@@ -96,15 +100,61 @@ class GameCreation extends Component {
         }
     }
 
-    startGame(event) {
+    beginGame(event) {
         event.preventDefault();
-        
+        if (this.state.currentlySelectedQuiz !== "defaultOption") {
+
+        }
+
+    }
+
+    displayPin(event) {
+        event.preventDefault();
+
+        let that = this;
+
+        if (this.state.currentlySelectedQuiz !== "defaultOption") {
+            // Generate a PIN
+            const gameRef = db.getGames(); // set reference to the full list of games
+            let pushedKey = gameRef.push(); // push a new game key to the Firebase Realtime Database
+
+            let currDate = new Date();
+            let dateAdd = currDate.toISOString().split('T')[0]; // Get current date
+            let timeAdd = currDate.toTimeString().split(' ')[0]; // Get current time
+
+            let keyVal = pushedKey.key; // save the actual key as a variable, for later use (maybe set it into state?)
+
+            // Create the new data to put in the new Game object (no students yet)
+            let newGameData = {
+                datecreated : dateAdd, // Current date
+                gamepin : utils.generatePIN(), // Generate a new PIN for the game
+                quiz : that.state.currentlySelectedQuiz, // Set the current quiz
+                started : false, // the quiz hasn't started yet, so we set this value to false
+                timecreated : timeAdd // Current time
+            };
+
+            pushedKey.set(newGameData).then(function (snapshot) { // Go and push all the new data to the database
+                pushedKey.on('value', (snapshot) => {
+                    that.setState({
+                        currentGame : snapshot.val(), // Set into state the current game object (will update live!)
+                        currentScreen : 2 // Move over to the PIN Display screen
+                    });
+                })
+            });
+        }
+
+
+    }
+
+    // TODO: Not implemented yet. This function should remove the studentID passed into it from this.state.game.students
+    removeStudent(event, studentID) {
+        event.preventDefault();
     }
 
     componentDidMount () {
         let that = this; // Required for accessing 'this' in nested scopes
 
-        db.getFacultyCourses(this.state.currentFaculty).on('value', (snapshot) => { // Problem: this is not a constant listener :/
+        db.getFacultyCourses(this.state.currentFaculty).on('value', (snapshot) => {
             //console.log('courses: ' + courses);
             let tempState = snapshot.val();
             that.setState({
@@ -126,62 +176,21 @@ class GameCreation extends Component {
             console.log("3");
         });
 
-            /*
-            for (let course in courses) { // for each course key in the returned courses snapshot
-                if (courses.hasOwnProperty(course)) {
-                    console.log(courses[course]);
-                    if(courses[course].faculty === that.state.currentFaculty) {
-                        console.log(that.state.currentFaculty);
-                        specificCourses.push(course);
-                    }
-                }
-            }
-            that.setState({
-                courses: specificCourses
-            }); */
-            /* this.setState({
-                courses: snapshot.val()
-            }); */
-            /*
-            let formatted = [];
-            for (let x in newState) { //iterates through found course list
-                db.getCourseWithID(newState[x]['id']).once('value', (snapshot) => { // uses course id
-                    let dbcourse = snapshot.val();
-                    console.log("db course elemnt: " + dbcourse);
-                    this.state.selectedCourses.push({
-                        id: dbcourse,
-                        quizzes: dbcourse.quizzes,
-                        students: dbcourse.students,
-                        coursecode: dbcourse.coursecode,
-                        title: dbcourse.title,
-                        yearrank: dbcourse.yearrank
-                    });
-                    console.log("selectedCourseinLoop: " + this.state.selectedCourses);
-                    that.validate(this.state.selectedCourses);
-                });
-            }
-        }).then(function(readCountTxn) {
-            // All promises succeeded.
-            renderBlog({
-                article: article,
-                readCount: readCountTxn.snapshot.val()
-            });
-        }
-
-        db.getFacultyName(this.state.currentFaculty).on('value', (snapshot) => {
-            let name = snapshot.val();
-            console.log(name);
-            this.setState({
-                currentName: name
-            });
-            */
-
     }
+
+    componentWillUnmount() {
+        db.getFacultyCourses.off();
+        db.getCourseNames().off();
+        db.getAllQuizNames().off();
+        // Need to also unmount the listener you set up in the function called 'Display Pin'
+    }
+
     createGame(){
         Randomizer.createPin(this.currentlySelectedQuiz);
     }
 
     render() {
+        if(this.state.currentScreen === 1) { // If page has just been opened, and no quiz game is currently in progress
             return (
                 <FilterQuiz
                     handleChange={this.handleChange}
@@ -192,9 +201,21 @@ class GameCreation extends Component {
                     allQuizNames={this.state.allQuizNames}
                     quizzesInCourse={this.state.linkedQuizzes}
                     findQuizzesInCourse={this.handleFilterByCourse}
+                    displayPin={this.displayPin}
                 />
-
             )
+        }
+        else if (this.state.currentScreen === 2) {
+            return (
+                <PINScreen
+                    game={this.state.currentGame}
+                    removeStudent={this.removeStudent}
+                />
+            )
+        }
+        else if (this.state.currentScreen === 3) {
+
+        }
     }
 }
 
@@ -242,8 +263,8 @@ class FilterQuiz extends Component {
                             </select>
                         </div>
 
-                        <button onClick={this.props.findQuizzesInCourse} className="btn btn-primary btn-block">
-                            Start Quiz Game!
+                        <button onClick={this.props.displayPin} className="btn btn-primary btn-block">
+                            Display PIN!
                         </button>
                     </div>
                 }
@@ -278,6 +299,69 @@ class FilterQuiz extends Component {
              </form>
          */
         )
+    }
+
+
+}
+
+class GameScreen extends Component {
+    constructor (props) {
+        super(props);
+
+    }
+}
+
+class PINScreen extends Component {
+    constructor (props) {
+        super(props);
+
+    }
+
+    render() {
+        // {this.props.game.key} --- USE THIS IF YOU WANT TO GET THE KEY FOR THE GAME OBJECT
+        return (
+            <div className="mb-3">
+                <div className="form-group row mb-3">
+                    <div className="jumbotron mx-auto">
+                        <h1 className="display-1"> {this.props.game.gamepin} </h1>
+                        <p> Please enter the above PIN into your app</p>
+                    </div>
+                </div>
+                <div className="form-group row mb-3">
+                    <button className="btn btn-primary btn-lg mx-auto">
+                        Start Game
+                    </button>
+                </div>
+                <LiveGameInfo
+                    game={this.props.game}
+                    removeStudent={this.props.removeStudent}
+                />
+            </div>
+        )
+    }
+}
+
+// Component which displays students within a quiz game (live!)
+class LiveGameInfo extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render () {
+        if(this.props.game.students) { // If students exists
+            return (
+                <div className="list-group">
+                    {Object.keys(this.props.game.students).map((studentID) => {
+                        return (
+                            <a onClick={(event) => this.props.removeStudent(event, studentID)} className = "list-group-item list-group-item-action"> {studentID} </a>
+                        )
+                    }) }
+                </div>
+            )
+        }
+        else {
+            return null;
+        }
     }
 
 
