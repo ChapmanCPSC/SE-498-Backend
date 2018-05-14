@@ -867,17 +867,21 @@ class AddQuestion extends Component {
                                 <div className="form-group">
                                     <input type="text" className = "form-control" name="answersInSelection" placeholder="Enter Answer 1 Text Here" maxLength="70"
                                            value={this.state.newQuestionA1} onChange={(event) => this.handleChangeAnswerTextNewQ(event, "newQuestionA1")}/>
-                                    <input type="checkbox" className = "form-check" checked={this.state.newQuestionA1check} onChange={(event) => this.handleChangeAnswerCorrectnessNewQ(event, "newQuestionA1check")}/>
+                                    <input  type="checkbox" checked={this.state.newQuestionA1check} onChange={(event) => this.handleChangeAnswerCorrectnessNewQ(event, "newQuestionA1check")}/>
+                                    <label > Correct Answer? </label>
                                 </div>
+
                                 <div className="form-group">
                                     <input type="text" className = "form-control" name="answersInSelection" placeholder="Enter Answer 2 Text Here" maxLength="70"
                                            value={this.state.newQuestionA2} onChange={(event) => this.handleChangeAnswerTextNewQ(event, "newQuestionA2")}/>
-                                    <input type="checkbox" className = "form-check" checked={this.state.newQuestionA2check} onChange={(event) => this.handleChangeAnswerCorrectnessNewQ(event, "newQuestionA2check")}/>
+                                    <input  type="checkbox" checked={this.state.newQuestionA2check} onChange={(event) => this.handleChangeAnswerCorrectnessNewQ(event, "newQuestionA2check")}/>
+                                    <label > Correct Answer? </label>
                                 </div>
 
                                 <button className="btn btn-success btn-block " disabled={this.props.inEditMode}
                                 >Add
                                 </button>
+
                             </form>
                         </div>
                     </div>
@@ -931,7 +935,8 @@ class Answers extends React.Component {
                         <div className="form-group" key={answerID}>
                             <input type="text" className = "form-control" name="answersInSelection" placeholder="Enter Answer Text Here" maxLength="70" size="80"
                                    value={this.props.answerData.answers[answerID]} onChange={(event) => this.handleAnswerTextChange(event, answerID)}/>
-                            <input type="checkbox" className = "form-check" checked={this.props.answerData.correctanswers[answerID]} onChange={(event) => this.handleAnswerCorrectOrNot(event, answerID)}/>
+                            <input type="checkbox" checked={this.props.answerData.correctanswers[answerID]} onChange={(event) => this.handleAnswerCorrectOrNot(event, answerID)}/>
+                            <label > Correct Answer? </label>
                             <button type="button" className="btn btn-dark btn-block" onClick={(event) => this.deleteAnswerChoice(event, answerID)}> Delete </button>
                         </div>
                     )
