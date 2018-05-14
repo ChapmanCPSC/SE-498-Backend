@@ -52,4 +52,4 @@ jobs:
       - store_artifacts:
           path: /src/components/__tests__/__snaptshots__/
         
-      - run: jest -u
+    #  - run: jest -u
