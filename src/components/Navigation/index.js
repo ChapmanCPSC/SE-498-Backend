@@ -26,7 +26,7 @@ const NavigationAuth = () =>
       <Link to={routes.GAME}>Game</Link>
       <div class = "right">
         
-        <Link to={routes.LANDING} onClick={auth.doSignOut}>Sign Out</Link>
+        <Link to={routes.LANDING} onClick={auth.doSignOut}>Log Out</Link>
       </div>
     </div>
   </div>
