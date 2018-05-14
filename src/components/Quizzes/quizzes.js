@@ -423,7 +423,12 @@ class QuizEdit extends Component {
             // Grab the data listed in Firebase so the user can edit!
             // Data Should be copied into a local structure
             db.getQuizWithID(this.props.selectedQuizForEditing).once('value', (snapshot) => {
-                this.setState({quizData : snapshot.val(), quizDataInitialLoad : snapshot.val()});
+                // Check to make sure there is a questions field, and if not, add it in
+                let quizDataTemp = snapshot.val();
+                if (!quizDataTemp.questions) {
+                    quizDataTemp.questions = false; // Add the field!
+                }
+                this.setState({quizData : quizDataTemp, quizDataInitialLoad : quizDataTemp});
             });
         }
         else if (this.props.inEditMode && !nextProps.inEditMode) {
@@ -442,9 +447,11 @@ class QuizEdit extends Component {
         updates['/quiz/' + this.props.selectedQuizForEditing] = this.state.quizData;
         updates['/quiz-name/' + this.props.selectedQuizForEditing ] = {name: this.state.quizData.name};
         // Be sure to update question relationships too! Let them know that they are part of the quiz
-        Object.keys(this.state.quizData.questions).forEach(key => {
-            updates['/question/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = true;
-        });
+        if (this.state.quizData.questions) { // If the quizData object has a field for questions
+            Object.keys(this.state.quizData.questions).forEach(key => {
+                updates['/question/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = true;
+            });
+        }
 
         // We will update the tags with the new and correct tag information (on the quiz)
         Object.keys(this.state.quizData.tags).forEach(key => {
@@ -459,11 +466,13 @@ class QuizEdit extends Component {
         });
 
         // Here we do a set difference with the initial backup (on our duplicated question data), to see if anything was deleted ( and thus set to null to delete it)
-        Object.keys(this.state.quizDataInitialLoad.questions).forEach(key => {
-            if (!(key in this.state.quizData.questions)) {
-                updates['/question/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = null;
-            }
-        });
+        if (this.state.quizDataInitialLoad.questions) { // If the quizDataInitialLoad object questions field hold questions, or is not false
+            Object.keys(this.state.quizDataInitialLoad.questions).forEach(key => {
+                if (!(key in this.state.quizData.questions)) {
+                    updates['/question/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = null;
+                }
+            });
+        }
         db.getFullDBReference().update(updates).then(function() {
             that.props.handleExitEditMode(event);
         });
