@@ -630,21 +630,26 @@ class QuestionEdit extends Component {
                                     <p> Here you can set a image to be displayed alongside (or in place of) the question, if you so desire.
                                     Please ensure your image is of a .jpeg or .png file type</p>
                                     <div className="container">
-                                          <Dropzone
-                                              accept="image/jpeg, image/png"
-                                              multiple={false}
-                                              onDrop={(accepted, rejected) => this.onDrop(accepted, rejected) }>
-                                              <p>
-                                              </p>
-                                          </Dropzone>
-                                          {this.state.questionData.imageforquestion && // Only show this image and button if image attached
-                                              <div className="">
-                                                  <img src={this.state.questionImageDataURL} className="" />
-                                                  <button type="button" onClick={this.removeQuestionImage}>
-                                                      Remove Image?
-                                                  </button>
-                                              </div>
-                                          }
+                                            {this.state.questionData.imageforquestion && this.state.questionImageDataURL && // Only show this image and button if image attached
+                                            <div className="row">
+                                                <div className="col-md-12">
+                                                    <img src={this.state.questionImageDataURL} alt="" className="img-fluid w-100" />
+                                                    <button type="button" onClick={this.removeQuestionImage}>
+                                                        Remove Image?
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            || // Or, if no image currently on the question... let the user add one!
+                                            <div className="row">
+                                                <Dropzone
+                                                    accept="image/jpeg, image/png"
+                                                    multiple={false}
+                                                    onDrop={(accepted, rejected) => this.onDrop(accepted, rejected) }>
+                                                    <p>
+                                                    </p>
+                                                </Dropzone>
+                                            </div>
+                                            }
                                     </div>
                                 </div>
                             </div>
