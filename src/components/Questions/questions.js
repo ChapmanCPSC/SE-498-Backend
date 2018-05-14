@@ -57,7 +57,7 @@ class QuestionsPage extends Component {
     }
 
     handleExitEditMode(event) {
-        event.preventDefault();
+
         this.setState({inEditMode: false,
             currentlySelectedQuestion : Object.keys(this.state.allQuestionNames)[0], // Since we reset the page back to showing all question names (not filtered), select first option!
             currentlySelectedTag : "defaultOption",
@@ -286,7 +286,7 @@ class QuestionEdit extends Component {
             // 1. If you are not in edit mode, but have requested to go into edit mode
             // Grab the data listed in Firebase so the user can edit!
             // Data Should be copied into a local structure
-            console.log("1. We are beginning");
+
             let that = this;
             db.getQuestionWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
                 let snapVal = snapshot.val();
@@ -300,15 +300,15 @@ class QuestionEdit extends Component {
                 else { // Else just set the state regularly
                     this.setState({questionData : snapshot.val(), questionDataInitialLoad : snapshot.val()});
                 }
-                console.log("2. FB 1!");
+
             });
 
 
             db.getQuestionAnswersWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
                 this.setState({answerData : snapshot.val(), answerDataInitialLoad : snapshot.val()});
-                console.log("3. FB 2!");
+
             });
-            console.log("4. We are done with Firebase!");
+
         }
         else if (this.props.inEditMode && !nextProps.inEditMode) {
             // 2. If you are in edit mode, but have requested to switch out back to filtering and selecting questions
@@ -765,64 +765,65 @@ class AddQuestion extends Component {
         event.preventDefault();
 
         let that = this;
-        if (this.state.currentlySelectedTagToAdd !== "defaultOption") {
-            console.log("Test Here");
-            // Need to be sure this works well with the filters
-            const quesRef = db.getQuestionReference();
+        if (this.state.currentlySelectedTagToAdd !== "defaultOption" && this.state.newQuestionText !== "" &&
+            this.state.newQuestionA1 !== "" && this.state.newQuestionA2 !== "") {
+                console.log("Test Here");
+                // Need to be sure this works well with the filters
+                const quesRef = db.getQuestionReference();
 
-            let currDate = new Date();
-            let dateAdd = currDate.toISOString().split('T')[0];
-            let timeAdd = currDate.toTimeString().split(' ')[0];
+                let currDate = new Date();
+                let dateAdd = currDate.toISOString().split('T')[0];
+                let timeAdd = currDate.toTimeString().split(' ')[0];
 
-            // This push operation is all client-side. I.e., we can run it without worrying about asynchronous issues
-            let newAddition = quesRef.push();
-            let answer1ID = utils.generateAnswerID();
-            let answer2ID = utils.generateAnswerID();
+                // This push operation is all client-side. I.e., we can run it without worrying about asynchronous issues
+                let newAddition = quesRef.push();
+                let answer1ID = utils.generateAnswerID();
+                let answer2ID = utils.generateAnswerID();
 
-            let keyVal = newAddition.key;
-            // This next section must utilize Promises to ensure that it all operates synchronously
-            let newQuestionData = {
-                name: this.state.newQuestionText,
-                datecreated: dateAdd,
-                imageforanswers: false,
-                imageforquestion: false,
-                lastused: false,
-                points: 100,
-                tags: {[this.state.currentlySelectedTagToAdd] : true},
-                timecreated: timeAdd
-            };
+                let keyVal = newAddition.key;
+                // This next section must utilize Promises to ensure that it all operates synchronously
+                let newQuestionData = {
+                    name: this.state.newQuestionText,
+                    datecreated: dateAdd,
+                    imageforanswers: false,
+                    imageforquestion: false,
+                    lastused: false,
+                    points: 100,
+                    tags: {[this.state.currentlySelectedTagToAdd] : true},
+                    timecreated: timeAdd
+                };
 
-            let updates = {};
-            updates['question/' + keyVal] = newQuestionData;
-            updates['question-name/' + keyVal] = {name: that.state.newQuestionText};
+                let updates = {};
+                updates['question/' + keyVal] = newQuestionData;
+                updates['question-name/' + keyVal] = {name: that.state.newQuestionText};
 
-            updates['choices/' + keyVal] = {
-                answers: {
-                    [answer1ID] : this.state.newQuestionA1,
-                    [answer2ID] : this.state.newQuestionA2
-                },
-                correctanswers: {
-                    [answer1ID] : this.state.newQuestionA1check,
-                    [answer2ID] : this.state.newQuestionA2check
-                }
-            };
+                updates['choices/' + keyVal] = {
+                    answers: {
+                        [answer1ID] : this.state.newQuestionA1,
+                        [answer2ID] : this.state.newQuestionA2
+                    },
+                    correctanswers: {
+                        [answer1ID] : this.state.newQuestionA1check,
+                        [answer2ID] : this.state.newQuestionA2check
+                    }
+                };
 
-            updates['tag/' + this.state.currentlySelectedTagToAdd + '/questions/' + keyVal] = true;
+                updates['tag/' + this.state.currentlySelectedTagToAdd + '/questions/' + keyVal] = true;
 
-            db.getFullDBReference().update(updates).then(function () {
-                // Reset state here
-                that.setState({
-                    currentlySelectedTagToAdd : "defaultOption",
-                    newQuestionText : "",
-                    newQuestionA1 : "",
-                    newQuestionA1check : false,
-                    newQuestionA2 : "",
-                    newQuestionA2check : false,
+                db.getFullDBReference().update(updates).then(function () {
+                    // Reset state here
+                    that.setState({
+                        currentlySelectedTagToAdd : "defaultOption",
+                        newQuestionText : "",
+                        newQuestionA1 : "",
+                        newQuestionA1check : false,
+                        newQuestionA2 : "",
+                        newQuestionA2check : false,
+                    });
+
+                    // Update state on main screen
+                    that.props.updateState(event);
                 });
-
-                // Update state on main screen
-                that.props.updateState(event);
-            });
 
 
         }
