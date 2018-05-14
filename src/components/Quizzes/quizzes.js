@@ -492,14 +492,17 @@ class QuizEdit extends Component {
     addTagToQuiz (event) {
         event.preventDefault();
 
-        // This is REALLY inefficient and we need another way of doing this without nested assigns
-        this.setState({
-            quizData: Object.assign({}, this.state.quizData, {
-                tags : Object.assign({}, this.state.quizData.tags, {
-                    [this.props.currentlySelectedTagToAdd] : true,
+        if(this.props.currentlySelectedTagToAdd !== "defaultOption") {
+            // This is REALLY inefficient and we need another way of doing this without nested assigns
+            this.setState({
+                quizData: Object.assign({}, this.state.quizData, {
+                    tags : Object.assign({}, this.state.quizData.tags, {
+                        [this.props.currentlySelectedTagToAdd] : true,
+                    }),
                 }),
-            }),
-        });
+            });
+        }
+
     }
     removeTagFromQuiz(event, tagID) {
         event.preventDefault();

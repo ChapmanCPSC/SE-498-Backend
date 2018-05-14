@@ -13,6 +13,7 @@ class QuestionsPage extends Component {
         this.state = {
             currentlySelectedQuestion : "defaultOption",
             currentlySelectedTag : "defaultOption",
+            currentlySelectedTagToAdd : "defaultOption",
             searchQuestionName: "",
             tags : {},
             allQuestionNames : {},
@@ -496,15 +497,16 @@ class QuestionEdit extends Component {
     addTagToQuestion (event) {
         event.preventDefault();
 
-        // This is REALLY inefficient and we need another way of doing this without nested assigns
-        this.setState({
-            questionData: Object.assign({}, this.state.questionData, {
-                tags : Object.assign({}, this.state.questionData.tags, {
-                    [this.props.currentlySelectedTagToAdd] : true,
+        if(this.props.currentlySelectedTagToAdd !== "defaultOption") {
+            // This is REALLY inefficient and we need another way of doing this without nested assigns
+            this.setState({
+                questionData: Object.assign({}, this.state.questionData, {
+                    tags : Object.assign({}, this.state.questionData.tags, {
+                        [this.props.currentlySelectedTagToAdd] : true,
+                    }),
                 }),
-            }),
-        });
-
+            });
+        }
     }
 
     removeTagFromQuestion (event, tagID) {
