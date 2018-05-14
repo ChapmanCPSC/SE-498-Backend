@@ -4,8 +4,10 @@ import { withRouter } from 'react-router-dom';
 import * as routes from '../../constants/routes';
 import logo from '../images/LogoLogin.png';
 
+
+
 const LandingPage = () =>
-    <div align = 'center'>
+    <div align = 'center' className="center-block">
         <div>
             <img src = {logo} alt="logo"/>
         </div>
@@ -71,4 +73,3 @@ export default withRouter(LandingPage);
 export {
     SignInForm,
 };
-
