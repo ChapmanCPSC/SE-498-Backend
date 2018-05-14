@@ -36,6 +36,14 @@ export function getQuizWithID(ID) {
 export function getQuestionAnswersWithID(ID) {
     return db.ref('choices/' + ID)
 }
+
+export function getQuestionAnswerChoices(ID) {
+    return db.ref('choices/' + ID + '/answers')
+}
+export function getQuestionCorrectAnswers(ID) {
+    return db.ref('choices/' + ID + '/correctanswers')
+}
+
 export function getAnswers() {
     return db.ref('choices')
 }

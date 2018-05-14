@@ -13,9 +13,7 @@ class QuestionsPage extends Component {
         this.state = {
             currentlySelectedQuestion : "defaultOption",
             currentlySelectedTag : "defaultOption",
-            currentlySelectedTagToAdd: "defaultOption",
             searchQuestionName: "",
-            newQuestionText : "",
             tags : {},
             allQuestionNames : {},
             questionFilterResults: [],
@@ -23,7 +21,8 @@ class QuestionsPage extends Component {
             newAnswerText : ""
         };
         this.handleChange = this.handleChange.bind(this);
-        this.handleAddQuestionSubmit = this.handleAddQuestionSubmit.bind(this);
+        this.quickStateUpdate = this.quickStateUpdate.bind(this);
+
         this.handleSearchForQuestion = this.handleSearchForQuestion.bind(this);
         this.handleGetQuestionsWithTag = this.handleGetQuestionsWithTag.bind(this);
         this.handleGetQuestionForEditFormSubmit = this.handleGetQuestionForEditFormSubmit.bind(this);
@@ -33,51 +32,17 @@ class QuestionsPage extends Component {
     handleChange(event) {
         this.setState({[event.target.name]: event.target.value})
     }
-    handleAddQuestionSubmit(event) {
-        event.preventDefault();
-
-        let that = this;
-        if (this.state.currentlySelectedTagToAdd !== "defaultOption") {
-            console.log("Test Here");
-            // Need to be sure this works well with the filters
-            const quesRef = db.getQuestionReference();
-
-            let currDate = new Date();
-            let dateAdd = currDate.toISOString().split('T')[0];
-            let timeAdd = currDate.toTimeString().split(' ')[0];
-
-            // This push operation is all client-side. I.e., we can run it without worrying about asynchronous issues
-            let newAddition = quesRef.push();
-            let keyVal = newAddition.key;
-            // This next section must utilize Promises to ensure that it all operates synchronously
-            let newQuestionData = {
-                name: this.state.newQuestionText,
-                datecreated: dateAdd,
-                imageforanswers: false,
-                imageforquestion: false,
-                lastused: false,
-                points: 100,
-                tags: {[this.state.currentlySelectedTagToAdd] : true},
-                timecreated: timeAdd
-            };
-
-            let updates = {};
-            updates['question/' + keyVal] = newQuestionData;
-            updates['question-name/' + keyVal] = {name: that.state.newQuestionText};
-            updates['choices/' + keyVal] = {answers: false, correctanswers: false};
-            updates['tag/' + this.state.currentlySelectedTagToAdd + '/questions/' + keyVal] = true;
-
-            db.getFullDBReference().update(updates).then(function () {
-                that.setState({
-                    newQuestionText : "",
-                    currentlySelectedTagToAdd: "defaultOption",
-                    currentlySelectedQuestion : Object.keys(that.state.allQuestionNames)[0],
-                    currentlySelectedTag : "defaultOption"})
-            });
 
 
-        }
+
+    // Use the below function to update the state for the main landing page for Questions to account for new or removed questions
+    quickStateUpdate(event) {
+        this.setState({
+            currentlySelectedTagToAdd: "defaultOption",
+            currentlySelectedQuestion : Object.keys(this.state.allQuestionNames)[0],
+            currentlySelectedTag : "defaultOption"})
     }
+
 
     handleGetQuestionForEditFormSubmit(event) {
         event.preventDefault();
@@ -92,7 +57,7 @@ class QuestionsPage extends Component {
     }
 
     handleExitEditMode(event) {
-        event.preventDefault();
+
         this.setState({inEditMode: false,
             currentlySelectedQuestion : Object.keys(this.state.allQuestionNames)[0], // Since we reset the page back to showing all question names (not filtered), select first option!
             currentlySelectedTag : "defaultOption",
@@ -145,11 +110,8 @@ class QuestionsPage extends Component {
                         <div className="row marginstuff">
                             <div className="col-6 col-lg-4">
                                 <AddQuestion
-                                    newQuestionText={this.state.newQuestionText}
-                                    onAddQuestionSubmit={this.handleAddQuestionSubmit}
-                                    handleChange={this.handleChange}
+                                    updateState={this.quickStateUpdate}
                                     inEditMode={this.state.inEditMode}
-                                    currentlySelectedTagToAdd={this.state.currentlySelectedTagToAdd}
                                     tags={this.state.tags}/>
                             </div>
                             <div className="col-12 col-sm-6 col-lg-8">
@@ -324,7 +286,7 @@ class QuestionEdit extends Component {
             // 1. If you are not in edit mode, but have requested to go into edit mode
             // Grab the data listed in Firebase so the user can edit!
             // Data Should be copied into a local structure
-            console.log("1. We are beginning");
+
             let that = this;
             db.getQuestionWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
                 let snapVal = snapshot.val();
@@ -338,15 +300,15 @@ class QuestionEdit extends Component {
                 else { // Else just set the state regularly
                     this.setState({questionData : snapshot.val(), questionDataInitialLoad : snapshot.val()});
                 }
-                console.log("2. FB 1!");
+
             });
 
 
             db.getQuestionAnswersWithID(this.props.selectedQuestionForEditing).once('value', (snapshot) => {
                 this.setState({answerData : snapshot.val(), answerDataInitialLoad : snapshot.val()});
-                console.log("3. FB 2!");
+
             });
-            console.log("4. We are done with Firebase!");
+
         }
         else if (this.props.inEditMode && !nextProps.inEditMode) {
             // 2. If you are in edit mode, but have requested to switch out back to filtering and selecting questions
@@ -398,7 +360,8 @@ class QuestionEdit extends Component {
     }
 
     deleteAnswerChoice(event, id) {
-        if(Object.keys(this.state.answerData.answers).length !== 1) {
+        // If the question doesn't have 2 answer choices (the minimum)
+        if(Object.keys(this.state.answerData.answers).length !== 2) {
             let removedKeyStateCopy = Object.assign({}, this.state);
             delete removedKeyStateCopy.answerData.answers[id];
             delete removedKeyStateCopy.answerData.correctanswers[id];
@@ -667,21 +630,26 @@ class QuestionEdit extends Component {
                                     <p> Here you can set a image to be displayed alongside (or in place of) the question, if you so desire.
                                     Please ensure your image is of a .jpeg or .png file type</p>
                                     <div className="container">
-                                          <Dropzone
-                                              accept="image/jpeg, image/png"
-                                              multiple={false}
-                                              onDrop={(accepted, rejected) => this.onDrop(accepted, rejected) }>
-                                              <p>
-                                              </p>
-                                          </Dropzone>
-                                          {this.state.questionData.imageforquestion && // Only show this image and button if image attached
-                                              <div className="">
-                                                  <img src={this.state.questionImageDataURL} className="" />
-                                                  <button type="button" onClick={this.removeQuestionImage}>
-                                                      Remove Image?
-                                                  </button>
-                                              </div>
-                                          }
+                                            {this.state.questionData.imageforquestion && this.state.questionImageDataURL && // Only show this image and button if image attached
+                                            <div className="row">
+                                                <div className="col-md-12">
+                                                    <img src={this.state.questionImageDataURL} alt="" className="img-fluid w-100" />
+                                                    <button className="btn btn-danger" type="button" onClick={this.removeQuestionImage}>
+                                                        Remove Image?
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            || // Or, if no image currently on the question... let the user add one!
+                                            <div className="row">
+                                                <Dropzone
+                                                    accept="image/jpeg, image/png"
+                                                    multiple={false}
+                                                    onDrop={(accepted, rejected) => this.onDrop(accepted, rejected) }>
+                                                    <p>
+                                                    </p>
+                                                </Dropzone>
+                                            </div>
+                                            }
                                     </div>
                                 </div>
                             </div>
@@ -766,66 +734,168 @@ class Modal extends React.Component {
 class AddQuestion extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            currentlySelectedTagToAdd : "defaultOption",
+            newQuestionText : "",
+            newQuestionA1 : "",
+            newQuestionA1check : false,
+            newQuestionA2 : "",
+            newQuestionA2check : false,
+        };
+
         this.handleChange = this.handleChange.bind(this);
-        this.state = { isModalOpen: false }
+        this.handleChangeAnswerCorrectnessNewQ = this.handleChangeAnswerCorrectnessNewQ.bind(this);
+        this.handleChangeAnswerTextNewQ = this.handleChangeAnswerTextNewQ.bind(this);
+        this.handleAddQuestionSubmit = this.handleAddQuestionSubmit.bind(this);
     }
     handleChange(event) {
-        this.props.handleChange(event)
+        this.setState({[event.target.name]: event.target.value});
     }
+
+    handleChangeAnswerCorrectnessNewQ(event, id) {
+        // This is REALLY inefficient and we need another way of doing this without nested assigns
+        this.setState({
+            [id] : event.target.checked
+        });
+    }
+
+    handleChangeAnswerTextNewQ(event, id) {
+        this.setState({
+            [id] : event.target.value
+        })
+    }
+
+    handleAddQuestionSubmit(event) {
+        event.preventDefault();
+
+        let that = this;
+        if (this.state.currentlySelectedTagToAdd !== "defaultOption" && this.state.newQuestionText !== "" &&
+            this.state.newQuestionA1 !== "" && this.state.newQuestionA2 !== "") {
+                console.log("Test Here");
+                // Need to be sure this works well with the filters
+                const quesRef = db.getQuestionReference();
+
+                let currDate = new Date();
+                let dateAdd = currDate.toISOString().split('T')[0];
+                let timeAdd = currDate.toTimeString().split(' ')[0];
+
+                // This push operation is all client-side. I.e., we can run it without worrying about asynchronous issues
+                let newAddition = quesRef.push();
+                let answer1ID = utils.generateAnswerID();
+                let answer2ID = utils.generateAnswerID();
+
+                let keyVal = newAddition.key;
+                // This next section must utilize Promises to ensure that it all operates synchronously
+                let newQuestionData = {
+                    name: this.state.newQuestionText,
+                    datecreated: dateAdd,
+                    imageforanswers: false,
+                    imageforquestion: false,
+                    lastused: false,
+                    points: 100,
+                    tags: {[this.state.currentlySelectedTagToAdd] : true},
+                    timecreated: timeAdd
+                };
+
+                let updates = {};
+                updates['question/' + keyVal] = newQuestionData;
+                updates['question-name/' + keyVal] = {name: that.state.newQuestionText};
+
+                updates['choices/' + keyVal] = {
+                    answers: {
+                        [answer1ID] : this.state.newQuestionA1,
+                        [answer2ID] : this.state.newQuestionA2
+                    },
+                    correctanswers: {
+                        [answer1ID] : this.state.newQuestionA1check,
+                        [answer2ID] : this.state.newQuestionA2check
+                    }
+                };
+
+                updates['tag/' + this.state.currentlySelectedTagToAdd + '/questions/' + keyVal] = true;
+
+                db.getFullDBReference().update(updates).then(function () {
+                    // Reset state here
+                    that.setState({
+                        currentlySelectedTagToAdd : "defaultOption",
+                        newQuestionText : "",
+                        newQuestionA1 : "",
+                        newQuestionA1check : false,
+                        newQuestionA2 : "",
+                        newQuestionA2check : false,
+                    });
+
+                    // Update state on main screen
+                    that.props.updateState(event);
+                });
+
+
+        }
+    }
+
     render() {
         if(!this.props.inEditMode) {
             return (
-              <div className="card mb-4 box-shadow">
-                  <div className="card-header">
-                      <h4 className="my-0 font-weight-normal">Add New Question!</h4>
-                  </div>
-                  <div className="card-body">
-                      <p> Want to add a new quiz to the QuizEdu system? Just click below! Be sure to select an initial tag for the quiz question</p>
-                      <div className="container">
-                        <form onSubmit={this.props.onAddQuestionSubmit}>
-                          <div className="form-group row">
-                            <input type="text" className="form-control"
-                                   disabled={this.props.inEditMode}
-                                   name="newQuestionText"
-                                   placeholder="Please enter your question"
-                                   value={this.props.newQuestionText}
-                                   onChange={this.handleChange}
-                            />
-                          </div>
-                          <div className="form-group col-md-10">
-                            <select name="currentlySelectedTagToAdd" value={this.props.currentlySelectedTagToAdd} className="form-control"
-                                    onChange={this.handleChange} disabled={this.props.inEditMode}>
-                                <option name="defaultTagOption"
-                                        value="defaultOption"
-                                        key="defaultOption">---Select a Tag!---
-                                </option>
-                                {Object.keys(this.props.tags).map(key => {
-                                    return (<option name="tagOption"
-                                                    key={key}
-                                                    value={key}>{this.props.tags[key].name}</option>
-                                    )
-                                })}
-                            </select>
-                          </div>
-                          <button className="btn btn-success btn-block " disabled={this.props.inEditMode}
-                          >Add
-                          </button>
-                        </form>
-                      </div>
+                <div className="card mb-4 box-shadow">
+                    <div className="card-header">
+                        <h4 className="my-0 font-weight-normal">Add New Question!</h4>
                     </div>
-                  </div>
+                    <div className="card-body">
+                        <p> Want to add a new quiz to the QuizEdu system? Just click below! Be sure to select an initial tag for the quiz question</p>
+                        <div className="container">
+                            <form onSubmit={this.handleAddQuestionSubmit}>
+                                <div className="form-group row">
+                                    <input type="text" className="form-control"
+                                           disabled={this.props.inEditMode}
+                                           name="newQuestionText"
+                                           placeholder="Please enter your question"
+                                           value={this.state.newQuestionText}
+                                           onChange={this.handleChange}
+                                    />
+                                </div>
+                                <div className="form-group col-md-10">
+                                    <select name="currentlySelectedTagToAdd" value={this.state.currentlySelectedTagToAdd} className="form-control"
+                                            onChange={this.handleChange} disabled={this.props.inEditMode}>
+                                        <option name="defaultTagOption"
+                                            value="defaultOption"
+                                            key="defaultOption">---Select a Tag!---
+                                        </option>
+                                        {Object.keys(this.props.tags).map(key => {
+                                            return (<option name="tagOption"
+                                                            key={key}
+                                                            value={key}>{this.props.tags[key].name}</option>
+                                            )
+                                        })}
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <input type="text" className = "form-control" name="answersInSelection" placeholder="Enter Answer 1 Text Here" maxLength="70"
+                                           value={this.state.newQuestionA1} onChange={(event) => this.handleChangeAnswerTextNewQ(event, "newQuestionA1")}/>
+                                    <input  type="checkbox" checked={this.state.newQuestionA1check} onChange={(event) => this.handleChangeAnswerCorrectnessNewQ(event, "newQuestionA1check")}/>
+                                    <label > Correct Answer? </label>
+                                </div>
+
+                                <div className="form-group">
+                                    <input type="text" className = "form-control" name="answersInSelection" placeholder="Enter Answer 2 Text Here" maxLength="70"
+                                           value={this.state.newQuestionA2} onChange={(event) => this.handleChangeAnswerTextNewQ(event, "newQuestionA2")}/>
+                                    <input  type="checkbox" checked={this.state.newQuestionA2check} onChange={(event) => this.handleChangeAnswerCorrectnessNewQ(event, "newQuestionA2check")}/>
+                                    <label > Correct Answer? </label>
+                                </div>
+
+                                <button className="btn btn-success btn-block " disabled={this.props.inEditMode}
+                                >Add
+                                </button>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
             )
         }
         else {
             return null;
         }
-    }
-    openModal() {
-        this.setState({ isModalOpen: true })
-    }
-
-    closeModal() {
-        this.setState({ isModalOpen: false })
     }
 }
 
@@ -870,7 +940,8 @@ class Answers extends React.Component {
                         <div className="form-group" key={answerID}>
                             <input type="text" className = "form-control" name="answersInSelection" placeholder="Enter Answer Text Here" maxLength="70" size="80"
                                    value={this.props.answerData.answers[answerID]} onChange={(event) => this.handleAnswerTextChange(event, answerID)}/>
-                            <input type="checkbox" className = "form-check" checked={this.props.answerData.correctanswers[answerID]} onChange={(event) => this.handleAnswerCorrectOrNot(event, answerID)}/>
+                            <input type="checkbox" checked={this.props.answerData.correctanswers[answerID]} onChange={(event) => this.handleAnswerCorrectOrNot(event, answerID)}/>
+                            <label > Correct Answer? </label>
                             <button type="button" className="btn btn-dark btn-block" onClick={(event) => this.deleteAnswerChoice(event, answerID)}> Delete </button>
                         </div>
                     )
