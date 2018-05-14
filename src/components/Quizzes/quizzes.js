@@ -75,7 +75,7 @@ class QuizzesPage extends Component {
     }
 
     handleExitEditMode(event) {
-        event.preventDefault();
+        
         this.setState({inEditMode: false,
             currentlySelectedQuiz : Object.keys(this.state.allQuizNames)[0], // Since we reset the page back to showing all quiz names (not filtered), select first option!
             currentlySelectedQuestion: Object.keys(this.state.allQuestionNames)[0], // Same as above, just now for the AddQuestionToQuiz Component
