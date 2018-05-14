@@ -440,62 +440,69 @@ class QuizEdit extends Component {
 
     submitQuiz(event) {
         event.preventDefault();
-        let updates = {};
-        let that = this;
+
+        if (window.confirm("Are you sure you want to submit all changes to this quiz?")) {
+            let updates = {};
+            let that = this;
 
 
-        updates['/quiz/' + this.props.selectedQuizForEditing] = this.state.quizData;
-        updates['/quiz-name/' + this.props.selectedQuizForEditing ] = {name: this.state.quizData.name};
-        // Be sure to update question relationships too! Let them know that they are part of the quiz
-        if (this.state.quizData.questions) { // If the quizData object has a field for questions
-            Object.keys(this.state.quizData.questions).forEach(key => {
-                updates['/question/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = true;
-            });
-        }
-
-        // We will update the tags with the new and correct tag information (on the quiz)
-        Object.keys(this.state.quizData.tags).forEach(key => {
-            updates['/tag/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = true;
-        });
-
-        // Here we do a set difference with the initial backup (for duplicated tag data), to see if anything was deleted ( and thus set to null to delete it)
-        Object.keys(this.state.quizDataInitialLoad.tags).forEach(key => {
-            if (!(key in this.state.quizData.tags)) {
-                updates['/tag/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = null;
+            updates['/quiz/' + this.props.selectedQuizForEditing] = this.state.quizData;
+            updates['/quiz-name/' + this.props.selectedQuizForEditing ] = {name: this.state.quizData.name};
+            // Be sure to update question relationships too! Let them know that they are part of the quiz
+            if (this.state.quizData.questions) { // If the quizData object has a field for questions
+                Object.keys(this.state.quizData.questions).forEach(key => {
+                    updates['/question/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = true;
+                });
             }
-        });
 
-        // Here we do a set difference with the initial backup (on our duplicated question data), to see if anything was deleted ( and thus set to null to delete it)
-        if (this.state.quizDataInitialLoad.questions) { // If the quizDataInitialLoad object questions field hold questions, or is not false
-            Object.keys(this.state.quizDataInitialLoad.questions).forEach(key => {
-                if (!(key in this.state.quizData.questions)) {
-                    updates['/question/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = null;
+            // We will update the tags with the new and correct tag information (on the quiz)
+            Object.keys(this.state.quizData.tags).forEach(key => {
+                updates['/tag/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = true;
+            });
+
+            // Here we do a set difference with the initial backup (for duplicated tag data), to see if anything was deleted ( and thus set to null to delete it)
+            Object.keys(this.state.quizDataInitialLoad.tags).forEach(key => {
+                if (!(key in this.state.quizData.tags)) {
+                    updates['/tag/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = null;
                 }
             });
+
+            // Here we do a set difference with the initial backup (on our duplicated question data), to see if anything was deleted ( and thus set to null to delete it)
+            if (this.state.quizDataInitialLoad.questions) { // If the quizDataInitialLoad object questions field hold questions, or is not false
+                Object.keys(this.state.quizDataInitialLoad.questions).forEach(key => {
+                    if (!(key in this.state.quizData.questions)) {
+                        updates['/question/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = null;
+                    }
+                });
+            }
+            db.getFullDBReference().update(updates).then(function() {
+                that.props.handleExitEditMode(event);
+            });
         }
-        db.getFullDBReference().update(updates).then(function() {
-            that.props.handleExitEditMode(event);
-        });
+
     }
 
     deleteQuiz(event) {
         event.preventDefault();
-        let deletes = {};
-        let that = this;
-        // Need to firstly ensure that you are removing tags and other linked information
-        Object.keys(this.state.quizDataInitialLoad.tags).forEach(key => {
-            deletes['/tag/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = null;
-        });
-        // Be sure to delete question relationships too! Let them know that they are no longer a part of the quiz
-        Object.keys(this.state.quizDataInitialLoad.questions).forEach(key => {
-            deletes['/question/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = null;
-        });
-        deletes['/quiz/' + this.props.selectedQuizForEditing] = null;
-        deletes['/quiz-name/' + this.props.selectedQuizForEditing ] = null;
 
-        db.getFullDBReference().update(deletes).then(function () {
-            that.props.handleExitEditMode(event);
-        });
+        if (window.confirm("Are you sure you want to delete this quiz? (Questions within this quiz will remain in our system)")) {
+            let deletes = {};
+            let that = this;
+            // Need to firstly ensure that you are removing tags and other linked information
+            Object.keys(this.state.quizDataInitialLoad.tags).forEach(key => {
+                deletes['/tag/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = null;
+            });
+            // Be sure to delete question relationships too! Let them know that they are no longer a part of the quiz
+            Object.keys(this.state.quizDataInitialLoad.questions).forEach(key => {
+                deletes['/question/' + key + '/quizzes/' + this.props.selectedQuizForEditing] = null;
+            });
+            deletes['/quiz/' + this.props.selectedQuizForEditing] = null;
+            deletes['/quiz-name/' + this.props.selectedQuizForEditing ] = null;
+
+            db.getFullDBReference().update(deletes).then(function () {
+                that.props.handleExitEditMode(event);
+            });
+        }
     }
 
     addTagToQuiz (event) {
