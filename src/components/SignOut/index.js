@@ -7,7 +7,7 @@ const SignOutButton = () =>
   <Link
     to={routes.LANDING}
     onClick={auth.doSignOut}>
-    Sign Out
+    Log Out
   </Link>
 
 export default SignOutButton;

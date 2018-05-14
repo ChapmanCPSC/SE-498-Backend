@@ -14,7 +14,8 @@ const LandingPage = () =>
             </div>
             <div className="jumbotron mb-5 bg-info text-white">
                 <h1 className="display-4">Welcome!</h1>
-                <p className="lead">This is the QuizEdu Administrative Site. Here you can manage questions, quizzes, games, and many other aspects of the QuizEdu
+		<p className="lead"> This is the QuizEdu Administrative Site.</p>
+                <p className="lead">Here, you can manage questions, quizzes, games, and many other aspects of the QuizEdu
                     platform!</p>
             </div>
             <div className='signin mb-5'>
