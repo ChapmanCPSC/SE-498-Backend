@@ -634,7 +634,7 @@ class QuestionEdit extends Component {
                                             <div className="row">
                                                 <div className="col-md-12">
                                                     <img src={this.state.questionImageDataURL} alt="" className="img-fluid w-100" />
-                                                    <button type="button" onClick={this.removeQuestionImage}>
+                                                    <button className="btn btn-danger" type="button" onClick={this.removeQuestionImage}>
                                                         Remove Image?
                                                     </button>
                                                 </div>
