@@ -4,6 +4,8 @@ import { firebase } from '../../firebase';
 import { db } from '../../firebase';
 import * as utils from '../../utilities/utils.js'
 import {TagModification} from '../TagModification/TagModification.js'
+import {AddTag} from '../TagModification/AddTag.js'
+import {RemoveTag} from '../TagModification/RemoveTag.js'
 
 class QuizzesPage extends Component {
     constructor (props) {
@@ -208,7 +210,7 @@ class QuizzesPage extends Component {
                             </div>
                         </div>
                         <div className="row marginstuff">
-                            <div className="col-6 col-lg-4">
+                            <div className="col-md-6">
                                 <AddQuiz
                                     newQuizText={this.state.newQuizText}
                                     onAddQuizSubmit={this.handleAddQuizSubmit}
@@ -217,19 +219,18 @@ class QuizzesPage extends Component {
                                     currentlySelectedTagToAdd={this.state.currentlySelectedTagToAdd}
                                     tags={this.state.tags}/>
                             </div>
-                            <div className="col-12 col-sm-6 col-lg-8">
-                                    <FilterQuizzes
-                                        tags={this.state.tags}
-                                        handleChange={this.handleChange}
-                                        currentlySelectedTag={this.state.currentlySelectedTag}
-                                        onTagSearchSubmit={this.handleGetQuizzesWithTag}
-                                        onSelectEditQuizSubmit={this.handleGetQuizForEditFormSubmit}
-                                        currentlySelectedQuiz={this.state.currentlySelectedQuiz}
-                                        allQuizNames={this.state.allQuizNames}
-                                        quizFilterResults={this.state.quizFilterResults}
-                                        inEditMode={this.state.inEditMode}/>
-
+                            <div className="col-md-3">
+                                <AddTag
+                                    inEditMode={this.state.inEditMode}
+                                />
                             </div>
+                            <div className="col-md-3">
+                                <RemoveTag
+                                    inEditMode={this.state.inEditMode}
+                                    tags={this.state.tags}
+                                />
+                            </div>
+
                             <QuizEdit
                                 selectedQuizForEditing={this.state.currentlySelectedQuiz}
                                 inEditMode={this.state.inEditMode}
@@ -242,6 +243,19 @@ class QuizzesPage extends Component {
                                 questionFilterResults={this.state.questionFilterResults}
                                 allQuestionNames={this.state.allQuestionNames}
                                 tags={this.state.tags}/>
+                        </div>
+                        <div className="row marginstuff">
+                            <FilterQuizzes
+                                tags={this.state.tags}
+                                handleChange={this.handleChange}
+                                currentlySelectedTag={this.state.currentlySelectedTag}
+                                onTagSearchSubmit={this.handleGetQuizzesWithTag}
+                                onSelectEditQuizSubmit={this.handleGetQuizForEditFormSubmit}
+                                currentlySelectedQuiz={this.state.currentlySelectedQuiz}
+                                allQuizNames={this.state.allQuizNames}
+                                quizFilterResults={this.state.quizFilterResults}
+                                inEditMode={this.state.inEditMode}/>
+
                         </div>
                     </div>
                 </main>
@@ -276,7 +290,7 @@ class FilterQuizzes extends Component {
                             quiz may have. Then, hit the "Filter" button to display quizzes with that tag! Select your quiz and then hit "Edit" to begin
                             alterations.</p>
                             <div className="container">
-                                <form className="mb-3" onSubmit={this.props.onTagSearchSubmit}>
+                                <form className="mb-3 col-md-6" onSubmit={this.props.onTagSearchSubmit}>
                                     <div className="form-group row">
                                         <select name="currentlySelectedTag" className="form-control"
                                                 value={this.props.currentlySelectedTag}
